@@ -53,9 +53,8 @@ fun ScreenScaffold(
                     onTabPressed = bottomBar.onTabPressed
                 )
             }
-        },
-        //snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = floatingActionButton
+        }
+
     ) { innerPadding ->
         content(innerPadding) // Screen-Content gets padding from Scaffold
     }

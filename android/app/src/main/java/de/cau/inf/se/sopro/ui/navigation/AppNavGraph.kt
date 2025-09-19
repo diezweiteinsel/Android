@@ -81,7 +81,7 @@ sealed class AppDestination(
         AppDestination(route, titleRes)
 
     data object YourApplicationDestination : NavMenuDestination("your_application", R.string.your_application_title)
-    data object SubmitApplicationDestination : NavMenuDestination("submit_application", R.string.submit_title)
+    data object SubmitApplicationDestination : NavMenuDestination("submit_application", R.string.submit_application_title)
     data object PublicApplicationDestination : NavMenuDestination("public_application", R.string.public_application_title)
     data object LoginDestination : NavMenuDestination("login", R.string.login_title)
 

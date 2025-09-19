@@ -7,17 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -132,17 +128,8 @@ fun CivitasTopAppBar(
     CenterAlignedTopAppBar(
         title = { Text(title) },
         modifier = modifier,
-        scrollBehavior = scrollBehavior,
-        navigationIcon = {
-            onNavigateBack?.let { goBack ->
-                IconButton(onClick = goBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
-            }
-        }
+        scrollBehavior = scrollBehavior
+
     )
 }
 
@@ -246,7 +233,7 @@ data class NavigationItemContent(
 
 private val drawerItems = listOf(
     NavigationItemContent(AppDestination.YourApplicationDestination,  Icons.Default.MailOutline,    R.string.your_application_title),
-    NavigationItemContent(AppDestination.SubmitApplicationDestination,  Icons.Default.Edit,    R.string.submit_title),
+    NavigationItemContent(AppDestination.SubmitApplicationDestination,  Icons.Default.Edit,    R.string.submit_application_title),
     NavigationItemContent(AppDestination.PublicApplicationDestination, Icons.Default.LocationOn, R.string.public_application_title),
     NavigationItemContent(AppDestination.LoginDestination, Icons.Default.Lock, R.string.login_title)
 )

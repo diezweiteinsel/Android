@@ -7,16 +7,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import de.cau.inf.se.sopro.ui.core.ScreenScaffold
-import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
+import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +33,7 @@ fun SubmitApplicationScreen(
         createBottomBar(navigationType, currentTab = AppDestination.SubmitApplicationDestination, navController)
     }
     ScreenScaffold(
-        titleRes = R.string.submit_title,
+        titleRes = R.string.submit_application_title,
         bottomBar = bottomBar
     ) { innerPadding ->
         SubmitApplicationContent(
@@ -50,7 +49,9 @@ fun SubmitApplicationContent(
 ) {
     Text(
         //text = stringResource(R.string.submit_msg),
-        text = "⢀⡴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
+
+        //Shrek is love, Shrek is life
+        text =  "⢀⡴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
                 "⠸⡇⠀⠿⡀⠀⠀⠀⣀⡴⢿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
                 "⠀⠀⠀⠀⠑⢄⣠⠾⠁⣀⣄⡈⠙⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀ \n" +
                 "⠀⠀⠀⠀⢀⡀⠁⠀⠀⠈⠙⠛⠂⠈⣿⣿⣿⣿⣿⠿⡿⢿⣆⠀⠀⠀⠀⠀⠀⠀ \n" +
@@ -69,8 +70,8 @@ fun SubmitApplicationContent(
     )
 }
 
-// Preview
 
+// Preview
 @Preview(showBackground = true, name = "SubmitApplicationScreen")
 @Composable
 private fun SubmitApplicationScreenPreview() {

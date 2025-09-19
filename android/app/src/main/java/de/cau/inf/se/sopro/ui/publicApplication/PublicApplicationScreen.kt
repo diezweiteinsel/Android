@@ -11,13 +11,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import de.cau.inf.se.sopro.ui.core.ScreenScaffold
-import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.R
-import de.cau.inf.se.sopro.ui.core.BottomBarSpec
+import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
+import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,9 +25,6 @@ fun PublicApplicationScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
-
-
 
 
 
@@ -58,8 +54,8 @@ fun PublicApplicationContent(
     )
 }
 
-// Preview
 
+// Preview
 @Preview(showBackground = true, name = "PublicApplicationScreen")
 @Composable
 private fun PublicApplicationScreenPreview() {

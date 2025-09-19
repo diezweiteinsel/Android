@@ -1,20 +1,30 @@
 <resources>
+
+    <!--General-->
     <string name="app_name">Civitas</string>
+
+
+    <!--Placeholders-->
     <string name="your_application_msg">Here you are gonna be able to see your applications</string>
-    <string name="back_button">Back</string>
-    <string name="home_title">Home</string>
-    <string name="search_title">Search</string>
-
     <string name="submit_msg">You will be able to submit an application here</string>
-    <string name="submit_title">New Application</string>
 
-    <string name="login_title">Login</string>
-    <string name="login_button">Login</string>
-    <string name="public_application_title">Public Applications</string>
+
+    <!--YourApplication page-->
     <string name="your_application_title">Your Applications</string>
 
+
+    <!--SubmitApplication page-->
+    <string name="submit_application_title">New Application</string>
+
+
+    <!--PublicApplication page-->
+    <string name="public_application_title">Public Applications</string>
+
+
+    <!--Login page-->
+    <string name="login_title">Login</string>
+    <string name="login_button">Login</string>
     <string name="user_name_text_field">Enter User Name</string>
     <string name="password_text_field">Enter Password</string>
-
 
 </resources>

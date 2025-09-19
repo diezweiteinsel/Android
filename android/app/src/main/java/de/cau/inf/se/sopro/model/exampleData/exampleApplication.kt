@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 
+//Just a generic application card with fixed dimensions and text
 @Composable
 fun ApplicationCard(modifier: Modifier = Modifier) {
     Card(

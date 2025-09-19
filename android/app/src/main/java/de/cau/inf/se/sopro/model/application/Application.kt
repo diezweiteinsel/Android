@@ -1,9 +1,8 @@
 package de.cau.inf.se.sopro.model.application
 
 import androidx.room.PrimaryKey
-import de.cau.inf.se.sopro.model.application.Form
-import de.cau.inf.se.sopro.model.application.Status
 
+//First idea for an application class, still WIP
 data class Application(
     @PrimaryKey
     val id: Int,

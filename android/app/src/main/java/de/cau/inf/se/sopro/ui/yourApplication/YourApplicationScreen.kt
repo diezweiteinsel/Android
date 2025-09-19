@@ -3,29 +3,24 @@ package de.cau.inf.se.sopro.ui.yourApplication
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import de.cau.inf.se.sopro.ui.core.ScreenScaffold
-import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.model.exampleData.ApplicationCard
-
+import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
+import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,6 +61,7 @@ fun YourApplicationContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        //Filled this with example cards to see how it looks
         ApplicationCard()
         ApplicationCard()
         ApplicationCard()
