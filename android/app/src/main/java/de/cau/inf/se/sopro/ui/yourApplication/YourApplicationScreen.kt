@@ -21,6 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.model.exampleData.ApplicationCard
+
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
