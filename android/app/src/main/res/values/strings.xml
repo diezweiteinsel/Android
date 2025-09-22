@@ -20,6 +20,9 @@
     <!--PublicApplication page-->
     <string name="public_application_title">Public Applications</string>
 
+    <!--Options page-->
+    <string name="options_title">Options</string>
+    <string name="options_save_button"> save</string>
 
     <!--Login page-->
     <string name="login_title">Login</string>
