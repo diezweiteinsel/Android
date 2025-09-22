@@ -94,7 +94,6 @@ fun LoginContent(
                 onClick = onLoginClick
             )
 
-            //LanguageChangeFAB()
         }
     }
 }
