@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Civitas</string>
+    <string name="wrong_input">Falsche Eingabe!</string>
+    <string name="your_application_msg">Hier werden Sie ihre Anträge sehen können</string>
+    <string name="submit_msg">Hier werden Sie ihre Anträge erstellen können</string>
+    <string name="your_application_title">Ihre Anträge</string>
+    <string name="submit_application_title">Neuer Antrag</string>
+    <string name="public_application_title">Öffentliche Anträge</string>
+    <string name="login_title">Anmelden</string>
+    <string name="login_button">Anmelden</string>
+    <string name="user_name_text_field">Benutzername</string>
+    <string name="password_text_field">Passwort</string>
+</resources>
