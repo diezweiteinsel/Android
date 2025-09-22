@@ -13,3 +13,9 @@ data class Application(
     val public: Boolean,
     val edited: Boolean
     )
+
+enum class Status {
+    PENDING,
+    APPROVED,
+    REJECTED
+}
