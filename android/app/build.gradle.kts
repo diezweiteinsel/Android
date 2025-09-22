@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.foundation.layout)
     ksp(libs.room.compiler)
 
     // Navigation-Compose

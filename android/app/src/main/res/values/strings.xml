@@ -2,6 +2,7 @@
 
     <!--General-->
     <string name="app_name">Civitas</string>
+    <string name="wrong_input">Invalid input!</string>
 
 
     <!--Placeholders-->
@@ -24,7 +25,7 @@
     <!--Login page-->
     <string name="login_title">Login</string>
     <string name="login_button">Login</string>
-    <string name="user_name_text_field">Enter User Name</string>
-    <string name="password_text_field">Enter Password</string>
+    <string name="user_name_text_field">User Name</string>
+    <string name="password_text_field">Password</string>
 
 </resources>
