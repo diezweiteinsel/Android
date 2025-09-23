@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -55,7 +57,9 @@ dependencies {
     implementation(platform(libs.retrofit.bom))
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.kotlinx.serialization)
-
+    implementation("com.squareup.retrofit2:converter-moshi:3.0.0")
+    implementation("com.squareup.moshi:moshi:1.15.2")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
     // OkHttp 5 (BOM)
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
@@ -64,6 +68,8 @@ dependencies {
     // kotlinx-serialization runtime
     implementation(libs.kotlinx.serialization.json)
 
+    //mocking
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)

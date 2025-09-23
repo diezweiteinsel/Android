@@ -13,11 +13,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.Date
 
-interface ApiHandler{
+interface ApiService{
     @GET("api/v1/health") //check if the Database is running
     suspend fun checkHealth() : Call<List<String>>
 
@@ -25,8 +23,7 @@ interface ApiHandler{
     suspend fun authenticateLogin()
 
     @POST("/api/v1/users") //create new applicant
-    suspend fun createApplicant(usertype: Usertype,username: String, password: String) : Applicant
-
+    suspend fun createApplicant(username: String, password: String) : Int
 
 
     @GET("/api/v1/forms") //get all Forms
@@ -37,6 +34,7 @@ interface ApiHandler{
         @Query("ApplicantId") ApplicantId: Int,
         @Query("status") status : Status
     ) : Call<List<Application>>
+
     @POST("/api/v1/applications")
     suspend fun createApplication( id: Int, applicantName: String,
                                   submissionDate: String,
@@ -46,15 +44,6 @@ interface ApiHandler{
                                   edited: Boolean) : Application
     @PUT("/api/v1/applications/{applicationId}")
     suspend fun updateApplication(@Query("id") id: Int)
-
-
-}
-private fun mockAPI(){
-    val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-    val api = Retrofit.Builder().baseUrl("https://jsonplaceholder.typicode.com")
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build()
-        .create(ApiHandler::class.java)
 
 
 }

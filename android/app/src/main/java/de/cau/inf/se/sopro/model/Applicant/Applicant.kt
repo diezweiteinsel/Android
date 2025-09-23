@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.model.Applicant
+package de.cau.inf.se.sopro.model.applicant
 
 import java.util.Date
 enum class Usertype{
@@ -7,6 +7,7 @@ enum class Usertype{
     ADMIN
 }
 data class Applicant(
+    val userid: Int,
     val username: String,
     val password: String,
     val createdAt: Date,
