@@ -2,6 +2,8 @@ package de.cau.inf.se.sopro.ui.options
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -42,19 +44,20 @@ fun OptionsScreen(navigationType: AppNavigationType,
 
 @Composable
 fun OptionsContent( modifier: Modifier = Modifier, onSave: () -> Unit){
-    Column(modifier = modifier.padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
+    Column(modifier = modifier.padding(3.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
 
 
         val def_url = "http://localhost:8080"
         var new_url by remember { mutableStateOf("") } //our new URL has to be transferred onSave
 
-        ChangeURLTextField(value = new_url,{new_url = it}, modifier= Modifier, label = { Text(def_url)})
+        ChangeURLTextField(value = new_url,{new_url = it}, modifier= modifier.fillMaxWidth(), label = { Text(def_url)})
 
+        SaveButton(onClick = onSave)
         }
     //add more options, dont know which
-    SaveButton(onClick = onSave)
+
 }
 
 
