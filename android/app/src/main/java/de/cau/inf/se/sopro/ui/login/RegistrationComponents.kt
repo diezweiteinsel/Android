@@ -13,25 +13,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import de.cau.inf.se.sopro.R
-import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
-import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 
-//All the parts that get displayed on the LoginScreen
+//All the parts that get displayed on the RegistrationScreen
 @Composable
-fun LoginButton(onClick: () -> Unit) {
-    ElevatedButton(onClick = { onClick() }) {
-        Text(stringResource(R.string.login_button))
-    }
-}
-
-@Composable
-fun UserNameTextField(
+fun NewUserNameTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -48,11 +37,12 @@ fun UserNameTextField(
 }
 
 @Composable
-fun PasswordTextField(
+fun NewPasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -61,17 +51,47 @@ fun PasswordTextField(
         label = label,
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true
+        singleLine = true,
+        isError = isError
     )
 }
 
 @Composable
-fun GoToRegistrationScreen(
+fun RegistrationButton(onClick: () -> Unit) {
+    ElevatedButton(onClick = { onClick() }) {
+        Text(stringResource(R.string.registration_button))
+    }
+}
+
+@Composable
+fun ConfirmPasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = label,
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        singleLine = true,
+        isError = isError,
+        supportingText = supportingText
+    )
+}
+
+@Composable
+fun GoToLoginScreen(
     navController: NavController,
     destinationRoute: String
 ) {
     Text(
-        text = (stringResource(R.string.go_to_registration_screen)),
+        text = (stringResource(R.string.go_to_login_screen)),
         modifier = Modifier
             .padding(top = 8.dp)
             .clickable {
@@ -80,19 +100,4 @@ fun GoToRegistrationScreen(
         color = MaterialTheme.colorScheme.primary,
         textDecoration = TextDecoration.Underline
     )
-}
-
-
-
-// Preview
-@Preview(showBackground = true, name = "LoginScreen")
-@Composable
-private fun LoginScreenPreview() {
-    val navController = rememberNavController()
-    CivitasAppTheme {
-        LoginScreen(
-            navigationType = AppNavigationType.BOTTOM_NAVIGATION,
-            navController = navController
-        )
-    }
 }

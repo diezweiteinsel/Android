@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,19 +34,19 @@ import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
+fun RegistrationScreen(
     navigationType: AppNavigationType, // TODO: navigation drawer or navigation rail
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
 
     ScreenScaffold(
-        titleRes = R.string.login_title,
+        titleRes = R.string.registration_title,
         bottomBar = BottomBarSpec.Hidden
     ) { innerPadding ->
-        LoginContent(
+        RegistrationContent(
             modifier = modifier.padding(innerPadding),
-            onLoginClick = {
+            onRegistrationClick = {
                 navController.navigateTopLevel(AppDestination.YourApplicationDestination)
             },
             navController = navController
@@ -54,11 +55,11 @@ fun LoginScreen(
 }
 
 
-//Unites all the components to be displayed on the LoginScreen
+//Unites all the components to be displayed on the RegistrationScreen
 @Composable
-fun LoginContent(
+fun RegistrationContent(
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit,
+    onRegistrationClick: () -> Unit,
     navController: NavHostController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -66,6 +67,8 @@ fun LoginContent(
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var passwordsDoNotMatch by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -84,14 +87,14 @@ fun LoginContent(
     ) {
 
         // Choose value depending on what looks better. Higher value means more space at the top
-        Spacer(modifier = Modifier.weight(0.3f))
+        Spacer(modifier = Modifier.weight(0.2f))
 
         Column(
             modifier = Modifier.weight(2f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            UserNameTextField(
+            NewUserNameTextField(
                 value = username,
                 onValueChange = { username = it },
                 modifier = Modifier
@@ -100,24 +103,58 @@ fun LoginContent(
                 label = { Text(stringResource(R.string.user_name_text_field)) }
             )
 
-            PasswordTextField(
+            NewPasswordTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    passwordsDoNotMatch = false
+                },
+
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text(stringResource(R.string.password_text_field)) }
+                label = { Text(stringResource(R.string.password_text_field)) },
+                isError = passwordsDoNotMatch
             )
 
-            LoginButton(
-                onClick = onLoginClick
+            ConfirmPasswordTextField(
+                value = confirmPassword,
+                onValueChange = {
+                    confirmPassword = it
+                    passwordsDoNotMatch = false
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                label = { Text(stringResource(R.string.confirm_password_text_field)) },
+                isError = passwordsDoNotMatch,
+                supportingText = {
+                    if (passwordsDoNotMatch) {
+                        Text(
+                            stringResource(R.string.passwords_do_not_match),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
-            GoToRegistrationScreen(
+            RegistrationButton(
+                onClick = {
+                    if (password == confirmPassword) {
+                        passwordsDoNotMatch = false
+                        onRegistrationClick()
+                    } else {
+                        passwordsDoNotMatch = true
+                        password = ""
+                        confirmPassword = ""
+                    }
+                }
+            )
+
+            GoToLoginScreen(
                 navController = navController,
-                destinationRoute = AppDestination.RegistrationDestination.route
+                destinationRoute = AppDestination.LoginDestination.route
             )
-
         }
     }
 }
