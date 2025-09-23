@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
 import de.cau.inf.se.sopro.R
-import de.cau.inf.se.sopro.ui.OptionsScreen.OptionsScreen
+import de.cau.inf.se.sopro.ui.options.OptionsScreen
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen

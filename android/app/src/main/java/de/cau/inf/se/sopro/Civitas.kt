@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -235,7 +236,8 @@ private val drawerItems = listOf(
     NavigationItemContent(AppDestination.YourApplicationDestination,  Icons.Default.MailOutline,    R.string.your_application_title),
     NavigationItemContent(AppDestination.SubmitApplicationDestination,  Icons.Default.Edit,    R.string.submit_application_title),
     NavigationItemContent(AppDestination.PublicApplicationDestination, Icons.Default.LocationOn, R.string.public_application_title),
-    NavigationItemContent(AppDestination.LoginDestination, Icons.Default.Lock, R.string.login_title)
+    NavigationItemContent(AppDestination.LoginDestination, Icons.Default.Lock, R.string.login_title),
+    NavigationItemContent(AppDestination.OptionsDestination,Icons.Default.Settings,R.string.options_title)
 )
 
 
