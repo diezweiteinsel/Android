@@ -93,6 +93,7 @@ fun LoginContent(
             LoginButton(
                 onClick = onLoginClick
             )
+
         }
     }
 }

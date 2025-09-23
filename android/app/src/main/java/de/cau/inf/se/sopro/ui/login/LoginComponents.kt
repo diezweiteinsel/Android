@@ -16,7 +16,6 @@ import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 
-
 //All the parts that get displayed on the LoginScreen
 @Composable
 fun LoginButton(onClick: () -> Unit) {
