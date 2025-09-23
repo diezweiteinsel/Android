@@ -27,6 +27,7 @@ foundation = "1.9.0"
 ui = "1.9.1"
 foundationLayout = "1.9.1"
 appcompat = "1.7.1"
+firebaseAppdistributionGradle = "5.1.1"
 
 [libraries]
 # AndroidX / Compose
@@ -71,6 +72,7 @@ androidx-foundation = { group = "androidx.compose.foundation", name = "foundatio
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebaseAppdistributionGradle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
