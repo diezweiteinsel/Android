@@ -68,6 +68,8 @@ dependencies {
     // kotlinx-serialization runtime
     implementation(libs.kotlinx.serialization.json)
 
+    //mocking
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
