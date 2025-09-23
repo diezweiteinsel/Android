@@ -10,8 +10,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.ui.OptionsScreen.OptionsScreen
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
@@ -54,6 +56,10 @@ fun AppNavHost(
         ) {
             composable(AppDestination.LoginDestination.route) { LoginScreen(navigationType, navController) }
             }
+        navigation(route = RootGraph.Options.route,
+            startDestination = RootGraph.Options.startDestination.route){
+            composable(AppDestination.OptionsDestination.route) { OptionsScreen(navigationType,navController) }
+        }
         }
     }
 
@@ -69,6 +75,8 @@ sealed class RootGraph(
     data object SubmitApplication : RootGraph("submit_application_graph", AppDestination.SubmitApplicationDestination)
     data object PublicApplication : RootGraph("public_application_graph", AppDestination.PublicApplicationDestination)
     data object Login : RootGraph("login_graph", AppDestination.LoginDestination)
+
+    data object Options : RootGraph("options_graph", AppDestination.OptionsDestination)
 }
 
 
@@ -84,6 +92,7 @@ sealed class AppDestination(
     data object SubmitApplicationDestination : NavMenuDestination("submit_application", R.string.submit_application_title)
     data object PublicApplicationDestination : NavMenuDestination("public_application", R.string.public_application_title)
     data object LoginDestination : NavMenuDestination("login", R.string.login_title)
+    data object OptionsDestination : NavMenuDestination("options",R.string.options_title)
 
 }
 
@@ -99,6 +108,8 @@ fun AppDestination.NavMenuDestination.toGraphRoute(): String = when (this) {
     AppDestination.SubmitApplicationDestination -> RootGraph.SubmitApplication.route
     AppDestination.PublicApplicationDestination -> RootGraph.PublicApplication.route
     AppDestination.LoginDestination -> RootGraph.Login.route
+    AppDestination.OptionsDestination -> RootGraph.Options.route
+
 }
 
 fun NavHostController.navigateTopLevel(dest: AppDestination.NavMenuDestination) =
