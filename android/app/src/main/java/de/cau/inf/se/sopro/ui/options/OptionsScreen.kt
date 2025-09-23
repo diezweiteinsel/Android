@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.OptionsScreen
+package de.cau.inf.se.sopro.ui.options
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

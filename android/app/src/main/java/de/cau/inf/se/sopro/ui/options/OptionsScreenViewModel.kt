@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.OptionsScreen
+package de.cau.inf.se.sopro.ui.options
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ElevatedButton
