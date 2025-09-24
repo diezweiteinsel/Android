@@ -1,15 +1,9 @@
 package de.cau.inf.se.sopro.network.api
 
-import com.squareup.moshi.KotlinJsonAdapterFactory
-import com.squareup.moshi.Moshi
-import de.cau.inf.se.sopro.model.applicant.Applicant
-import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -31,7 +25,7 @@ interface ApiService{
 
     @GET("/api/v1/applications")
     suspend fun getApplications(
-        @Query("ApplicantId") ApplicantId: Int,
+        @Query("ApplicantId") applicantId: Int,
         @Query("status") status : Status
     ) : Call<List<Application>>
 

@@ -1,13 +1,6 @@
 package de.cau.inf.se.sopro.data
 
-import de.cau.inf.se.sopro.model.applicant.Usertype
-import de.cau.inf.se.sopro.network.api.ApiService
-import kotlinx.coroutines.runBlocking
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-
+/*
 class Repository{
     private val apiservice : ApiService
     //private val databasedao : DatabaseDao
@@ -40,3 +33,5 @@ class Repository{
         server.shutdown()
     }
 }
+
+ */

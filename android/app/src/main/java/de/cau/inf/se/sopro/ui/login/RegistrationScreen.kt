@@ -140,9 +140,12 @@ fun RegistrationContent(
 
             RegistrationButton(
                 onClick = {
-                    if (password == confirmPassword) {
+                    if (password == confirmPassword && password.isNotEmpty()) {
                         passwordsDoNotMatch = false
                         onRegistrationClick()
+                        password = ""
+                        confirmPassword = ""
+
                     } else {
                         passwordsDoNotMatch = true
                         password = ""

@@ -3,7 +3,6 @@ package de.cau.inf.se.sopro.di
 import android.content.Context
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
-import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.network.api.ApiService
 import okhttp3.Credentials
 import okhttp3.Interceptor
