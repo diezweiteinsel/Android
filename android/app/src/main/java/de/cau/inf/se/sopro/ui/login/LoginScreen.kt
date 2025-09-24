@@ -118,7 +118,7 @@ fun LoginContent(
             )
 
             LoginButton(
-                onClick = { vm.Login()}
+                onClick = { vm.Login() }
 
             )
 

@@ -1,6 +1,5 @@
 package de.cau.inf.se.sopro.data
 
-import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
@@ -10,7 +9,6 @@ import kotlinx.coroutines.runBlocking
 
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import retrofit2.Response
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -18,7 +16,7 @@ import retrofit2.http.Query
 
 interface Repository{
     suspend fun checkHealth() : Call<List<String>>
-    suspend fun authenticateLogin()
+    suspend fun authenticateLogin(username: String, password: String)
     suspend fun createApplicant(username: String, password: String)
     suspend fun getForms() : Call<List<Form>>
     suspend fun getApplications( ApplicantId: Int, status : Status) : Call<List<Application>>
@@ -52,7 +50,7 @@ class DefRepository( private val apiService : ApiService) : Repository{
         TODO("Not yet implemented")
     }
 
-    override suspend fun authenticateLogin() {
+    override suspend fun authenticateLogin(username: String, password: String) {
         TODO("Not yet implemented")
     }
 

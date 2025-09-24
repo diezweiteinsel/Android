@@ -65,9 +65,6 @@ fun OptionsContent(
                 navController.navigate(AppDestination.LoginDestination.route)
             }
         )
-        }
+    }
     //add more options, dont know which
-
 }
-
-
