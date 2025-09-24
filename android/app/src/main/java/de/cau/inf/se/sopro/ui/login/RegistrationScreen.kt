@@ -172,10 +172,7 @@ fun RegistrationContent(
                 onClick = onRegistrationClick
             )
 
-            GoToLoginScreen(
-                navController = navController,
-                destinationRoute = AppDestination.LoginDestination.route
-            )
+            GoToLoginScreen(navController = navController)
         }
     }
 }

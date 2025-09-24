@@ -94,16 +94,19 @@ fun ConfirmPasswordTextField(
 }
 
 @Composable
-fun GoToLoginScreen(
-    navController: NavController,
-    destinationRoute: String
-) {
+fun GoToLoginScreen(navController: NavController) {
     Text(
         text = (stringResource(R.string.go_to_login_screen)),
         modifier = Modifier
             .padding(top = 8.dp)
             .clickable {
-            navController.navigate(destinationRoute)
+                navController.navigate(AppDestination.LoginDestination.route) {
+
+                    popUpTo(AppDestination.RegistrationDestination.route) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
         },
         color = MaterialTheme.colorScheme.primary,
         textDecoration = TextDecoration.Underline

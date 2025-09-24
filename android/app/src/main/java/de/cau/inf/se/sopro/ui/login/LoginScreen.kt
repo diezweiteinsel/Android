@@ -109,10 +109,9 @@ fun LoginContent(
 
             )
 
-            GoToRegistrationScreen(
-                navController = navController,
-                destinationRoute = AppDestination.RegistrationDestination.route
-            )
+            GoToRegistrationScreen(navController = navController)
+
+            GoToYourApplicationScreen(navController = navController)
 
         }
     }

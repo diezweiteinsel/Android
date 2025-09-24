@@ -34,6 +34,7 @@
     <string name="user_name_text_field">User Name</string>
     <string name="password_text_field">Password</string>
     <string name="go_to_registration_screen">Don\'t have an account? Register.</string>
+    <string name="go_to_your_application_screen">Directly go to your applications.</string>
 
 
     <!--Registration page-->

@@ -31,7 +31,7 @@ fun AppNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = RootGraph.YourApplication.route
+        startDestination = RootGraph.Login.route
     ) {
         navigation(
             route = RootGraph.YourApplication.route,
