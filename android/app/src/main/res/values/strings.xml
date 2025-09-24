@@ -24,7 +24,7 @@
 
     <!--Options page-->
     <string name="options_title">Options</string>
-    <string name="options_save_button">save</string>
+    <string name="options_save_button">Save</string>
     <string name="logout_button">Logout</string>
 
 

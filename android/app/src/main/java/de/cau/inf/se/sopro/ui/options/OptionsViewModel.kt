@@ -34,3 +34,14 @@ fun SaveButton(onClick: () -> Unit) {
 
     }
 }
+
+@Composable
+fun LogoutButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ElevatedButton(onClick = { onClick() }) {
+        Text(stringResource(R.string.logout_button))
+    }
+
+}

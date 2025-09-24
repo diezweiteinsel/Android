@@ -127,10 +127,3 @@ data class FormFieldState(
 }
 
 
-@Composable
-fun LogoutButton(onClick: () -> Unit) {
-    ElevatedButton(onClick = { onClick() }) {
-        Text(stringResource(R.string.logout_button))
-    }
-
-}
