@@ -29,8 +29,6 @@ fun ScreenScaffold(
     bottomBar: BottomBarSpec = BottomBarSpec.Hidden,
     onNavigateBack: (() -> Unit)? = null,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-    //snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    floatingActionButton: (@Composable () -> Unit) = { },
     content: @Composable (PaddingValues) -> Unit // Compose convention: content parameter as
                                                  // last parameter for trailing lambda
 ) {

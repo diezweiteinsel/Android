@@ -13,11 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -29,7 +28,11 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import de.cau.inf.se.sopro.data.ApplicantRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,14 +42,29 @@ fun RegistrationScreen(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+    val repository = ApplicantRepository(context.applicationContext)
+
+    val viewModel: RegistrationViewModel = viewModel(
+        factory = RegistrationViewModel.Factory(repository)
+    )
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     ScreenScaffold(
         titleRes = R.string.registration_title,
         bottomBar = BottomBarSpec.Hidden
     ) { innerPadding ->
         RegistrationContent(
             modifier = modifier.padding(innerPadding),
+            uiState = uiState,
+            onUserNameChanged = viewModel::onUsernameChanged,
+            onPasswordChanged = viewModel::onPasswordChanged,
+            onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
             onRegistrationClick = {
-                navController.navigateTopLevel(AppDestination.YourApplicationDestination)
+                if (viewModel.validateAndRegister()) {
+                    navController.navigateTopLevel(AppDestination.LoginDestination)
+                }
             },
             navController = navController
         )
@@ -58,16 +76,15 @@ fun RegistrationScreen(
 @Composable
 fun RegistrationContent(
     modifier: Modifier = Modifier,
+    uiState: RegistrationUiState,
+    onUserNameChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onConfirmPasswordChanged: (String) -> Unit,
     onRegistrationClick: () -> Unit,
     navController: NavHostController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordsDoNotMatch by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -93,44 +110,54 @@ fun RegistrationContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            NewUserNameTextField(
-                value = username,
-                onValueChange = { username = it },
+            NewUsernameTextField(
+                value = uiState.username.value,
+                onValueChange = onUserNameChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text(stringResource(R.string.user_name_text_field)) }
+                label = { Text(stringResource(R.string.user_name_text_field)) },
+                isError = uiState.username.isError,
+                supportingText = {
+                    uiState.username.errorMessageResId?.let {
+                        Text(
+                            stringResource(it),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
             NewPasswordTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    passwordsDoNotMatch = false
-                },
-
+                value = uiState.password.value,
+                onValueChange = onPasswordChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.password_text_field)) },
-                isError = passwordsDoNotMatch
+                isError = uiState.password.isError,
+                supportingText = {
+                    uiState.password.errorMessageResId?.let {
+                        Text(
+                            stringResource(it),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
             ConfirmPasswordTextField(
-                value = confirmPassword,
-                onValueChange = {
-                    confirmPassword = it
-                    passwordsDoNotMatch = false
-                },
+                value = uiState.confirmPassword.value,
+                onValueChange = onConfirmPasswordChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.confirm_password_text_field)) },
-                isError = passwordsDoNotMatch,
+                isError = uiState.confirmPassword.isError,
                 supportingText = {
-                    if (passwordsDoNotMatch) {
+                    uiState.confirmPassword.errorMessageResId?.let {
                         Text(
-                            stringResource(R.string.passwords_do_not_match),
+                            stringResource(it),
                             color = MaterialTheme.colorScheme.error
                         )
                     }
@@ -138,19 +165,7 @@ fun RegistrationContent(
             )
 
             RegistrationButton(
-                onClick = {
-                    if (password == confirmPassword && password.isNotEmpty()) {
-                        passwordsDoNotMatch = false
-                        onRegistrationClick()
-                        password = ""
-                        confirmPassword = ""
-
-                    } else {
-                        passwordsDoNotMatch = true
-                        password = ""
-                        confirmPassword = ""
-                    }
-                }
+                onClick = onRegistrationClick
             )
 
             GoToLoginScreen(

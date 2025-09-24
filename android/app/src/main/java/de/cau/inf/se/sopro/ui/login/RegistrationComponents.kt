@@ -20,11 +20,13 @@ import de.cau.inf.se.sopro.R
 
 //All the parts that get displayed on the RegistrationScreen
 @Composable
-fun NewUserNameTextField(
+fun NewUsernameTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -32,7 +34,9 @@ fun NewUserNameTextField(
         modifier = modifier,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true
+        singleLine = true,
+        isError = isError,
+        supportingText = supportingText
     )
 }
 
@@ -42,7 +46,8 @@ fun NewPasswordTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
-    isError: Boolean = false
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -52,7 +57,8 @@ fun NewPasswordTextField(
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
-        isError = isError
+        isError = isError,
+        supportingText = supportingText
     )
 }
 
@@ -100,4 +106,20 @@ fun GoToLoginScreen(
         color = MaterialTheme.colorScheme.primary,
         textDecoration = TextDecoration.Underline
     )
+}
+
+
+data class RegistrationUiState(
+    val username: FormFieldState = FormFieldState(),
+    val password: FormFieldState = FormFieldState(),
+    val confirmPassword: FormFieldState = FormFieldState()
+)
+
+data class FormFieldState(
+    val value: String = "",
+    val errorMessageResId: Int? = null
+) {
+
+    val isError: Boolean
+        get() = errorMessageResId != null
 }

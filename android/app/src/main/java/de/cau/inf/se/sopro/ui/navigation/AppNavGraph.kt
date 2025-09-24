@@ -65,9 +65,8 @@ fun AppNavHost(
             startDestination = RootGraph.Options.startDestination.route){
             composable(AppDestination.OptionsDestination.route) { OptionsScreen(navigationType,navController) }
         }
-        }
     }
-
+}
 
 
 

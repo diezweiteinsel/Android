@@ -41,5 +41,8 @@
     <string name="confirm_password_text_field">Confirm Password</string>
     <string name="passwords_do_not_match">Passwords do not match!"</string>
     <string name="go_to_login_screen">Already have an account? Login.</string>
+    <string name="password_is_empty">Please put in a password.</string>
+    <string name="password_too_short">Password must have at least 6 characters.</string>
+    <string name="username_too_short">Username must have at least 4 characters.</string>
 
 </resources>
