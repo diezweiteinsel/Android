@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,15 +24,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
+import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,14 +67,14 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     modifier: Modifier = Modifier,
+    onLoginClick: () -> Unit, ) {
     onLoginClick: () -> Unit,
     navController: NavHostController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val vm: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 
     Column(
         modifier = modifier
@@ -92,8 +101,8 @@ fun LoginContent(
         ) {
 
             UserNameTextField(
-                value = username,
-                onValueChange = { username = it },
+                value = vm.username,
+                onValueChange = { vm.onUsernameChange(it)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -101,8 +110,8 @@ fun LoginContent(
             )
 
             PasswordTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = vm.password,
+                onValueChange = { vm.onPasswordChange(it)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -110,7 +119,8 @@ fun LoginContent(
             )
 
             LoginButton(
-                onClick = onLoginClick
+                onClick = { vm.Login()}
+
             )
 
             GoToRegistrationScreen(
@@ -119,5 +129,58 @@ fun LoginContent(
             )
 
         }
+    }
+}
+@Composable
+fun LoginButton(onClick: () -> Unit) {
+    ElevatedButton(onClick = { onClick() }) {
+        Text(stringResource(R.string.login_button))
+    }
+
+}
+
+@Composable
+fun UserNameTextField(
+    value : String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = label,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        singleLine = true
+    )
+}
+
+@Composable
+fun PasswordTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = label,
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        singleLine = true
+    )
+}
+
+@Composable
+private fun LoginScreenPreview() {
+    val navController = rememberNavController()
+    CivitasAppTheme {
+        LoginScreen(
+            navigationType = AppNavigationType.BOTTOM_NAVIGATION,
+            navController = navController
+        )
     }
 }
