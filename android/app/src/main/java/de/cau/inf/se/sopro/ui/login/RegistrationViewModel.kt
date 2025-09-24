@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.ui.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.data.ApplicantRepository
 import de.cau.inf.se.sopro.model.applicant.Applicant
@@ -71,10 +72,8 @@ class RegistrationViewModel(private val applicantRepository: ApplicantRepository
 
         if (isValidationSuccessful) {
 
-            val newUserId = (applicantRepository.getApplicants().maxOfOrNull { it.userid } ?: 0) + 1
-
             val newApplicant = Applicant(
-                userid = newUserId,
+                userid = 1,
                 username = _uiState.value.username.value,
                 password = _uiState.value.password.value,
                 usertype = Usertype.APPLICANT
@@ -83,5 +82,22 @@ class RegistrationViewModel(private val applicantRepository: ApplicantRepository
         }
 
         return isValidationSuccessful
+    }
+
+
+    companion object {
+        fun Factory(applicantRepository: ApplicantRepository): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    if (modelClass.isAssignableFrom(RegistrationViewModel::class.java)) {
+                        return RegistrationViewModel(applicantRepository) as T
+                    }
+
+                    throw IllegalArgumentException("Unknown ViewModel class")
+
+                }
+            }
+        }
     }
 }

@@ -9,24 +9,24 @@ class ApplicantRepository(private val context: Context) {
 
     private val fileName = "applicants_mock.json"
 
-    fun getApplicants(): MutableList<Applicant> {
+    fun getApplicant(): Applicant? {
         return try {
             val jsonString = context.openFileInput(fileName).bufferedReader().use { it.readText() }
-            Json.decodeFromString<MutableList<Applicant>>(jsonString)
+            val applicants = Json.decodeFromString<List<Applicant>>(jsonString)
+            applicants.firstOrNull()
         } catch (e: FileNotFoundException) {
-            mutableListOf()
-
+            null
         }
     }
 
     fun saveApplicant(applicant: Applicant) {
-        val applicants = getApplicants()
-        applicants.add(applicant)
 
-        val updateJsonString = Json.encodeToString(applicants)
+        val singleApplicantList = listOf(applicant)
+
+        val jsonString = Json.encodeToString(singleApplicantList)
 
         context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
-            it.write(updateJsonString.toByteArray())
+            it.write(jsonString.toByteArray())
         }
     }
 }

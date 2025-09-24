@@ -43,13 +43,10 @@ fun RegistrationScreen(
 ) {
 
     val context = LocalContext.current
+    val repository = ApplicantRepository(context.applicationContext)
 
     val viewModel: RegistrationViewModel = viewModel(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RegistrationViewModel(ApplicantRepository(context.applicationContext)) as T
-            }
-        }
+        factory = RegistrationViewModel.Factory(repository)
     )
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
