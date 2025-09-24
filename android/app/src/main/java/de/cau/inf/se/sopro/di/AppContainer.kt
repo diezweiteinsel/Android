@@ -3,6 +3,8 @@ package de.cau.inf.se.sopro.di
 import android.content.Context
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import de.cau.inf.se.sopro.data.DefRepository
+import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.network.api.ApiService
 import okhttp3.Credentials
@@ -15,7 +17,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 interface AppContainer {
-
+    val repository : Repository
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -43,13 +45,15 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             val newRequest: Request = builder.build()
             chain.proceed(newRequest)
         }).build()
-
-    private fun createApi(){
-        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        val api = Retrofit.Builder().baseUrl("https://jsonplaceholder.typicode.com")
+        //creating our API, we are using moshi as a JSON converter because its considered faster and safer then GSON
+        val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        val api: ApiService = Retrofit.Builder().baseUrl("https://jsonplaceholder.typicode.com")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(ApiService::class.java)
+
+    override val repository: Repository by lazy {
+        DefRepository( api)
     }
 
 
