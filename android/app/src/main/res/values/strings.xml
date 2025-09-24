@@ -2,6 +2,7 @@
 
     <!--General-->
     <string name="app_name">Civitas</string>
+    <string name="wrong_input">Invalid input!</string>
 
 
     <!--Placeholders-->
@@ -20,14 +21,28 @@
     <!--PublicApplication page-->
     <string name="public_application_title">Public Applications</string>
 
+
     <!--Options page-->
     <string name="options_title">Options</string>
     <string name="options_save_button"> save</string>
 
+
     <!--Login page-->
     <string name="login_title">Login</string>
     <string name="login_button">Login</string>
-    <string name="user_name_text_field">Enter User Name</string>
-    <string name="password_text_field">Enter Password</string>
+    <string name="user_name_text_field">User Name</string>
+    <string name="password_text_field">Password</string>
+    <string name="go_to_registration_screen">Don\'t have an account? Register.</string>
+
+
+    <!--Registration page-->
+    <string name="registration_title">Registration</string>
+    <string name="registration_button">Register</string>
+    <string name="confirm_password_text_field">Confirm Password</string>
+    <string name="passwords_do_not_match">Passwords do not match!"</string>
+    <string name="go_to_login_screen">Already have an account? Login.</string>
+    <string name="password_is_empty">Please put in a password.</string>
+    <string name="password_too_short">Password must have at least 6 characters.</string>
+    <string name="username_too_short">Username must have at least 4 characters.</string>
 
 </resources>

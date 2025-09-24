@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.OptionsScreen
+package de.cau.inf.se.sopro.ui.options
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ElevatedButton
@@ -11,8 +11,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import de.cau.inf.se.sopro.R
 
 @Composable
-
-
 fun ChangeURLTextField(
     value: String,
     onValueChange: (String) -> Unit,

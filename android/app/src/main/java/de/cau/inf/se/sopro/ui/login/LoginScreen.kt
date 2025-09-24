@@ -1,9 +1,12 @@
 package de.cau.inf.se.sopro.ui.login
 
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,7 +56,8 @@ fun LoginScreen(
             modifier = modifier.padding(innerPadding),
             onLoginClick = {
                 navController.navigateTopLevel(AppDestination.YourApplicationDestination)
-            }
+            },
+            navController = navController
         )
     }
 }
@@ -62,11 +68,26 @@ fun LoginScreen(
 fun LoginContent(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit, ) {
+    onLoginClick: () -> Unit,
+    navController: NavHostController
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     val vm: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxSize()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            },
+
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -101,6 +122,12 @@ fun LoginContent(
                 onClick = { vm.Login()}
 
             )
+
+            GoToRegistrationScreen(
+                navController = navController,
+                destinationRoute = AppDestination.RegistrationDestination.route
+            )
+
         }
     }
 }
