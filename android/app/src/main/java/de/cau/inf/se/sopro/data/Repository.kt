@@ -104,7 +104,7 @@ class DefRepository( private val apiService : ApiService) : Repository{
         val api = retrofit.create(ApiService::class.java)
 
         runBlocking {
-            val post = api.createApplicant(Usertype.APPLICANT,"max ratjen","password")
+            val post = api.createApplicant("max ratjen","password",Usertype.APPLICANT)
             println("Mocked Response: $post")
         }
 

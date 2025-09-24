@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
+import de.cau.inf.se.sopro.ui.login.LogoutButton
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
@@ -33,17 +34,18 @@ fun OptionsScreen(navigationType: AppNavigationType,
     ) { innerPadding ->
         OptionsContent(
             modifier = modifier.padding(innerPadding),
-
-            onSave = {
-                navController.navigateTopLevel(AppDestination.YourApplicationDestination)
-
-            }
+            onSave = { navController.navigateTopLevel(AppDestination.YourApplicationDestination) },
+            navController = navController
         )
     }
 }
 
 @Composable
-fun OptionsContent( modifier: Modifier = Modifier, onSave: () -> Unit){
+fun OptionsContent(
+    modifier: Modifier = Modifier,
+    onSave: () -> Unit,
+    navController: NavHostController
+    ){
     Column(modifier = modifier.padding(3.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -55,6 +57,14 @@ fun OptionsContent( modifier: Modifier = Modifier, onSave: () -> Unit){
         ChangeURLTextField(value = new_url,{new_url = it}, modifier= modifier.fillMaxWidth(), label = { Text(def_url)})
 
         SaveButton(onClick = onSave)
+
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        LogoutButton(
+            onClick = {
+                navController.navigate(AppDestination.LoginDestination.route)
+            }
+        )
         }
     //add more options, dont know which
 

@@ -67,7 +67,6 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit, ) {
     onLoginClick: () -> Unit,
     navController: NavHostController
 ) {
@@ -131,56 +130,4 @@ fun LoginContent(
         }
     }
 }
-@Composable
-fun LoginButton(onClick: () -> Unit) {
-    ElevatedButton(onClick = { onClick() }) {
-        Text(stringResource(R.string.login_button))
-    }
 
-}
-
-@Composable
-fun UserNameTextField(
-    value : String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        label = label,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true
-    )
-}
-
-@Composable
-fun PasswordTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        label = label,
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true
-    )
-}
-
-@Composable
-private fun LoginScreenPreview() {
-    val navController = rememberNavController()
-    CivitasAppTheme {
-        LoginScreen(
-            navigationType = AppNavigationType.BOTTOM_NAVIGATION,
-            navController = navController
-        )
-    }
-}
