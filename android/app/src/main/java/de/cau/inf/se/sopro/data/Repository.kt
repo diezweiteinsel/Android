@@ -10,67 +10,70 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Field
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
+import java.util.Date
 
 interface Repository{
     suspend fun checkHealth() : Call<List<String>>
-    suspend fun authenticateLogin(username: String, password: String)
-    suspend fun createApplicant(username: String, password: String)
-    suspend fun getForms() : Call<List<Form>>
-    suspend fun getApplications( ApplicantId: Int, status : Status) : Call<List<Application>>
-    suspend fun createApplication( id: Int, applicantName: String,
-                                   submissionDate: String,
-                                   form: Form,
-                                   status: Status,
-                                   public: Boolean,
-                                   edited: Boolean) : Application
-    suspend fun updateApplication(@Query("id") id: Int)
-    fun validateUsercreation(response: Int)
+
+    suspend fun authenticateLogin(username: String,  password: String): Response<String>
+
+    suspend fun createApplicant(username: String,
+                                password: String, role: Usertype)
+
+    suspend fun getForms(): Call<List<Form>>
+    suspend fun getApplications(
+      createdAt: Date,
+      formId: Int,
+      status : Status,
+      applicantId: Int
+    ): Call<List<Application>>
+
+    suspend fun createApplication( application: Application)
+
+    suspend fun updateApplication(application: Application)
+
 }
 class DefRepository( private val apiService : ApiService) : Repository{
-    override suspend fun updateApplication(id: Int) {
+
+    override suspend fun updateApplication(application: Application) {
         TODO("Not yet implemented")
     }
 
-    override fun validateUsercreation(response: Int) {
+
+    override suspend fun createApplication(application: Application){
         TODO("Not yet implemented")
     }
 
-    override suspend fun createApplication(
-        id: Int,
-        applicantName: String,
-        submissionDate: String,
-        form: Form,
-        status: Status,
-        public: Boolean,
-        edited: Boolean
-    ): Application {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun authenticateLogin(username: String, password: String) {
+    override suspend fun authenticateLogin(username: String, password: String): Response<String> {
         TODO("Not yet implemented")
     }
 
     override suspend fun checkHealth(): Call<List<String>> {
         TODO("Not yet implemented")
     }
-    override suspend fun createApplicant(username:String,password: String) {
+    override suspend fun createApplicant(username:String,password: String,role: Usertype) {
 
         val response = apiService.createApplicant(username, password, Usertype.APPLICANT)
         if (response.isSuccessful){
-            print("do nothing")
+            print("success")
         }else{
             print("failed")
         }
     }
 
-
     override suspend fun getApplications(
-        ApplicantId: Int,
-        status: Status
+        createdAt: Date,
+        formId: Int,
+        status : Status,
+        applicantId: Int
     ): Call<List<Application>> {
         TODO("Not yet implemented")
     }
@@ -81,31 +84,4 @@ class DefRepository( private val apiService : ApiService) : Repository{
 
     //private val databasedao : DatabaseDao
 
-
-    fun main() {
-        val server = MockWebServer()
-        server.start()
-
-        // Enqueue fake response
-        server.enqueue(
-            MockResponse()
-                .setBody("""{"id": 1}""")
-                .setResponseCode(201)
-        )
-
-        // Build Retrofit pointing to the mock server
-        val retrofit = Retrofit.Builder()
-            .baseUrl(server.url("/"))
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
-        val api = retrofit.create(ApiService::class.java)
-
-        runBlocking {
-            val post = api.createApplicant("max ratjen","password",Usertype.APPLICANT)
-            println("Mocked Response: $post")
-        }
-
-        server.shutdown()
-    }
 }
