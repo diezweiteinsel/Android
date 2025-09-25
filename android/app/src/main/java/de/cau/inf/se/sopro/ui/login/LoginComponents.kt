@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
@@ -66,17 +67,40 @@ fun PasswordTextField(
 }
 
 @Composable
-fun GoToRegistrationScreen(
-    navController: NavController,
-    destinationRoute: String
-) {
+fun GoToRegistrationScreen(navController: NavController) {
     Text(
         text = (stringResource(R.string.go_to_registration_screen)),
         modifier = Modifier
             .padding(top = 8.dp)
             .clickable {
-            navController.navigate(destinationRoute)
+                navController.navigate(AppDestination.RegistrationDestination.route) {
+
+                    popUpTo(AppDestination.LoginDestination.route) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
         },
+        color = MaterialTheme.colorScheme.primary,
+        textDecoration = TextDecoration.Underline
+    )
+}
+
+@Composable
+fun GoToYourApplicationScreen(navController: NavController) {
+    Text(
+        text = (stringResource(R.string.go_to_your_application_screen)),
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .clickable {
+                navController.navigate(AppDestination.YourApplicationDestination.route) {
+
+                    popUpTo(AppDestination.LoginDestination.route) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
         color = MaterialTheme.colorScheme.primary,
         textDecoration = TextDecoration.Underline
     )
