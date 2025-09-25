@@ -37,11 +37,10 @@ fun SaveButton(onClick: () -> Unit) {
 
 @Composable
 fun LogoutButton(
-    onClick: () -> Unit,
+    onShowDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ElevatedButton(onClick = { onClick() }) {
+    ElevatedButton(onClick = { onShowDialog() }) {
         Text(stringResource(R.string.logout_button))
     }
-
 }
