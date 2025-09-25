@@ -14,6 +14,6 @@ data class Applicant(
     val username: String,
     val password: String,
     //val createdAt: Date,
-    val usertype: Usertype,
+    val role: Usertype,
     val email: String? = null
 )

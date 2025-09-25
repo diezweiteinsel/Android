@@ -32,7 +32,7 @@ fun LoginButton(onClick: () -> Unit) {
 
 @Composable
 fun UserNameTextField(
-    value: String,
+    value : String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null

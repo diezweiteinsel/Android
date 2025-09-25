@@ -13,31 +13,39 @@ import de.cau.inf.se.sopro.data.Repository
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(private val repository: Repository) : ViewModel(){
+class LoginViewModel(private val repository: Repository) : ViewModel() {
     var username by mutableStateOf("")
     var password by mutableStateOf("")
+
     //var loginResult by mutableStateOf<LoginResponse?>(null)
     var error by mutableStateOf<String?>(null)
-    fun onUsernameChange(new_username: String){ username = new_username }
-    fun onPasswordChange(new_password: String){ password = new_password }
+    fun onUsernameChange(newUsername: String) {
+        username = newUsername
+    }
 
-    fun Login(){
-        viewModelScope.launch { repository.authenticateLogin(username,password) }
+    fun onPasswordChange(newPassword: String) {
+        password = newPassword
+    }
+
+    fun login() {
+        viewModelScope.launch { repository.authenticateLogin(username, password) }
     }
 
 
+    companion object {
 
-companion object {
-
-    val Factory = viewModelFactory {
-        initializer {
-            val application = this[AndroidViewModelFactory.APPLICATION_KEY] as CivitasApplication
-            val repository = application.container.repository
-            //val savedStateHandle = this.createSavedStateHandle()
-            LoginViewModel(repository)
+        val Factory = viewModelFactory {
+            initializer {
+                val application =
+                    this[AndroidViewModelFactory.APPLICATION_KEY] as CivitasApplication
+                val repository = application.container.repository
+                //val savedStateHandle = this.createSavedStateHandle()
+                LoginViewModel(repository)
+            }
         }
     }
 }
-}
+
+
 
 

@@ -1,10 +1,15 @@
 package de.cau.inf.se.sopro.ui.options
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,31 +38,51 @@ fun OptionsScreen(navigationType: AppNavigationType,
     ) { innerPadding ->
         OptionsContent(
             modifier = modifier.padding(innerPadding),
-
-            onSave = {
-                navController.navigateTopLevel(AppDestination.YourApplicationDestination)
-
-            }
+            onSave = { navController.navigateTopLevel(AppDestination.YourApplicationDestination) },
+            navController = navController
         )
     }
 }
 
 @Composable
-fun OptionsContent( modifier: Modifier = Modifier, onSave: () -> Unit){
-    Column(modifier = modifier.padding(3.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+fun OptionsContent(
+    modifier: Modifier = Modifier,
+    onSave: () -> Unit,
+    navController: NavHostController
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val def_url = "http://localhost:8080"
+            var new_url by remember { mutableStateOf("") }
 
-        val def_url = "http://localhost:8080"
-        var new_url by remember { mutableStateOf("") } //our new URL has to be transferred onSave
+            //Choose value depending on what looks good. Higher value means more space at the top
+            Spacer(modifier = Modifier.height(48.dp))
 
-        ChangeURLTextField(value = new_url,{new_url = it}, modifier= modifier.fillMaxWidth(), label = { Text(def_url)})
+            ChangeURLTextField(
+                value = new_url,
+                onValueChange = { new_url = it },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(def_url) }
+            )
 
-        SaveButton(onClick = onSave)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SaveButton(onClick = onSave)
         }
-    //add more options, dont know which
 
+        Spacer(Modifier.weight(1f))
+
+        LogoutButton(
+            onClick = { navController.navigateTopLevel(AppDestination.LoginDestination) },
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
-
-

@@ -76,7 +76,7 @@ class RegistrationViewModel(private val applicantRepository: ApplicantRepository
                 userid = 1,
                 username = _uiState.value.username.value,
                 password = _uiState.value.password.value,
-                usertype = Usertype.APPLICANT
+                role = Usertype.APPLICANT
             )
             applicantRepository.saveApplicant(newApplicant)
         }

@@ -74,6 +74,7 @@ fun CivitasApp(
         ?: AppDestination.YourApplicationDestination.route
 
 
+    /*
     val navigationType = when(windowSize) {
         WindowWidthSizeClass.Compact -> {
             AppNavigationType.BOTTOM_NAVIGATION
@@ -88,6 +89,9 @@ fun CivitasApp(
             AppNavigationType.BOTTOM_NAVIGATION
         }
     }
+    */
+
+    val navigationType = AppNavigationType.BOTTOM_NAVIGATION
 
 
     when(navigationType) {

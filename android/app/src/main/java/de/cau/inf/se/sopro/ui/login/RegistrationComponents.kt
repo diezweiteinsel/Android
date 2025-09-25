@@ -1,5 +1,6 @@
 package de.cau.inf.se.sopro.ui.login
 
+import android.widget.Button
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.ui.navigation.AppDestination
 
 
 //All the parts that get displayed on the RegistrationScreen
@@ -123,3 +125,5 @@ data class FormFieldState(
     val isError: Boolean
         get() = errorMessageResId != null
 }
+
+
