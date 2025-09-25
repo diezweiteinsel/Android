@@ -8,7 +8,6 @@ plugins {
     id("com.google.devtools.ksp") version "2.2.0-2.0.2"
 }
 
-
 android {
     namespace = "de.cau.inf.se.sopro"
     compileSdk = 36
@@ -73,6 +72,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.window.size.class1)
@@ -81,7 +81,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.appcompat)
-    ksp(libs.room.compiler)
+
 
     // Navigation-Compose
     implementation(libs.androidx.navigation.compose)
