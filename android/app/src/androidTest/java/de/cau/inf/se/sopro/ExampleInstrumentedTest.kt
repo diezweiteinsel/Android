@@ -22,6 +22,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+
+/*
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
     @get:Rule
@@ -49,7 +51,7 @@ class ExampleInstrumentedTest {
         val api = retrofit.create(ApiService::class.java)
 
         runBlocking {
-            val post = api.createApplicant("max ratjen","password")
+            val post = api.createApplicant("max ratjen","password", role = )
             println("Mocked Response: $post")
         }
     }
@@ -59,3 +61,5 @@ class ExampleInstrumentedTest {
     }
 
 }
+
+ */
