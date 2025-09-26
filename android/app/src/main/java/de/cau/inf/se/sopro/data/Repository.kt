@@ -1,111 +1,92 @@
 package de.cau.inf.se.sopro.data
 
+import androidx.annotation.Nullable
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
-import kotlinx.coroutines.runBlocking
-
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
+import kotlinx.serialization.internal.throwMissingFieldException
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Query
+import java.util.Date
 
 interface Repository{
-    suspend fun checkHealth() : Call<List<String>>
-    suspend fun authenticateLogin(username: String, password: String)
-    suspend fun createApplicant(username: String, password: String)
-    suspend fun getForms() : Call<List<Form>>
-    suspend fun getApplications( ApplicantId: Int, status : Status) : Call<List<Application>>
-    suspend fun createApplication( id: Int, applicantName: String,
-                                   submissionDate: String,
-                                   form: Form,
-                                   status: Status,
-                                   public: Boolean,
-                                   edited: Boolean) : Application
-    suspend fun updateApplication(@Query("id") id: Int)
-    fun validateUsercreation(response: Int)
+    suspend fun checkHealth() : Boolean
+
+    suspend fun authenticateLogin(username: String,  password: String, jwt: String) : Boolean
+    suspend fun createApplicant(username: String,
+                                password: String, role: Usertype)
+    suspend fun getForms(): List<Form>?
+    suspend fun getApplications(
+      createdAt: Date,
+      formId: Int,
+      status : Status,
+      applicantId: Int
+    ): List<Application>?
+    suspend fun createApplication( application: Application)
+    suspend fun updateApplication(application: Application)
+
 }
 class DefRepository( private val apiService : ApiService) : Repository{
-    override suspend fun updateApplication(id: Int) {
-        TODO("Not yet implemented")
+
+    override suspend fun checkHealth(): Boolean{
+        val response = apiService.checkHealth()
+        return response.isSuccessful
     }
 
-    override fun validateUsercreation(response: Int) {
-        TODO("Not yet implemented")
+
+    override suspend fun updateApplication(application: Application) {
+        val response = apiService.updateApplication(application)
+        try {
+            response.isSuccessful
+        }catch (e : IllegalArgumentException){ //is not an IllegalArgumentException
+            print(e)
+        }
     }
 
-    override suspend fun createApplication(
-        id: Int,
-        applicantName: String,
-        submissionDate: String,
-        form: Form,
-        status: Status,
-        public: Boolean,
-        edited: Boolean
-    ): Application {
-        TODO("Not yet implemented")
+    override suspend fun createApplication(application: Application){
+        val response = apiService.createApplication(application)
+
     }
 
-    override suspend fun authenticateLogin(username: String, password: String) {
-        TODO("Not yet implemented")
+    override suspend fun authenticateLogin(username: String, password: String,jwt:String): Boolean {
+        val response = apiService.authenticateLogin(username,password,jwt)
+        //same with db
+        //if(jwt not in DB)
+            //JWT in DB speichern
+        //else{
+        //tuhe nichts  }
+        return response.isSuccessful
     }
 
-    override suspend fun checkHealth(): Call<List<String>> {
-        TODO("Not yet implemented")
-    }
-    override suspend fun createApplicant(username:String,password: String) {
+
+
+    override suspend fun createApplicant(username:String,password: String,role: Usertype) {
 
         val response = apiService.createApplicant(username, password, Usertype.APPLICANT)
         if (response.isSuccessful){
-            print("do nothing")
+            print("success")
         }else{
             print("failed")
         }
     }
 
-
     override suspend fun getApplications(
-        ApplicantId: Int,
-        status: Status
-    ): Call<List<Application>> {
-        TODO("Not yet implemented")
+        createdAt: Date,
+        formId: Int,
+        status : Status,
+        applicantId: Int
+    ): List<Application>? {
+        val response = apiService.getApplications(createdAt,formId,status,applicantId)
+        return response.body()  //da bin ich mir nicht sicher + wir brauchen eine absicherung falls der andere fall eintritt
+
     }
 
-    override suspend fun getForms(): Call<List<Form>> {
-        TODO("Not yet implemented")
+    override suspend fun getForms(): List<Form>? {  //convert forms into objects method will call this
+        val forms = apiService.getForms()
+        return forms.body()
     }
 
-    //private val databasedao : DatabaseDao
+    //private val databaseDao : DatabaseDao
 
-
-    fun main() {
-        val server = MockWebServer()
-        server.start()
-
-        // Enqueue fake response
-        server.enqueue(
-            MockResponse()
-                .setBody("""{"id": 1}""")
-                .setResponseCode(201)
-        )
-
-        // Build Retrofit pointing to the mock server
-        val retrofit = Retrofit.Builder()
-            .baseUrl(server.url("/"))
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
-        val api = retrofit.create(ApiService::class.java)
-
-        runBlocking {
-            val post = api.createApplicant("max ratjen","password",Usertype.APPLICANT)
-            println("Mocked Response: $post")
-        }
-
-        server.shutdown()
-    }
 }

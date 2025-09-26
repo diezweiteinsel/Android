@@ -24,7 +24,7 @@ interface AppContainer {
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
     // This is the default URL of the web backend running locally on the host.
-    private val BASE_URL_LOCALHOST = "http://localhost:8080"
+    private val BASE_URL_LOCALHOST = "http://localhost:8000"
 
     // The Android App running within the emulator can access the web backend
     // running locally on the same host via the loopback address 10.0.2.2
@@ -48,7 +48,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         }).build()
         //creating our API, we are using moshi as a JSON converter because its considered faster and safer then GSON
         val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        val api: ApiService = Retrofit.Builder().baseUrl("https://jsonplaceholder.typicode.com")
+        val api: ApiService = Retrofit.Builder().baseUrl("http://localhost:8000")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(ApiService::class.java)
