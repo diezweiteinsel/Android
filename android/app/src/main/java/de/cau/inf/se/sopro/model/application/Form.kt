@@ -9,5 +9,5 @@ data class Form(
     @PrimaryKey
     val id: Int,
     val name: String,
-    val title: String,
+    val title: String
 )

@@ -9,7 +9,6 @@ enum class Usertype{
     APPLICANT,
     ADMIN
 }
-
 @Serializable
 @Entity
 data class Applicant(
@@ -17,8 +16,8 @@ data class Applicant(
     val userid: Int,
     val username: String,
     val password: String,
-    //val createdAt: Date,
+    //val createdAt: String,
     val role: Usertype,
     val email: String? = null,
-    val jwt: String? = ""
+    val jwt: String? = null
 )
