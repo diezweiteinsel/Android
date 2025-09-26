@@ -11,6 +11,6 @@ interface FormDao {
     @Upsert
     suspend fun saveForm(form : Form) //save forms locally to the db
 
-    @Query("Select * From Form") //get forms locally from the db
+    @Query("Select * From form") //get forms locally from the db
     fun getForms() : Flow<List<Form>>
 }

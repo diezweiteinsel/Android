@@ -59,6 +59,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:3.0.0")
     implementation("com.squareup.moshi:moshi:1.15.2")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
     // OkHttp 5 (BOM)
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
@@ -82,7 +84,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    ksp(libs.room.compiler)
+
 
     // Navigation-Compose
     implementation(libs.androidx.navigation.compose)
@@ -104,4 +106,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+}
+ksp{
+    arg("room.schemaLocation", "$projectDir/schemas");
+    arg("ksp.verbose", "true")
 }
