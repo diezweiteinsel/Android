@@ -5,7 +5,6 @@ import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import de.cau.inf.se.sopro.data.DefRepository
 import de.cau.inf.se.sopro.data.Repository
-import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.network.api.ApiService
 import okhttp3.Credentials
 import okhttp3.Interceptor
@@ -13,7 +12,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-
 
 
 interface AppContainer {

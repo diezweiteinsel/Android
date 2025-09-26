@@ -2,8 +2,8 @@ package de.cau.inf.se.sopro.persistence.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.Upsert
 import androidx.room.Query
+import androidx.room.Upsert
 import de.cau.inf.se.sopro.model.application.Application
 import kotlinx.coroutines.flow.Flow
 
