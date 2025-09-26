@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FormDao {
     @Upsert
-    suspend fun saveForm(form : Form) //
+    suspend fun saveForm(form : Form) //save forms locally to the db
 
-    @Query("Select * From Form") //get forms locally from the db
-    suspend fun getForms() : Flow<List<Form>>
+    @Query("Select * From form") //get forms locally from the db
+    fun getForms() : Flow<List<Form>>
 }

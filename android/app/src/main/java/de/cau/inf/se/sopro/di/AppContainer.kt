@@ -8,6 +8,8 @@ import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.network.api.ApiService
 import de.cau.inf.se.sopro.persistence.LocDatabase
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
+import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
+import de.cau.inf.se.sopro.persistence.dao.FormDao
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -27,7 +29,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     // The Android App running within the emulator can access the web backend
     // running locally on the same host via the loopback address 10.0.2.2
-    private val BASE_URL_LOOPBACK_FOR_EMULATOR = "http://10.0.2.2:8080"
+    private val BASE_URL_LOOPBACK_FOR_EMULATOR = "http://10.0.2.2:8000"
 
     // Set the currently used web backend URL
     private val USED_URL = BASE_URL_LOOPBACK_FOR_EMULATOR
@@ -47,15 +49,17 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         }).build()
         //creating our API, we are using moshi as a JSON converter because its considered faster and safer then GSON
         val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        val api: ApiService = Retrofit.Builder().baseUrl("http://localhost:8000")
+        val api: ApiService = Retrofit.Builder().baseUrl("http://10.0.2.2:8000")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(ApiService::class.java)
 
     private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
+    private val applicationDao: ApplicationDao = LocDatabase.getDatabase(context).applicationDao()
+    private val formDao: FormDao = LocDatabase.getDatabase(context).formDao()
 
     override val repository: Repository by lazy {
-        DefRepository( api)
+        DefRepository( api,applicantDao,applicationDao,formDao)
     }
 
 

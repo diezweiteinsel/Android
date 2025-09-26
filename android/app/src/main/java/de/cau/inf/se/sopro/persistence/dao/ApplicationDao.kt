@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
+import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.application.Application
 import kotlinx.coroutines.flow.Flow
 
@@ -17,7 +18,7 @@ interface ApplicationDao {
     fun getPublicApplications() : Flow<List<Application>>
 
     @Insert
-    suspend fun createApplication(application: Application )
+    suspend fun saveApplication(application: Application)
 
     @Upsert
     suspend fun updateApplication(application: Application)

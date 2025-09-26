@@ -5,6 +5,8 @@ import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
+import okhttp3.Request
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -18,9 +20,9 @@ interface ApiService{
     @GET("api/v1/health") //check if the Database is running
     suspend fun checkHealth() : Response<String>
 
-    @PUT("/api/v1/auth/login") //authenticate the applicant
-    suspend fun authenticateLogin(@Query("username") username: String,@Query("password") password: String ,@Query("jwt") jwt: String): Response<String>
-
+    data class LoginRequest(val username: String, val password: String)
+    @POST("/api/v1/auth/token") //authenticate the applicant
+    suspend fun authenticateLogin(@Body loginRequest: LoginRequest) : Response<String>
     @POST("/api/v1/users") //create new applicant
     suspend fun createApplicant(@Field("username") username: String,
                                 @Field("password") password: String,

@@ -71,7 +71,7 @@ object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
         PrimitiveSerialDescriptor("LocalDateTime", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: LocalDateTime) {
-        // .toString() erzeugt praktischerweise das ISO-Format (z.B. "2025-09-26T15:36:50")
+
         encoder.encodeString(value.toString())
     }
 
