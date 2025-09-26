@@ -27,6 +27,7 @@ import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
+import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +35,8 @@ import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 fun LoginScreen(
     navigationType: AppNavigationType, // TODO: navigation drawer or navigation rail
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+
 ) {
 
     ScreenScaffold(
@@ -43,7 +45,9 @@ fun LoginScreen(
     ) { innerPadding ->
         LoginContent(
             modifier = modifier.padding(innerPadding),
-            navController = navController
+            navController = navController,
+
+
         )
     }
 }
@@ -105,8 +109,7 @@ fun LoginContent(
             )
 
             LoginButton(
-                onClick = { vm.login() }
-
+                onClick = {vm.login(navController)}
             )
 
             GoToRegistrationScreen(navController = navController)

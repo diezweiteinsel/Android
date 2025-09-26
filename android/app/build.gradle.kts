@@ -59,8 +59,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:3.0.0")
     implementation("com.squareup.moshi:moshi:1.15.2")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
+    implementation(libs.androidx.compose.foundation)
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
-
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     // OkHttp 5 (BOM)
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
