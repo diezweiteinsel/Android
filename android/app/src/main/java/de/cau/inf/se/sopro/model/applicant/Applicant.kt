@@ -3,7 +3,8 @@ package de.cau.inf.se.sopro.model.applicant
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
-import java.util.Date
+import java.time.LocalDateTime
+
 enum class Usertype{
     REPORTER,
     APPLICANT,
@@ -17,7 +18,7 @@ data class Applicant(
     val userid: Int,
     val username: String,
     val password: String,
-    //val createdAt: Date,
+    //val createdAt: LocalDateTime,
     val role: Usertype,
     val email: String? = null,
     val jwt: String? = ""

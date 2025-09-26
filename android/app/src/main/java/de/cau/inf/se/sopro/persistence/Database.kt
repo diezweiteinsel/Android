@@ -1,12 +1,14 @@
 package de.cau.inf.se.sopro.persistence
 
 import androidx.room.Database
+import androidx.room.TypeConverters
 import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
 
 @Database(entities = [ApplicantDao::class, ApplicationDao::class, FormDao::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class Database {
 
     abstract val applicationDao: ApplicationDao

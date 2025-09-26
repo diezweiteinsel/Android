@@ -1,21 +1,23 @@
 package de.cau.inf.se.sopro.model.application
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 
 //First idea for an application class, still WIP
-@Entity()
+@Entity(tableName = "") //TODO
 data class Application(
     @PrimaryKey
     val id: Int,
     val applicantId: Int,
     val applicantName: String,
-    val submissionDate: String,
+    val createdAt: LocalDateTime,
     val form: Form,
     val status: Status,
-    val public: Boolean,
-    val edited: Boolean
+    val isPublic: Boolean,
+    val isEdited: Boolean,
+
+    val dynamicAttributes: Map<String, String> = emptyMap()
     )
 
 enum class Status {
