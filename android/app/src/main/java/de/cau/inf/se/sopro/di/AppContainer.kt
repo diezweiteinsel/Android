@@ -5,8 +5,9 @@ import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import de.cau.inf.se.sopro.data.DefRepository
 import de.cau.inf.se.sopro.data.Repository
-import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.network.api.ApiService
+import de.cau.inf.se.sopro.persistence.LocDatabase
+import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -51,6 +52,8 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(ApiService::class.java)
+
+    private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
 
     override val repository: Repository by lazy {
         DefRepository( api)
