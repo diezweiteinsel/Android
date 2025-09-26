@@ -1,18 +1,15 @@
 package de.cau.inf.se.sopro.ui.options
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
@@ -32,14 +31,28 @@ import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 @Composable
 fun OptionsScreen(navigationType: AppNavigationType,
                   navController: NavHostController,
-                  modifier: Modifier = Modifier){
+                  modifier: Modifier = Modifier,
+                  viewModel: OptionsViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.logoutEvent.collect {
+            navController.navigateTopLevel(AppDestination.LoginDestination)
+        }
+    }
+
     ScreenScaffold(
-        titleRes = R.string.options_title
+        titleRes = R.string.options_title,
+        onNavigateBack = { navController.popBackStack() }
     ) { innerPadding ->
         OptionsContent(
             modifier = modifier.padding(innerPadding),
             onSave = { navController.navigateTopLevel(AppDestination.YourApplicationDestination) },
-            navController = navController
+            uiState = uiState,
+            onLogoutClick = viewModel::onLogoutClick,
+            onConfirmLogout = viewModel::onConfirmLogout,
+            onDismissLogoutDialog = viewModel::onDismissLogoutDialog
         )
     }
 }
@@ -48,7 +61,10 @@ fun OptionsScreen(navigationType: AppNavigationType,
 fun OptionsContent(
     modifier: Modifier = Modifier,
     onSave: () -> Unit,
-    navController: NavHostController
+    uiState: OptionsUiState,
+    onLogoutClick: () -> Unit,
+    onConfirmLogout: () -> Unit,
+    onDismissLogoutDialog: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -60,17 +76,17 @@ fun OptionsContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val def_url = "http://localhost:8080"
-            var new_url by remember { mutableStateOf("") }
+            val defUrl = "http://localhost:8080"
+            var newUrl by remember { mutableStateOf("") }
 
             //Choose value depending on what looks good. Higher value means more space at the top
             Spacer(modifier = Modifier.height(48.dp))
 
             ChangeURLTextField(
-                value = new_url,
-                onValueChange = { new_url = it },
+                value = newUrl,
+                onValueChange = { newUrl = it },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text(def_url) }
+                label = { Text(defUrl) }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -81,8 +97,15 @@ fun OptionsContent(
         Spacer(Modifier.weight(1f))
 
         LogoutButton(
-            onClick = { navController.navigateTopLevel(AppDestination.LoginDestination) },
+            onShowDialog = onLogoutClick,
             modifier = Modifier.fillMaxWidth()
+        )
+    }
+
+    if (uiState.showLogoutDialog) {
+        LogoutConfirmationDialog(
+            onConfirm = onConfirmLogout,
+            onDismiss = onDismissLogoutDialog
         )
     }
 }
