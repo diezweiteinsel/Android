@@ -8,8 +8,12 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
+import de.cau.inf.se.sopro.ui.navigation.AppDestination
+import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
+import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import kotlinx.coroutines.launch
 
 
@@ -27,8 +31,14 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         password = newPassword
     }
 
-    fun login() {
-        viewModelScope.launch { repository.authenticateLogin(username, password) }
+    fun login(navController: NavHostController) {
+        viewModelScope.launch {
+            if(repository.authenticateLogin(username, password)){
+                navController.navigateTopLevel(AppDestination.YourApplicationDestination)
+        }else{
+                error = "Login failed"
+            }
+        }
     }
 
 

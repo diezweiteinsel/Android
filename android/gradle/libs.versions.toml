@@ -29,6 +29,7 @@ foundationLayout = "1.9.1"
 appcompat = "1.7.1"
 firebaseAppdistributionGradle = "5.1.1"
 lifecycleViewmodelKtx = "2.9.4"
+foundationVersion = "1.9.2"
 
 [libraries]
 # AndroidX / Compose
@@ -75,6 +76,7 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebaseAppdistributionGradle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

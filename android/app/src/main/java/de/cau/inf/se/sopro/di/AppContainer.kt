@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.di
 
 import android.content.Context
+import androidx.compose.foundation.content.MediaType
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import de.cau.inf.se.sopro.data.DefRepository
@@ -10,11 +11,15 @@ import de.cau.inf.se.sopro.persistence.LocDatabase
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import kotlinx.serialization.json.Json
 import okhttp3.Credentials
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 
@@ -48,12 +53,17 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             chain.proceed(newRequest)
         }).build()
         //creating our API, we are using moshi as a JSON converter because its considered faster and safer then GSON
-        val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        val api: ApiService = Retrofit.Builder().baseUrl("http://10.0.2.2:8000")
+        //val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        /*val api: ApiService = Retrofit.Builder().baseUrl("http://10.0.2.2:8000")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(ApiService::class.java)
-
+*/      private val retrofit: Retrofit = Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(authClient)
+            .baseUrl(USED_URL)
+            .build()
+    private val api: ApiService = retrofit.create(ApiService::class.java)
     private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
     private val applicationDao: ApplicationDao = LocDatabase.getDatabase(context).applicationDao()
     private val formDao: FormDao = LocDatabase.getDatabase(context).formDao()
