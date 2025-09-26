@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Settings
@@ -132,8 +134,17 @@ fun CivitasTopAppBar(
     CenterAlignedTopAppBar(
         title = { Text(title) },
         modifier = modifier,
-        scrollBehavior = scrollBehavior
-
+        scrollBehavior = scrollBehavior,
+        navigationIcon = {
+            if (onNavigateBack != null) {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        }
     )
 }
 
@@ -236,7 +247,7 @@ data class NavigationItemContent(
 )
 
 private val drawerItems = listOf(
-    NavigationItemContent(AppDestination.YourApplicationDestination,  Icons.Default.MailOutline,    R.string.your_application_title),
+    NavigationItemContent(AppDestination.YourApplicationDestination,  Icons.Default.Email,    R.string.your_application_title),
     NavigationItemContent(AppDestination.SubmitApplicationDestination,  Icons.Default.Edit,    R.string.submit_application_title),
     NavigationItemContent(AppDestination.PublicApplicationDestination, Icons.Default.LocationOn, R.string.public_application_title),
     NavigationItemContent(AppDestination.OptionsDestination,Icons.Default.Settings,R.string.options_title)
