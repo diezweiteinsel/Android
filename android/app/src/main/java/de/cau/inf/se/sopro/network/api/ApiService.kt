@@ -5,25 +5,33 @@ import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
+import kotlinx.serialization.Serializable
 import okhttp3.Request
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 import java.util.Date
 
 interface ApiService{
+
     @GET("api/v1/health") //check if the Database is running
     suspend fun checkHealth() : Response<String>
-
-    data class LoginRequest(val username: String, val password: String)
-    @POST("/api/v1/auth/token") //authenticate the applicant
-    suspend fun authenticateLogin(@Body loginRequest: LoginRequest) : Response<String>
-    @POST("/api/v1/users") //create new applicant
+    //val grant_type: String = "password",
+    @FormUrlEncoded
+    @POST("/api/v1/auth/token")
+    suspend fun authenticateLogin(
+        @Field("grant_type") grantType: String = "password",
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): Response<LoginResponse>
+     @POST("/api/v1/users") //create new applicant
     suspend fun createApplicant(@Field("username") username: String,
                                 @Field("password") password: String,
                                 @Field("role") role: Usertype) : Response<Int>
@@ -49,3 +57,11 @@ interface ApiService{
 
 
 }
+
+//data classes
+@Serializable
+data class LoginResponse(
+    val access_token: String,
+    val token_type: String,
+    val roles: List<String>
+)

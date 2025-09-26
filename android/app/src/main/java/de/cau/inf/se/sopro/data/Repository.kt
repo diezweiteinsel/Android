@@ -62,8 +62,8 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
     }
 
     override suspend fun authenticateLogin(username: String, password: String): Boolean {
-        val loginRequest = ApiService.LoginRequest(username, password)
-        val response = apiService.authenticateLogin(loginRequest)
+
+        val response = apiService.authenticateLogin(username = username, password = password)
         if(!response.isSuccessful){
             return false
         }
