@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 interface ApplicationDao {
 
     @Query("Select * from application where applicantId=:applicantId ")
-    suspend fun getApplicantApplications(applicantId: Int) : Flow<List<Application>>
+    fun getApplicantApplications(applicantId: Int) : Flow<List<Application>>
 
     @Query("Select * from application where public = 1")
-    suspend fun getPublicApplications() : Flow<List<Application>>
+    fun getPublicApplications() : Flow<List<Application>>
 
     @Insert
-    suspend fun createApplication(application: Application )
+    suspend fun saveApplication(application: Application)
 
     @Upsert
     suspend fun updateApplication(application: Application)

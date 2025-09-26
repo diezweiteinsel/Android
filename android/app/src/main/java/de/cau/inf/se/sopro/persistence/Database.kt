@@ -7,9 +7,10 @@ import androidx.room.Room
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
-
-
-@Database(entities = [ApplicantDao::class, ApplicationDao::class, FormDao::class], version = 1)
+import de.cau.inf.se.sopro.model.applicant.Applicant
+import de.cau.inf.se.sopro.model.application.Application
+import de.cau.inf.se.sopro.model.application.Form
+@Database(entities = [Applicant::class, Application::class, Form::class], version = 1)
 abstract class LocDatabase : RoomDatabase(){
 
     abstract fun applicationDao(): ApplicationDao

@@ -6,6 +6,7 @@ import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
+import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import kotlinx.serialization.internal.throwMissingFieldException
 import retrofit2.Call
 import java.util.Date
@@ -27,7 +28,7 @@ interface Repository{
     suspend fun updateApplication(application: Application)
 
 }
-class DefRepository( private val apiService : ApiService) : Repository{
+class DefRepository( private val apiService : ApiService, private val applicantDao: ApplicantDao) : Repository{
 
     override suspend fun checkHealth(): Boolean{
         val response = apiService.checkHealth()
@@ -51,7 +52,7 @@ class DefRepository( private val apiService : ApiService) : Repository{
 
     override suspend fun authenticateLogin(username: String, password: String,jwt:String): Boolean {
         val response = apiService.authenticateLogin(username,password,jwt)
-        //same with db
+        applicantDao.saveJwt(response.body()!!)
         //if(jwt not in DB)
             //JWT in DB speichern
         //else{
