@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.yourApplication
+package de.cau.inf.se.sopro.ui.publicApplication
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ApplicationCard(application: Application) {
+fun PublicApplicationCard(application: Application) {
 
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -51,18 +51,18 @@ fun ApplicationCard(application: Application) {
                 text = "Submitted: ${application.createdAt.format(dateFormatter)}",
                 style = MaterialTheme.typography.bodySmall
             )
+
             Text(
-                text = "Status: ${application.status}",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+                text = "By: ${application.applicantName}",
+                style = MaterialTheme.typography.bodyMedium
             )
 
-            if (application.isPublic)
-                Text(
-                    text = "This application is public and visible to anyone.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+
+            Text(
+                text = "Wow! Look at that ${application.category}!",
+                style = MaterialTheme.typography.bodyMedium
+            )
+
 
 
             if (application.dynamicAttributes.isNotEmpty()) {
@@ -79,14 +79,9 @@ fun ApplicationCard(application: Application) {
                         application.dynamicAttributes.forEach { (key, value) ->
                             Text(text = "• $key: $value")
                         }
-
                     }
-
                 }
             }
-
-
-
         }
     }
 }

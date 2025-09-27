@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "63e1ac617706a50e65dcc631111f4a47",
+    "identityHash": "338aa344d151e03337e844616bc1fd2f",
     "entities": [
       {
         "tableName": "Application",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `applicantId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `applicantName` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `status` TEXT NOT NULL, `isPublic` INTEGER NOT NULL, `isEdited` INTEGER NOT NULL, `dynamicAttributes` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`applicantId`) REFERENCES `Applicant`(`userid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `applicantId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `category` TEXT NOT NULL, `applicantName` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `status` TEXT NOT NULL, `isPublic` INTEGER NOT NULL, `isEdited` INTEGER NOT NULL, `dynamicAttributes` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`applicantId`) REFERENCES `Applicant`(`userid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,6 +24,12 @@
             "fieldPath": "formId",
             "columnName": "formId",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -167,7 +173,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '63e1ac617706a50e65dcc631111f4a47')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '338aa344d151e03337e844616bc1fd2f')"
     ]
   }
 }

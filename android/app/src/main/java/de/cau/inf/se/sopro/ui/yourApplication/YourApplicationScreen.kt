@@ -41,9 +41,7 @@ fun YourApplicationScreen(
     modifier: Modifier = Modifier,
     viewModel: YourApplicationViewModel = viewModel()
 ) {
-    val applications by viewModel.applicantApplications.collectAsStateWithLifecycle()
-
-
+    val applicationsState by viewModel.applications.collectAsStateWithLifecycle()
 
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
     // navigationType and navController stay the same. This avoids unnecessary work.
@@ -55,7 +53,7 @@ fun YourApplicationScreen(
         bottomBar = bottomBar
     ) { innerPadding ->
         YourApplicationContent(
-            applications = applications,
+            applications = applicationsState,
             modifier.padding(innerPadding)
         )
     }
@@ -68,42 +66,12 @@ fun YourApplicationContent(
     applications: List<Application>,
     modifier: Modifier = Modifier
 ) {
-
-    if (applications.isEmpty()) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Keine Anträge gefunden.")
-        }
-        return
-    }
-
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(vertical = 8.dp)
-    ) {
-        items(applications) { application ->
+    LazyColumn(modifier = modifier) {
+        items(
+            items = applications,
+            key = { application -> application.id }
+        ) { application ->
             ApplicationCard(application = application)
         }
-    }
-}
-
-
-
-// Preview
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true, name = "YourApplicationContent Preview")
-@Composable
-private fun YourApplicationContentPreview() {
-
-    val fakeApplications = listOf(
-        Application(id = 1, applicantId = 1, applicantName = "Max Mustermann", formId = 69, createdAt = LocalDateTime.now(), status = Status.PENDING, isPublic = false, isEdited = false, dynamicAttributes = mapOf("Grund" to "Antrag auf Sonderurlaub")),
-        Application(id = 2, applicantId = 1, applicantName = "Max Mustermann", formId = 161, createdAt = LocalDateTime.now(), status = Status.APPROVED, isPublic = false, isEdited = false)
-    )
-
-    CivitasAppTheme {
-        YourApplicationContent(applications = fakeApplications)
     }
 }
