@@ -1,5 +1,7 @@
 package de.cau.inf.se.sopro.ui.login
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.cau.inf.se.sopro.R
@@ -10,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.time.LocalDateTime
 
 class RegistrationViewModel(private val applicantRepository: ApplicantRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(RegistrationUiState())
@@ -39,6 +42,7 @@ class RegistrationViewModel(private val applicantRepository: ApplicantRepository
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun validateAndRegister(): Boolean {
         val username = _uiState.value.username
         val password = _uiState.value.password

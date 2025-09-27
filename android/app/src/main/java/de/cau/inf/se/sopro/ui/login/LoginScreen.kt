@@ -35,8 +35,7 @@ import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 fun LoginScreen(
     navigationType: AppNavigationType, // TODO: navigation drawer or navigation rail
     navController: NavHostController,
-    modifier: Modifier = Modifier,
-
+    modifier: Modifier = Modifier
 ) {
 
     ScreenScaffold(
@@ -45,9 +44,7 @@ fun LoginScreen(
     ) { innerPadding ->
         LoginContent(
             modifier = modifier.padding(innerPadding),
-            navController = navController,
-
-
+            navController = navController
         )
     }
 }

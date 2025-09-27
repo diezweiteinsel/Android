@@ -1,6 +1,8 @@
 package de.cau.inf.se.sopro.data
 
+import android.os.Build
 import androidx.annotation.Nullable
+import androidx.annotation.RequiresApi
 import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
@@ -13,6 +15,7 @@ import de.cau.inf.se.sopro.persistence.dao.FormDao
 import kotlinx.serialization.internal.throwMissingFieldException
 import kotlinx.serialization.json.Json
 import retrofit2.Call
+import java.time.LocalDateTime
 import java.util.Date
 
 interface Repository{
@@ -61,6 +64,7 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun authenticateLogin(username: String, password: String): Boolean {
 
         val response = apiService.authenticateLogin(username = username, password = password)
@@ -71,15 +75,16 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
             return false
         }
         val jwt = Json.encodeToString(response.body())
-        applicantDao.saveJwt(Applicant(1,username,password,Usertype.APPLICANT,jwt = jwt))
+        applicantDao.saveJwt(Applicant(1,username,password,LocalDateTime.now(),Usertype.APPLICANT,jwt = jwt))
         return response.isSuccessful
 
     }
 
 
 
-    override suspend fun createApplicant(username:String,password: String,role: Usertype) {
-        applicantDao.saveApplicant(Applicant(1,username,password,role))
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun createApplicant(username:String, password: String, role: Usertype) {
+        applicantDao.saveApplicant(Applicant(1,username,password,LocalDateTime.now(),role))
         val response = apiService.createApplicant(username, password, Usertype.APPLICANT)
         if (response.isSuccessful){
             print("success")

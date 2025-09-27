@@ -23,7 +23,6 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 
-
 interface AppContainer {
     val repository : Repository
 }

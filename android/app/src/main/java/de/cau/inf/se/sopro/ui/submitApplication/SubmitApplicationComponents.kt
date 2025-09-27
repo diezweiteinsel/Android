@@ -8,8 +8,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import de.cau.inf.se.sopro.ui.utils.DynamicSelectTextField
 import de.cau.inf.se.sopro.R
+import de.cau.inf.se.sopro.ui.utils.DynamicSelectTextField
 
 @Composable
 fun SubmitApplicationCategory(
