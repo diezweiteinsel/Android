@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.yourApplication
+package de.cau.inf.se.sopro.ui.publicApplication
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
-class YourApplicationViewModel : ViewModel() {
+class PublicApplicationViewModel : ViewModel() {
     private val _applications = MutableStateFlow<List<Application>>(emptyList())
 
     val applications: StateFlow<List<Application>> = _applications
@@ -26,9 +26,9 @@ class YourApplicationViewModel : ViewModel() {
 
         viewModelScope.launch {
             _applications.value = listOf(
-                Application(1, 4, 1, "Fire", "Felix", LocalDateTime.now(), Status.APPROVED, true, false),
-                Application(2, 6, 2, "Dog", "Max", LocalDateTime.now().minusDays(3), Status.REJECTED, false, false),
-                Application(3, 9, 3, "Dog", "Felix", LocalDateTime.now().minusWeeks(2), Status.PENDING, false, false)
+                Application(1, 4, 1, "Fire", "Felix", LocalDateTime.now(), Status.APPROVED, true, false, mapOf("Beschreibung" to "Das wird so ein cooles Feuer wow.")),
+                Application(2, 6, 2, "Dog", "Bene", LocalDateTime.now().minusDays(3), Status.APPROVED, true, false),
+                Application(3, 9, 3, "Dog", "Paul", LocalDateTime.now().minusWeeks(2), Status.APPROVED, true, false)
             )
         }
     }
