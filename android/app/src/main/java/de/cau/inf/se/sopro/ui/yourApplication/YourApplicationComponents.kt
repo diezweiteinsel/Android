@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ApplicationCard(application: Application) {
-    // Der Formatter, um das Datum schön anzuzeigen
+
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm 'Uhr'")
 
     Card(
@@ -32,15 +32,14 @@ fun ApplicationCard(application: Application) {
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp) // Abstand zwischen Elementen
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Feste Attribute anzeigen
             Text(
-                text = "Antrag von: ${application.applicantName}",
+                text = application.category,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "Eingereicht am: ${application.createdAt.format(dateFormatter)}",
+                text = "Submitted: ${application.createdAt.format(dateFormatter)}",
                 style = MaterialTheme.typography.bodySmall
             )
             Text(
@@ -49,16 +48,21 @@ fun ApplicationCard(application: Application) {
                 fontWeight = FontWeight.Bold
             )
 
-            // Trennlinie vor den dynamischen Attributen
+            if (application.isPublic)
+                Text(
+                    text = "This application is public and visible to anyone",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
-            // Dynamische Attribute anzeigen, falls vorhanden
             if (application.dynamicAttributes.isNotEmpty()) {
                 Text(
-                    text = "Zusätzliche Informationen:",
+                    text = "More information:",
                     style = MaterialTheme.typography.labelMedium
                 )
-                // Durch die Map iterieren und jedes Attribut anzeigen
+
                 application.dynamicAttributes.forEach { (key, value) ->
                     Text(text = "• $key: $value")
                 }

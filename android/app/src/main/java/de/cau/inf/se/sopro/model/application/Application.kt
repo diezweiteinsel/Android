@@ -24,6 +24,7 @@ data class Application(
     val id: Int,
     val applicantId: Int,
     val formId: Int,
+    val category: String,
     val applicantName: String,
 
     @Serializable(with = LocalDateTimeSerializer::class)
