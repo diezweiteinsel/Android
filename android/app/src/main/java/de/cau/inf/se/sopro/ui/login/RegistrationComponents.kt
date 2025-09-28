@@ -42,6 +42,27 @@ fun NewUsernameTextField(
 }
 
 @Composable
+fun EmailTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = label,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        singleLine = true,
+        isError = isError,
+        supportingText = supportingText
+    )
+}
+
+@Composable
 fun NewPasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
@@ -115,8 +136,10 @@ fun GoToLoginScreen(navController: NavController) {
 
 data class RegistrationUiState(
     val username: FormFieldState = FormFieldState(),
+    val email: FormFieldState = FormFieldState(),
     val password: FormFieldState = FormFieldState(),
-    val confirmPassword: FormFieldState = FormFieldState()
+    val confirmPassword: FormFieldState = FormFieldState(),
+    val registrationError: String? = null
 )
 
 data class FormFieldState(

@@ -1,7 +1,7 @@
 package de.cau.inf.se.sopro.data
 
 import android.os.Build
-import androidx.annotation.Nullable
+import android.util.Log
 import androidx.annotation.RequiresApi
 import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.applicant.Usertype
@@ -9,21 +9,23 @@ import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
+import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
-import kotlinx.serialization.internal.throwMissingFieldException
 import kotlinx.serialization.json.Json
-import retrofit2.Call
 import java.time.LocalDateTime
 import java.util.Date
 
 interface Repository{
     suspend fun checkHealth() : Boolean
 
-    suspend fun authenticateLogin(username: String,  password: String) : Boolean
+    suspend fun authenticateLogin(username: String,
+                                  password: String) : Boolean
     suspend fun createApplicant(username: String,
-                                password: String, role: Usertype)
+                                email: String,
+                                password: String,
+                                role: Usertype): Boolean
     suspend fun getForms(): List<Form>?
     suspend fun getApplications(
       createdAt: Date,
@@ -35,8 +37,8 @@ interface Repository{
     suspend fun updateApplication(application: Application)
 
 }
-class DefRepository(private val apiService : ApiService, private val applicantDao: ApplicantDao
-                    , private val applicationDao: ApplicationDao, private val formDao: FormDao) : Repository{
+class DefRepository(private val apiService : ApiService, private val applicantDao: ApplicantDao,
+                    private val applicationDao: ApplicationDao, private val formDao: FormDao) : Repository{
 
     override suspend fun checkHealth(): Boolean{
         val response = apiService.checkHealth()
@@ -75,7 +77,8 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
             return false
         }
         val jwt = Json.encodeToString(response.body())
-        applicantDao.saveJwt(Applicant(1,username,password,LocalDateTime.now(),Usertype.APPLICANT,jwt = jwt))
+        applicantDao.saveJwt(Applicant(1,username,password,LocalDateTime.now(),Usertype.APPLICANT,
+            jwt = jwt))
         return response.isSuccessful
 
     }
@@ -83,13 +86,42 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun createApplicant(username:String, password: String, role: Usertype) {
-        applicantDao.saveApplicant(Applicant(1,username,password,LocalDateTime.now(),role))
-        val response = apiService.createApplicant(username, password, Usertype.APPLICANT)
-        if (response.isSuccessful){
-            print("success")
-        }else{
-            print("failed")
+    override suspend fun createApplicant(
+        username: String,
+        email: String,
+        password: String,
+        role: Usertype
+    ): Boolean {
+        try {
+            val requestBody = CreateApplicantRequest(
+                username = username,
+                email = email,
+                password = password,
+                role = role
+            )
+
+            Log.d("Repository", "Request body: $requestBody")
+
+            val response = apiService.createApplicant(requestBody)
+
+            if (response.isSuccessful) {
+                val newUserId = response.body()?.user_id
+                Log.d("Repository", "User created successfully with ID: $newUserId")
+
+                applicantDao.saveApplicant(Applicant(newUserId, username, password, LocalDateTime.now(), role))
+
+                return true
+            } else {
+
+                val errorCode = response.code()
+                val errorMessage = response.errorBody()?.string()
+                Log.e("Repository", "Server registration failed! Code: $errorCode, Message: $errorMessage")
+
+                return false
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "An exception occurred during registration: ${e.message}", e)
+            return false
         }
     }
 
