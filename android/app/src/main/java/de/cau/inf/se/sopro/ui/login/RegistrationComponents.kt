@@ -116,7 +116,8 @@ fun GoToLoginScreen(navController: NavController) {
 data class RegistrationUiState(
     val username: FormFieldState = FormFieldState(),
     val password: FormFieldState = FormFieldState(),
-    val confirmPassword: FormFieldState = FormFieldState()
+    val confirmPassword: FormFieldState = FormFieldState(),
+    val registrationError: String? = null
 )
 
 data class FormFieldState(

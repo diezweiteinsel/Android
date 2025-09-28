@@ -23,7 +23,10 @@ interface Repository{
 
     suspend fun authenticateLogin(username: String,  password: String) : Boolean
     suspend fun createApplicant(username: String,
-                                password: String, role: Usertype)
+                                email: String,
+                                password: String,
+                                role: Usertype
+    ): Boolean
     suspend fun getForms(): List<Form>?
     suspend fun getApplications(
       createdAt: Date,
@@ -35,8 +38,8 @@ interface Repository{
     suspend fun updateApplication(application: Application)
 
 }
-class DefRepository(private val apiService : ApiService, private val applicantDao: ApplicantDao
-                    , private val applicationDao: ApplicationDao, private val formDao: FormDao) : Repository{
+class DefRepository(private val apiService : ApiService, private val applicantDao: ApplicantDao,
+                    private val applicationDao: ApplicationDao, private val formDao: FormDao) : Repository{
 
     override suspend fun checkHealth(): Boolean{
         val response = apiService.checkHealth()
@@ -83,13 +86,20 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun createApplicant(username:String, password: String, role: Usertype) {
+    override suspend fun createApplicant(
+        username: String,
+        email: String,
+        password: String,
+        role: Usertype
+    ): Boolean {
         applicantDao.saveApplicant(Applicant(1,username,password,LocalDateTime.now(),role))
-        val response = apiService.createApplicant(username, password, Usertype.APPLICANT)
+        val response = apiService.createApplicant(username, email, password, Usertype.APPLICANT)
         if (response.isSuccessful){
             print("success")
+            return true
         }else{
             print("failed")
+            return false
         }
     }
 

@@ -1,5 +1,7 @@
 package de.cau.inf.se.sopro.ui.login
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,13 +30,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
-import de.cau.inf.se.sopro.data.ApplicantRepository
+import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(
@@ -41,15 +45,17 @@ fun RegistrationScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-
-    val context = LocalContext.current
-    val repository = ApplicantRepository(context.applicationContext)
-
-    val viewModel: RegistrationViewModel = viewModel(
-        factory = RegistrationViewModel.Factory(repository)
-    )
+    val viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.Factory)
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = navController, key2 = viewModel) {
+        viewModel.registrationSuccess.collect { success ->
+            if (success) {
+                navController.navigateTopLevel(AppDestination.LoginDestination)
+            }
+        }
+    }
 
     ScreenScaffold(
         titleRes = R.string.registration_title,
@@ -61,11 +67,7 @@ fun RegistrationScreen(
             onUserNameChanged = viewModel::onUsernameChanged,
             onPasswordChanged = viewModel::onPasswordChanged,
             onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
-            onRegistrationClick = {
-                if (viewModel.validateAndRegister()) {
-                    navController.navigateTopLevel(AppDestination.LoginDestination)
-                }
-            },
+            onRegistrationClick = viewModel::onRegisterClick,
             navController = navController
         )
     }

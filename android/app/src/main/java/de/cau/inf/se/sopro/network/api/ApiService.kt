@@ -31,8 +31,11 @@ interface ApiService{
         @Field("username") username: String,
         @Field("password") password: String
     ): Response<LoginResponse>
+
+    @FormUrlEncoded
      @POST("/api/v1/users") //create new applicant
     suspend fun createApplicant(@Field("username") username: String,
+                                @Field("username") email: String,
                                 @Field("password") password: String,
                                 @Field("role") role: Usertype) : Response<Int>
 
@@ -49,7 +52,7 @@ interface ApiService{
     ) : Response<List<Application>>
 
     @POST("/api/v1/applications")
-    suspend fun createApplication( application: Application) : Response<Int>
+    suspend fun createApplication(application: Application) : Response<Int>
 
 
     @PUT("/api/v1/applications/{applicationId}")
@@ -61,7 +64,7 @@ interface ApiService{
 //data classes
 @Serializable
 data class LoginResponse(
-    val access_token: String,
-    val token_type: String,
+    val accessToken: String,
+    val tokenType: String,
     val roles: List<String>
 )
