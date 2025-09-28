@@ -72,8 +72,8 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
         }
 
         val passwordError = when {
-            (password.value.length < 6) -> R.string.password_too_short
             (password.value.isBlank()) -> R.string.password_is_empty
+            (password.value.length < 6) -> R.string.password_too_short
             else -> null
         }
 
