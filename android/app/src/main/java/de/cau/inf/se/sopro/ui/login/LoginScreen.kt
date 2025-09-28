@@ -48,8 +48,8 @@ fun LoginScreen(
     LaunchedEffect(key1 = navController, key2 = viewModel) {
         viewModel.loginSuccess.collect { success ->
             if (success) {
-                navController.navigate(AppDestination.YourApplicationDestination) {
-                    popUpTo(AppDestination.LoginDestination) {
+                navController.navigate(AppDestination.YourApplicationDestination.route) {
+                    popUpTo(AppDestination.LoginDestination.route) {
                         inclusive = true
                     }
                 }
