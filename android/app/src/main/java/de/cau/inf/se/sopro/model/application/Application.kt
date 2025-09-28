@@ -3,10 +3,10 @@ package de.cau.inf.se.sopro.model.application
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.persistence.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
-import de.cau.inf.se.sopro.model.applicant.Applicant
 
 //First idea for an application class, still WIP
 @Serializable //Lets us turn the attributes into a JSON
