@@ -13,7 +13,6 @@ import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
-import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import kotlinx.coroutines.launch
 
 
