@@ -8,6 +8,7 @@ import de.cau.inf.se.sopro.persistence.LocDatabase
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import de.cau.inf.se.sopro.persistence.dao.BlockDao
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -45,24 +46,23 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             val newRequest: Request = builder.build()
             chain.proceed(newRequest)
         }).build()
-        //creating our API, we are using moshi as a JSON converter because its considered faster and safer then GSON
-        //val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        /*val api: ApiService = Retrofit.Builder().baseUrl("http://10.0.2.2:8000")
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-            .create(ApiService::class.java)
-*/      private val retrofit: Retrofit = Retrofit.Builder()
+        private val retrofit: Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .client(authClient)
             .baseUrl(USED_URL)
             .build()
+
+    //Initializing the api and our daos before creating our Default Repository, where all the processing
+    //is done
     private val api: ApiService = retrofit.create(ApiService::class.java)
     private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
     private val applicationDao: ApplicationDao = LocDatabase.getDatabase(context).applicationDao()
     private val formDao: FormDao = LocDatabase.getDatabase(context).formDao()
+    //private val blockDao: BlockDao = LocDatabase.getDatabase(context).blockDao()
+
 
     override val repository: Repository by lazy {
-        DefRepository( api,applicantDao,applicationDao,formDao)
+        DefRepository( api,applicantDao,applicationDao,formDao) //,blockDao
     }
 
 

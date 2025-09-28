@@ -16,6 +16,7 @@ interface ApplicantDao {
 
     @Query("Select userid from applicant")
     fun getUserId() : Int
+
     @Upsert
     suspend fun saveJwt(applicant: Applicant)
 

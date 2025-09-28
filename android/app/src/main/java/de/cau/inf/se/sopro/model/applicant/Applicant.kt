@@ -19,10 +19,8 @@ data class Applicant(
     val userid: Int?,
     val username: String,
     val password: String,
-
     @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime? = null,
-
     val role: Usertype,
     val email: String? = null,
     val jwt: String? = null
