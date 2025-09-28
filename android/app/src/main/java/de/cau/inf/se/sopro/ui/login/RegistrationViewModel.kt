@@ -67,6 +67,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
         val confirmPassword = _uiState.value.confirmPassword
 
         val usernameError = when {
+            (username.value.isBlank()) -> R.string.username_is_empty
             (username.value.length < 4) -> R.string.username_too_short
             else -> null
         }
@@ -86,7 +87,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
             it.copy(
                 username = it.username.copy(errorMessageResId = usernameError),
                 password = it.password.copy(errorMessageResId = passwordError),
-                confirmPassword = it.confirmPassword.copy(errorMessageResId = confirmPasswordError),
+                confirmPassword = it.confirmPassword.copy(errorMessageResId = confirmPasswordError)
             )
         }
 

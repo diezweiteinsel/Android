@@ -32,11 +32,13 @@ fun LoginButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun UserNameTextField(
+fun UsernameTextField(
     value : String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -44,7 +46,9 @@ fun UserNameTextField(
         modifier = modifier,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true
+        singleLine = true,
+        isError = isError,
+        supportingText = supportingText
     )
 }
 
@@ -53,7 +57,9 @@ fun PasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -62,7 +68,9 @@ fun PasswordTextField(
         label = label,
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true
+        singleLine = true,
+        isError = isError,
+        supportingText = supportingText
     )
 }
 
@@ -119,4 +127,19 @@ private fun LoginScreenPreview() {
             navController = navController
         )
     }
+}
+
+data class LoginUiState(
+    val username: FormFieldState = FormFieldState(),
+    val password: FormFieldState = FormFieldState(),
+    val loginError: String? = null
+)
+
+data class LoginFormFieldState(
+    val value: String = "",
+    val errorMessageResId: Int? = null
+) {
+
+    val isError: Boolean
+        get() = errorMessageResId != null
 }

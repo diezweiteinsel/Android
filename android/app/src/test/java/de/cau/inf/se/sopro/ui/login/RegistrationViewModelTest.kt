@@ -39,7 +39,7 @@ class RegistrationViewModelTest {
     }
 
     @Test
-    fun `when onUsernameChanged is called, uiState updates username`() {
+    fun onUsernameChanged_isCalled_uiStateUpdatesUsername() {
         // Arrange
         val newUsername = "testuser"
 
@@ -52,7 +52,7 @@ class RegistrationViewModelTest {
     }
 
     @Test
-    fun `when onPasswordChanged is called, uiState updates password`() {
+    fun onPasswordChanged_isCalled_uiStateUpdatesPassword() {
         // Arrange
         val password = "testpassword"
 
@@ -65,7 +65,7 @@ class RegistrationViewModelTest {
     }
 
     @Test
-    fun `when onConfirmPasswordChanged is called, uiState updates confirmPassword`() {
+    fun onConfirmPasswordChanged_isCalled_uiStateUpdatesConfirmPassword() {
         // Arrange
         val confirmPassword = "testpassword"
 

@@ -21,7 +21,7 @@ interface Repository{
     suspend fun checkHealth() : Boolean
 
     suspend fun authenticateLogin(username: String,
-                                  password: String) : Boolean
+                                  password: String) : LoginResult
     suspend fun createApplicant(username: String,
                                 email: String,
                                 password: String,
@@ -67,20 +67,34 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun authenticateLogin(username: String, password: String): Boolean {
+    override suspend fun authenticateLogin(username: String, password: String): LoginResult {
+        return try {
+            val response = apiService.authenticateLogin(username = username, password = password)
 
-        val response = apiService.authenticateLogin(username = username, password = password)
-        if(!response.isSuccessful){
-            return false
+            if (response.isSuccessful) {
+                val jwt = Json.encodeToString(response.body())
+                applicantDao.saveJwt(
+                    Applicant(
+                        1,
+                        username,
+                        password,
+                        LocalDateTime.now(),
+                        Usertype.APPLICANT,
+                        jwt = jwt
+                    )
+                )
+                LoginResult.Success
+            } else {
+                when (response.code()) {
+                    404 -> LoginResult.UserNotFound
+                    401, 403 -> LoginResult.WrongPassword
+                    else -> LoginResult.GenericError
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Authentication failed with an exception", e)
+            LoginResult.GenericError
         }
-        if(response.code() == 404){
-            return false
-        }
-        val jwt = Json.encodeToString(response.body())
-        applicantDao.saveJwt(Applicant(1,username,password,LocalDateTime.now(),Usertype.APPLICANT,
-            jwt = jwt))
-        return response.isSuccessful
-
     }
 
 
@@ -143,4 +157,11 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
 
     //private val databaseDao : DatabaseDao
 
+}
+
+sealed class LoginResult {
+    data object Success : LoginResult()
+    data object UserNotFound : LoginResult()
+    data object WrongPassword : LoginResult()
+    data object GenericError : LoginResult()
 }
