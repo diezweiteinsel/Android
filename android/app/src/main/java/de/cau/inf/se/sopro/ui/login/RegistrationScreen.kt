@@ -65,6 +65,7 @@ fun RegistrationScreen(
             modifier = modifier.padding(innerPadding),
             uiState = uiState,
             onUserNameChanged = viewModel::onUsernameChanged,
+            onEmailChanged = viewModel::onEmailChanged,
             onPasswordChanged = viewModel::onPasswordChanged,
             onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
             onRegistrationClick = viewModel::onRegisterClick,
@@ -80,6 +81,7 @@ fun RegistrationContent(
     modifier: Modifier = Modifier,
     uiState: RegistrationUiState,
     onUserNameChanged: (String) -> Unit,
+    onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onConfirmPasswordChanged: (String) -> Unit,
     onRegistrationClick: () -> Unit,
@@ -124,6 +126,24 @@ fun RegistrationContent(
                 isError = uiState.username.isError,
                 supportingText = {
                     uiState.username.errorMessageResId?.let {
+                        Text(
+                            stringResource(it),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+
+            EmailTextField(
+                value = uiState.email.value,
+                onValueChange = onEmailChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                label = { Text("Email") },
+                isError = uiState.email.isError,
+                supportingText = {
+                    uiState.email.errorMessageResId?.let {
                         Text(
                             stringResource(it),
                             color = MaterialTheme.colorScheme.error

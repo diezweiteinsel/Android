@@ -18,7 +18,7 @@ import de.cau.inf.se.sopro.persistence.dao.FormDao
     Applicant::class,
     Form::class
 ],
-    version = 1)
+    version = 2)
 @TypeConverters(Converters::class)
 abstract class LocDatabase : RoomDatabase(){
 
@@ -33,6 +33,7 @@ abstract class LocDatabase : RoomDatabase(){
         fun getDatabase(context: Context) : LocDatabase{
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, LocDatabase::class.java, "database")
+                    .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                     .also{Instance = it}
             }

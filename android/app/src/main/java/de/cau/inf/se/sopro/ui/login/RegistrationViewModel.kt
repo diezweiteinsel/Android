@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 class RegistrationViewModel(private val repository: Repository) : ViewModel() {
     private val _uiState = MutableStateFlow(RegistrationUiState())
@@ -31,6 +32,14 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 username = currentState.username.copy(value = username, errorMessageResId = null),
+            )
+        }
+    }
+
+    fun onEmailChanged(email: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                email = currentState.email.copy(value = email, errorMessageResId = null),
             )
         }
     }
@@ -54,6 +63,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun onRegisterClick() {
         val username = _uiState.value.username
+        val email = _uiState.value.email
         val password = _uiState.value.password
         val confirmPassword = _uiState.value.confirmPassword
 
@@ -62,7 +72,6 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
             else -> null
         }
 
-        Log.d("nachts", password.value)
         val passwordError = when {
             (password.value.length < 6) -> R.string.password_too_short
             (password.value.isBlank()) -> R.string.password_is_empty
@@ -91,7 +100,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             val success = repository.createApplicant(
                 username = username.value,
-                email = "random@place.com",
+                email = email.value,
                 password = password.value,
                 role = Usertype.APPLICANT
             )
@@ -106,7 +115,7 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
                     )
 
                 }
-                Log.d("nachts", "Registration failed.")
+                Log.d("Repository", "Registration failed.")
             }
 
 

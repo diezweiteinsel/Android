@@ -16,7 +16,7 @@ enum class Usertype{
 @Entity
 data class Applicant(
     @PrimaryKey
-    val userid: Int,
+    val userid: Int?,
     val username: String,
     val password: String,
 
