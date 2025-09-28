@@ -62,7 +62,7 @@ fun RegistrationScreen(
         RegistrationContent(
             modifier = modifier.padding(innerPadding),
             uiState = uiState,
-            onUserNameChanged = viewModel::onUsernameChanged,
+            onUsernameChanged = viewModel::onUsernameChanged,
             onEmailChanged = viewModel::onEmailChanged,
             onPasswordChanged = viewModel::onPasswordChanged,
             onConfirmPasswordChanged = viewModel::onConfirmPasswordChanged,
@@ -78,7 +78,7 @@ fun RegistrationScreen(
 fun RegistrationContent(
     modifier: Modifier = Modifier,
     uiState: RegistrationUiState,
-    onUserNameChanged: (String) -> Unit,
+    onUsernameChanged: (String) -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onConfirmPasswordChanged: (String) -> Unit,
@@ -116,7 +116,7 @@ fun RegistrationContent(
 
             NewUsernameTextField(
                 value = uiState.username.value,
-                onValueChange = onUserNameChanged,
+                onValueChanged = onUsernameChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -134,7 +134,7 @@ fun RegistrationContent(
 
             EmailTextField(
                 value = uiState.email.value,
-                onValueChange = onEmailChanged,
+                onValueChanged = onEmailChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -152,7 +152,7 @@ fun RegistrationContent(
 
             NewPasswordTextField(
                 value = uiState.password.value,
-                onValueChange = onPasswordChanged,
+                onValueChanged = onPasswordChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
@@ -170,7 +170,7 @@ fun RegistrationContent(
 
             ConfirmPasswordTextField(
                 value = uiState.confirmPassword.value,
-                onValueChange = onConfirmPasswordChanged,
+                onValueChanged = onConfirmPasswordChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),

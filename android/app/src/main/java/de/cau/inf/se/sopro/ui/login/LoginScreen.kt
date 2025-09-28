@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,11 +24,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
+import de.cau.inf.se.sopro.ui.navigation.AppDestination
+import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +41,21 @@ fun LoginScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = navController, key2 = viewModel) {
+        viewModel.loginSuccess.collect { success ->
+            if (success) {
+                navController.navigate(AppDestination.YourApplicationDestination.route) {
+                    popUpTo(AppDestination.LoginDestination.route) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+    }
 
     ScreenScaffold(
         titleRes = R.string.login_title,
@@ -42,6 +63,10 @@ fun LoginScreen(
     ) { innerPadding ->
         LoginContent(
             modifier = modifier.padding(innerPadding),
+            uiState = uiState,
+            onUsernameChange = viewModel::onUsernameChange,
+            onPasswordChange = viewModel::onPasswordChange,
+            onLoginClick = viewModel::onLoginClick,
             navController = navController
         )
     }
@@ -52,12 +77,16 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     modifier: Modifier = Modifier,
+    uiState: LoginUiState,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
     navController: NavHostController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    val vm: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+    //val vm: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 
     Column(
         modifier = modifier
@@ -85,26 +114,44 @@ fun LoginContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            UserNameTextField(
-                value = vm.username,
-                onValueChange = { vm.onUsernameChange(it)},
+            UsernameTextField(
+                value = uiState.username.value,
+                onValueChange = onUsernameChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text(stringResource(R.string.user_name_text_field)) }
+                label = { Text(stringResource(R.string.user_name_text_field)) },
+                isError = uiState.username.isError,
+                supportingText = {
+                    uiState.username.errorMessageResId?.let {
+                        Text(
+                            stringResource(it),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
             PasswordTextField(
-                value = vm.password,
-                onValueChange = { vm.onPasswordChange(it)},
+                value = uiState.password.value,
+                onValueChange = onPasswordChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text(stringResource(R.string.password_text_field)) }
+                label = { Text(stringResource(R.string.password_text_field)) },
+                isError = uiState.password.isError,
+                supportingText = {
+                    uiState.password.errorMessageResId?.let {
+                        Text(
+                            stringResource(it),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
             LoginButton(
-                onClick = {vm.login(navController)}
+                onClick = onLoginClick
             )
 
             GoToRegistrationScreen(navController = navController)
