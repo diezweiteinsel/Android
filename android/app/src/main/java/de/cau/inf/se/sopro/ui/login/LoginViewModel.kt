@@ -36,8 +36,6 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     var username by mutableStateOf("")
     var password by mutableStateOf("")
 
-    //var loginResult by mutableStateOf<LoginResponse?>(null)
-    var error by mutableStateOf<String?>(null)
     fun onUsernameChange(username: String) {
         _uiState.update { currentState ->
             currentState.copy(
