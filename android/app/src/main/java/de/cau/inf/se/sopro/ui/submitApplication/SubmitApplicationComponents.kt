@@ -79,10 +79,10 @@ fun DynamicForm(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        items(blocks) { block ->
+        items(blocks) { block -> //using items() to loop through the blocks and dynamically create a composable for each block
             when (block.type) {
                 FieldType.TEXT -> OutlinedTextField(
-                    value = values[block.id] ?: "",
+                    value = values[block.id] ?: "", //if the value is null, we want to return an empty string
                     onValueChange = { onValueChange(block.id, it) },
                     label = { Text(block.label) },
                     modifier = Modifier.fillMaxWidth()
@@ -110,18 +110,21 @@ fun CancelButton( // Renamed to follow Composable naming conventions (PascalCase
 }
 
 @Composable
-fun submitButton(modifier: Modifier, onClick: () -> Unit, uiState: SubmitApplicationUiState){
-    //TODO
+fun submitButton(modifier: Modifier= Modifier, onClick: () -> Unit){
+    ElevatedButton(onClick = { onClick() }) {
+        Text(stringResource(R.string.submit_application))
+    }
 }
-data class SubmitApplicationUiState(
+
+data class SubmitApplicationUiState( //this is our uiState, which we want to be a single source of truth
     val isLoading: Boolean = false,
-    val values : Map<String, String> = emptyMap(),
+    val values : Map<String, String> = emptyMap(), //userinput
     val errorMessage: String? = null,
-    val blocks: List<Block> = emptyList()
+    val blocks: List<Block> = emptyList() //the blocks of our form
 )
 
     enum class FieldType { TEXT, NUMBER}
-    data class Block(
+    data class Block( //this is how we define a block for now
         val id: String,
         val label: String,
         val type: FieldType

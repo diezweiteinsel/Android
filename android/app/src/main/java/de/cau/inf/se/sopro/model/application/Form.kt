@@ -26,7 +26,8 @@ data class Form(
 
 @Serializable
 data class Block( //this is one block
-    val blockId: String,
-    val label: String,
-    val type: String
+    val id: Long,
+    val name: String, //this is the label of the block
+    val type: String, //datatype of the block
+    val value: String
 )

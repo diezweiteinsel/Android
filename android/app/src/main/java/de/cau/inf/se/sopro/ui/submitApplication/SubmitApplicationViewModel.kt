@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
+import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
@@ -32,9 +33,23 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
             repository.getForms()
         }
     }
+
+    fun onSubmit(navController: NavHostController){
+        if(_uiState.value.values.isNotEmpty()){
+            viewModelScope.launch {
+                //repository.createApplication(Application(_uiState.value.values))
+                navController.navigateTopLevel(AppDestination.YourApplicationDestination)
+            }
+        }
+    }
+
+    fun checkApplication() { //we want to check if the values match the form
+        //todo
+    }
     fun onCancelClicked(navController: NavHostController) {
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
     }
+
     fun createDynamicApplication() {
         viewModelScope.launch {
             val form =
@@ -57,7 +72,7 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
                     }
                 }
 
-                _uiState.update { it.copy(fields = buildingBlocks) }
+                _uiState.update { it.copy(blocks = buildingBlocks) }
 
             }
     }
@@ -68,7 +83,6 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
             )
         }
     }
-
     companion object { //viewmodel factory to be able to use our repository
 
         val Factory = viewModelFactory {
