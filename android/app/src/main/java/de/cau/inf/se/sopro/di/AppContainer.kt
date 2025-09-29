@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.di
 
 import android.content.Context
+import de.cau.inf.se.sopro.data.AuthInterceptor
 import de.cau.inf.se.sopro.data.DefRepository
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.network.api.ApiService
@@ -34,35 +35,25 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     private val USED_URL = BASE_URL_LOOPBACK_FOR_EMULATOR
 
 
+    private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
+    private val applicationDao: ApplicationDao = LocDatabase.getDatabase(context).applicationDao()
+    private val formDao: FormDao = LocDatabase.getDatabase(context).formDao()
+    private val authInterceptor = AuthInterceptor(applicantDao)
+
+
     // Create instance of OkHttpClient with interceptor that adds
     // credentials for HTTP Basic Authentication to each request
     var authClient: OkHttpClient =
-        OkHttpClient().newBuilder().addInterceptor(Interceptor { chain: Interceptor.Chain? ->
-            val originalRequest: Request = chain!!.request()
-            val builder: Request.Builder = originalRequest.newBuilder().header(
-                "Authorization",
-                Credentials.basic("admin", "password")
-            )
-            val newRequest: Request = builder.build()
-            chain.proceed(newRequest)
-        }).build()
+        OkHttpClient().newBuilder().addInterceptor(authInterceptor).build()
         private val retrofit: Retrofit = Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .client(authClient)
             .baseUrl(USED_URL)
             .build()
-
-    //Initializing the api and our daos before creating our Default Repository, where all the processing
-    //is done
-    private val api: ApiService = retrofit.create(ApiService::class.java)
-    private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
-    private val applicationDao: ApplicationDao = LocDatabase.getDatabase(context).applicationDao()
-    private val formDao: FormDao = LocDatabase.getDatabase(context).formDao()
-    //private val blockDao: BlockDao = LocDatabase.getDatabase(context).blockDao()
-
+        private val api: ApiService = retrofit.create(ApiService::class.java)
 
     override val repository: Repository by lazy {
-        DefRepository( api,applicantDao,applicationDao,formDao) //,blockDao
+        DefRepository( api,applicantDao,applicationDao,formDao)
     }
 
 
