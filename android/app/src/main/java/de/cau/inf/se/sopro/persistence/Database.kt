@@ -8,8 +8,10 @@ import androidx.room.TypeConverters
 import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
+import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
+import de.cau.inf.se.sopro.persistence.dao.BlockDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
 
 
@@ -18,8 +20,9 @@ import de.cau.inf.se.sopro.persistence.dao.FormDao
     Applicant::class,
     Form::class
 ],
-    version = 2)
+    version = 3)
 @TypeConverters(Converters::class)
+
 abstract class LocDatabase : RoomDatabase(){
 
     abstract fun applicationDao(): ApplicationDao

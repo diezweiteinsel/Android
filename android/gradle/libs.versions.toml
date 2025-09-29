@@ -30,6 +30,7 @@ appcompat = "1.7.1"
 firebaseAppdistributionGradle = "5.1.1"
 lifecycleViewmodelKtx = "2.9.4"
 foundationVersion = "1.9.2"
+roomCompiler = "2.8.1"
 
 [libraries]
 # AndroidX / Compose
@@ -77,6 +78,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 firebase-appdistribution-gradle = { group = "com.google.firebase", name = "firebase-appdistribution-gradle", version.ref = "firebaseAppdistributionGradle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -35,10 +35,17 @@ interface Repository{
     ): List<Application>?
     suspend fun createApplication(application: Application)
     suspend fun updateApplication(application: Application)
-
+    suspend fun getFormByTitle(title: String): Form?
 }
 class DefRepository(private val apiService : ApiService, private val applicantDao: ApplicantDao,
                     private val applicationDao: ApplicationDao, private val formDao: FormDao) : Repository{
+    //Localdatabase only
+
+    override suspend fun getFormByTitle(title: String): Form?{
+        val response = formDao.getFormByName(title)
+        return response
+    }
+
 
     override suspend fun checkHealth(): Boolean{
         val response = apiService.checkHealth()
@@ -147,16 +154,19 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
     ): List<Application>? {
         val response = apiService.getApplications(createdAt,formId,status,applicantId)
         return response.body()  //da bin ich mir nicht sicher + wir brauchen eine absicherung falls der andere fall eintritt
-
     }
 
     override suspend fun getForms(): List<Form>? {  //convert forms into objects method will call this
-        val forms = apiService.getForms()
-        return forms.body()
+
+        val response = apiService.getForms()
+        if(response.isSuccessful){
+            for(form in response.body()!!){ //save all forms in the local database
+
+                formDao.saveForm(form)
+            }
+        }
+        return response.body()
     }
-
-    //private val databaseDao : DatabaseDao
-
 }
 
 sealed class LoginResult {

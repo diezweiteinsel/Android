@@ -63,7 +63,6 @@ fun PublicApplicationCard(application: Application) {
             )
 
 
-
             if (application.dynamicAttributes.isNotEmpty()) {
 
                 AnimatedVisibility(visible = isExpanded) {

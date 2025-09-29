@@ -16,6 +16,7 @@
 
     <!--SubmitApplication page-->
     <string name="submit_application_title">New Application</string>
+    <string name="submit_application">submit</string>
 
 
     <!--PublicApplication page-->

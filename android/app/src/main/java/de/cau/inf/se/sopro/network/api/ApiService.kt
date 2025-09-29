@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.network.api
 
 
+import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
@@ -74,3 +75,19 @@ data class CreateApplicantRequest(
     val password: String,
     val role: Usertype
 )
+
+//data classes for getForms()
+@Serializable
+data class FormResponse(
+    val id: Int,
+    val formName: String, //das ist der responsename
+    val blocks: List<Section> //this list contains our building blocks for the application
+)
+
+@Serializable
+data class Section( //this is one form
+    val sectionID: Int = 0,
+    val title: String = "",
+    val fields: List<Block> = emptyList() //this list contains our building blocks for the application
+)
+
