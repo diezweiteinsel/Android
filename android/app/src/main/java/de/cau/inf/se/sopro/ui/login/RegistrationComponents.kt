@@ -23,7 +23,7 @@ import de.cau.inf.se.sopro.ui.navigation.AppDestination
 @Composable
 fun NewUsernameTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -31,7 +31,7 @@ fun NewUsernameTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onValueChanged,
         modifier = modifier,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -44,7 +44,7 @@ fun NewUsernameTextField(
 @Composable
 fun EmailTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -52,7 +52,7 @@ fun EmailTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onValueChanged,
         modifier = modifier,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -65,7 +65,7 @@ fun EmailTextField(
 @Composable
 fun NewPasswordTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -73,7 +73,7 @@ fun NewPasswordTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onValueChanged,
         modifier = modifier,
         label = label,
         visualTransformation = PasswordVisualTransformation(),
@@ -94,7 +94,7 @@ fun RegistrationButton(onClick: () -> Unit) {
 @Composable
 fun ConfirmPasswordTextField(
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -102,7 +102,7 @@ fun ConfirmPasswordTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onValueChanged,
         modifier = modifier,
         label = label,
         visualTransformation = PasswordVisualTransformation(),
