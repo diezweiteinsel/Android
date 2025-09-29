@@ -18,7 +18,6 @@ import retrofit2.http.Query
 import java.util.Date
 
 interface ApiService{
-
     @GET("api/v1/health") //check if the Database is running
     suspend fun checkHealth() : Response<String>
     //val grant_type: String = "password",

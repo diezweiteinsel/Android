@@ -13,7 +13,6 @@ interface ApplicantDao {
     @Query("Select jwt from applicant where userid = :userId")
     fun getJwt(userId: Int) : String?
 
-
     @Query("Select userid from applicant")
     fun getUserId() : Int
 

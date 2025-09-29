@@ -159,11 +159,10 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
     override suspend fun getForms(): List<Form>? {  //convert forms into objects method will call this
 
         val response = apiService.getForms()
+        val forms = response.body()
+        Log.d("Repository", "Forms: $forms")
         if(response.isSuccessful){
-            for(form in response.body()!!){ //save all forms in the local database
-
-                formDao.saveForm(form)
-            }
+            forms?.forEach { form -> formDao.saveForm(form) }
         }
         return response.body()
     }

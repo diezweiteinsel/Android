@@ -15,21 +15,21 @@ import de.cau.inf.se.sopro.persistence.dao.BlockDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
 
 
-@Database(entities = [
+@Database(entities = [ //our Entities
     Application::class,
     Applicant::class,
     Form::class
 ],
-    version = 3)
-@TypeConverters(Converters::class)
+    version = 13)
+@TypeConverters(Converters::class, BConverters::class)
 
 abstract class LocDatabase : RoomDatabase(){
 
-    abstract fun applicationDao(): ApplicationDao
+    abstract fun applicationDao(): ApplicationDao //init the Dao's
     abstract fun applicantDao(): ApplicantDao
     abstract fun formDao(): FormDao
 
-    companion object{
+    companion object{ //Dependency Injection
         @Volatile
         private var Instance : LocDatabase? = null
 
