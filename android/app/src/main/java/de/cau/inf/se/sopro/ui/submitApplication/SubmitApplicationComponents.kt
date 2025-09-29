@@ -127,7 +127,7 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
     data class Block( //this is how we define a block for now
         val id: String,
         val label: String,
-        val type: FieldType
+        val type: FieldType,
     )
 
     val blocks = mutableListOf(

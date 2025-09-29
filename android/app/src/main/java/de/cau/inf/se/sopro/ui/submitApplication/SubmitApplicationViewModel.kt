@@ -57,8 +57,8 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
                 val buildingBlocks: List<Block> =
                     form!!.sections.map { block -> //wir mappen jeden block aus form.sections auf ein Building Block object
                         Block(
-                            block.blockId,
-                            block.label, //problem, we dont know what a building block looks like
+                            block.name,
+                            block.type, //problem, we dont know what a building block looks like
                             type = when (block.type.lowercase()) {
                                 "text" -> FieldType.TEXT
                                 "number" -> FieldType.NUMBER

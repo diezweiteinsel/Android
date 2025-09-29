@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,8 +89,9 @@ fun SubmitApplicationContent(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        SubmitApplicationForm(modifier = Modifier.weight(1f).fillMaxWidth())
+        SubmitApplicationForm()
+        DynamicForm(modifier = Modifier.weight(1f).fillMaxWidth() ,blocks,
+            values = values, onValueChange = onValueChange)
 
         Row(modifier= Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceEvenly){
             CancelButton(modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -97,8 +100,6 @@ fun SubmitApplicationContent(
             submitButton(modifier = modifier.fillMaxWidth().padding(16.dp), onClick = onSubmit)
         }
 
-        DynamicForm(modifier = modifier.fillMaxWidth().padding(16.dp) ,blocks,
-            values = values, onValueChange = onValueChange)
 
 
         GoToYourApplicationScreen(navController = navController)
