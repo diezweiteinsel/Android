@@ -32,4 +32,11 @@ class TokenManager(context: Context) {
     fun clearJwt() {
         prefs.edit().remove(AUTH_TOKEN).apply()
     }
+
+    fun clearAll() {
+        prefs.edit()
+            .remove(AUTH_TOKEN)
+            .remove(USER_ID)
+            .apply()
+    }
 }

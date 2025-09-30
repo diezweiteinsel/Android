@@ -14,6 +14,9 @@ interface ApplicationDao {
     @Query("Select * from Application where userId=:userId ")
     fun getApplicantApplications(userId: Int) : Flow<List<Application>>
 
+    @Query("SELECT * FROM Application WHERE userId = :userId")
+    fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
+
     @Query("Select * from Application where isPublic = 1")
     fun getPublicApplications() : Flow<List<Application>>
 

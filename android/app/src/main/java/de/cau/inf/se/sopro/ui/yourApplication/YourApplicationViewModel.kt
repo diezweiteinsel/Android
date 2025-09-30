@@ -9,8 +9,10 @@ import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.data.TokenManager
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.ui.login.LoginViewModel
+import de.cau.inf.se.sopro.ui.options.OptionsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -19,25 +21,37 @@ class YourApplicationViewModel(
     private val tokenManager: TokenManager? = null
 ) : ViewModel() {
     private val _applications = MutableStateFlow<List<Application>>(emptyList())
-
     val applications: StateFlow<List<Application>> = _applications
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     val userId = tokenManager?.getUserId()
 
     init {
-        loadApplications(userId = userId)
+        loadApplications()
+    }
+
+    fun refreshApplications() {
+        viewModelScope.launch {
+            try {
+                _isRefreshing.value = true
+                repository.refreshApplications()
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun loadApplications(
-        userId: Int?
-    ) {
-
+    private fun loadApplications() {
         viewModelScope.launch {
             val userId = tokenManager?.getUserId()
 
             if (userId != null) {
-                _applications.value = repository.getApplications(userId)
+                repository.getApplicationsAsFlow(userId).collect { appsFromDb ->
+                    _applications.value = appsFromDb
+                }
             }
         }
     }
@@ -54,7 +68,10 @@ class ViewModelFactory(private val repository: Repository) : ViewModelProvider.F
             @Suppress("UNCHECKED_CAST")
             return LoginViewModel(repository) as T
         }
-        // Füge hier weitere ViewModels hinzu, falls nötig
+        if (modelClass.isAssignableFrom(OptionsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return OptionsViewModel(repository) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

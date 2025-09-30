@@ -13,6 +13,7 @@ import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface Repository{
@@ -28,11 +29,14 @@ interface Repository{
 
     suspend fun getApplications(userId: Int?): List<Application>
 
-    suspend fun refreshApplications()
+    fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
 
+    suspend fun refreshApplications()
     suspend fun createApplication(application: Application)
     suspend fun updateApplication(application: Application)
     suspend fun getFormByTitle(title: String): Form?
+
+    fun logout()
 }
 class DefRepository(private val apiService : ApiService,
                     private val applicantDao: ApplicantDao,
@@ -202,6 +206,14 @@ class DefRepository(private val apiService : ApiService,
             return emptyList()
 
         }
+    }
+
+    override fun getApplicationsAsFlow(userId: Int): Flow<List<Application>> {
+        return applicationDao.getApplicationsAsFlow(userId)
+    }
+
+    override fun logout() {
+        tokenManager.clearAll()
     }
 }
 

@@ -21,6 +21,7 @@ import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
+import de.cau.inf.se.sopro.ui.options.OptionsViewModel
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
@@ -83,7 +84,18 @@ fun AppNavHost(
         }
         navigation(route = RootGraph.Options.route,
             startDestination = RootGraph.Options.startDestination.route){
-            composable(AppDestination.OptionsDestination.route) { OptionsScreen(navigationType,navController) }
+            composable(AppDestination.OptionsDestination.route) {
+                val application = LocalContext.current.applicationContext as CivitasApplication
+                val repository = application.container.repository
+                val factory = ViewModelFactory(repository)
+                val optionsViewModel: OptionsViewModel = viewModel(factory = factory)
+
+                OptionsScreen(
+                    navigationType,
+                    navController,
+                    viewModel = optionsViewModel
+                )
+            }
         }
     }
 }
