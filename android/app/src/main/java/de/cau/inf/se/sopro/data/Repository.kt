@@ -3,6 +3,7 @@ package de.cau.inf.se.sopro.data
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.auth0.android.jwt.JWT
 import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
@@ -25,9 +26,7 @@ interface Repository{
                                 role: Usertype): Boolean
     suspend fun getForms(): List<Form>?
 
-    suspend fun getApplications(
-        userId: Int?
-    ): List<Application>
+    suspend fun getApplications(userId: Int?): List<Application>
 
     suspend fun refreshApplications()
 
@@ -53,7 +52,8 @@ class DefRepository(private val apiService : ApiService,
 
         if (userId != null) {
             try {
-                val response = apiService.getApplications(userId)
+                val response = apiService.getApplications(userId = userId)
+
                 val networkApplications = response.body()
 
                 if (!networkApplications.isNullOrEmpty()) {
@@ -61,7 +61,7 @@ class DefRepository(private val apiService : ApiService,
                     applicationDao.insertAll(networkApplications)
                 }
             } catch (e: Exception) {
-                Log.e("Repository", "Failed to refresh applications", e)
+                Log.e("Repository", "Failed to refresh applications für user $userId", e)
             }
         } else {
             Log.w("Repository", "Cannot refresh applications, no user ID found.")
@@ -104,9 +104,17 @@ class DefRepository(private val apiService : ApiService,
                 val userId = response.body()!!.userId
 
                 if (jwt != null) {
-                    tokenManager.saveJwt(jwt)
-                    tokenManager.saveUserId(userId)
-                    return LoginResult.Success
+                    val decodedJWT = JWT(jwt)
+                    val userId = decodedJWT.getClaim("userid").asInt()
+
+                    if (userId != null) {
+                        tokenManager.saveJwt(jwt)
+                        tokenManager.saveUserId(userId)
+                        return LoginResult.Success
+                    }else {
+                        Log.e("Repository", "Token did not contain a valid userId")
+                        LoginResult.GenericError
+                    }
                 } else {
 
                     Log.e("Repository", "Authentication successful but token was null.")
@@ -172,13 +180,9 @@ class DefRepository(private val apiService : ApiService,
         TODO("Not yet implemented")
     }
 
-    override suspend fun getApplications(
-        userId: Int?
-    ): List<Application> {
+    override suspend fun getApplications(userId: Int?): List<Application> {
         try {
-            val response = apiService.getApplications(
-                userId = userId
-            )
+            val response = apiService.getApplications(userId = userId)
 
             if (response.isSuccessful) {
                 return response.body() ?: emptyList()

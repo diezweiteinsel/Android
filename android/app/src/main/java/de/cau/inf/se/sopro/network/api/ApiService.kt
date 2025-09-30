@@ -38,17 +38,12 @@ interface ApiService{
     @GET("/api/v1/forms") //get all Forms
     suspend fun getForms() : Response<List<Form>>
 
-    @GET("/api/v1/applications/{user_id}")
+    @GET("/api/v1/applications")
     suspend fun getApplications(
-        @Path("user_id") userId: Int?,
-        @Query("form_id") formId: Int? = null
-        /*
-        @Query("user_id") userId: Int? = null,
+        @Query("user_id") userId: Int?,
         @Query("form_id") formId: Int? = null,
         @Query("status") status: Status? = null,
         @Query("is_public") isPublic: Boolean? = null
-
-         */
 
     ) : Response<List<Application>>
 

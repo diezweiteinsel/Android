@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 class YourApplicationViewModel(
     private val repository: Repository,
-    tokenManager: TokenManager? = null
+    private val tokenManager: TokenManager? = null
 ) : ViewModel() {
     private val _applications = MutableStateFlow<List<Application>>(emptyList())
 
@@ -34,10 +34,11 @@ class YourApplicationViewModel(
     ) {
 
         viewModelScope.launch {
-            val fetchedApplications = repository.getApplications(
-                userId = userId
-            )
-            _applications.value = fetchedApplications
+            val userId = tokenManager?.getUserId()
+
+            if (userId != null) {
+                _applications.value = repository.getApplications(userId)
+            }
         }
     }
 }
