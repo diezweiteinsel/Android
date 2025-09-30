@@ -56,16 +56,6 @@ class Converters {
     fun toBlockList(jsonString: String?): List<Block>? {
         return jsonString?.let { Json.decodeFromString(BlockListSerializer, it) }
     }
-    /*
-    @TypeConverter
-    fun fromBlockList(value: List<Block>?): String {
-        return gson.toJson(value)
-    }
-    @TypeConverter
-    fun toBlockList(value: String): List<Block>? {
-        val listType = object : TypeToken<List<Block>>() {}.type
-        return gson.fromJson(value, listType)
-    }*/
     @TypeConverter
     fun toForm(form: Form?): String? {
         return gson.toJson(form)

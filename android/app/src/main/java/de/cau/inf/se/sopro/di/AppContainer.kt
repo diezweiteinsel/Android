@@ -29,7 +29,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     // The Android App running within the emulator can access the web backend
     // running locally on the same host via the loopback address 10.0.2.2
-    private val BASE_URL_LOOPBACK_FOR_EMULATOR = "http://10.0.2.2:8083"
+    private val BASE_URL_LOOPBACK_FOR_EMULATOR = "http://134.245.1.240:1203"
 
     // Set the currently used web backend URL
     private val USED_URL = BASE_URL_LOOPBACK_FOR_EMULATOR

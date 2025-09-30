@@ -15,7 +15,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -29,9 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.room.ColumnInfo
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.utils.DynamicSelectTextField
+import kotlinx.serialization.json.JsonObject
 
 @Composable
 fun SubmitApplicationCategory(
@@ -45,7 +50,8 @@ fun SubmitApplicationCategory(
 }
 @Composable
 fun SubmitApplicationForm(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onValueChange: () -> Unit
 ) {
     val categories = Suggestion.CATEGORIES
     //this is here to remember the state of our textfield
@@ -67,33 +73,43 @@ fun SubmitApplicationForm(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DynamicForm(
     modifier: Modifier = Modifier,
-    blocks: List<Block>,
+    blocks: List<UiBlock>,
     values: Map<String, String>,
     onValueChange: (String, String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         items(blocks) { block -> //using items() to loop through the blocks and dynamically create a composable for each block
             when (block.type) {
                 FieldType.TEXT -> OutlinedTextField(
-                    value = values[block.id] ?: "", //if the value is null, we want to return an empty string
-                    onValueChange = { onValueChange(block.id, it) },
+                    value = values[block.label] ?: "", //if the value is null, we want to return an empty string
+                    onValueChange = { onValueChange(block.label, it) },
                     label = { Text(block.label) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 FieldType.NUMBER -> OutlinedTextField(
-                    value = values[block.id] ?: "",
-                    onValueChange = { onValueChange(block.id, it) },
+                    value = values[block.label] ?: "",
+                    onValueChange = { onValueChange(block.label, it) },
                     label = { Text(block.label) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
+               /* FieldType.DATE -> DatePicker(
+                    state = TODO(),
+                    modifier = TODO(),
+                    dateFormatter = TODO(),
+                    title = TODO(),
+                    headline = TODO(),
+                    showModeToggle = TODO(),
+                    colors = TODO()
+                )*/
             }
             Spacer(Modifier.height(16.dp))
         }
@@ -120,19 +136,18 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
     val isLoading: Boolean = false,
     val values : Map<String, String> = emptyMap(), //userinput
     val errorMessage: String? = null,
-    val blocks: List<Block> = emptyList() //the blocks of our form
+    val blocks: List<UiBlock> = emptyList() //the blocks of our form
 )
 
-    enum class FieldType { TEXT, NUMBER}
-    data class Block( //this is how we define a block for now
-        val id: String,
+    enum class FieldType { TEXT, NUMBER} //DATE
+    data class UiBlock( //this is how we define a block for now
         val label: String,
+        val datatype: String,
+        val required: Boolean,
         val type: FieldType,
+        val constraintsJson: List<String>?
     )
 
-    val blocks = mutableListOf(
-        Block("Vorname", "Vorname", FieldType.TEXT),
-        Block("Nachname", "Nachname", FieldType.TEXT),
-        Block("E-Mail", "E-Mail", FieldType.TEXT),
-        Block("Telefonnummer", "Telefonnummer", FieldType.TEXT)
-    )
+    var blocks = mutableListOf(UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
+        UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
+        UiBlock("E-Mail", "STRING", false,FieldType.TEXT, constraintsJson = emptyList()))

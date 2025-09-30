@@ -1,5 +1,6 @@
 package de.cau.inf.se.sopro.ui.submitApplication
 
+import android.util.Log
 import androidx.compose.material3.OutlinedTextField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
 
 class SubmitApplicationViewModel(private val repository: Repository) : ViewModel() {
     private val _uiState = MutableStateFlow(SubmitApplicationUiState())
@@ -49,29 +51,36 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
     fun onCancelClicked(navController: NavHostController) {
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
     }
-
     fun createDynamicApplication() {
+        Log.d("MyApp", "createDynamicApplication() executed")
+
         viewModelScope.launch {
-            val form =
-                repository.getFormByTitle("Dog") //we want to get the selected form, then the structure will load
-                val buildingBlocks: List<Block> =
-                    form!!.sections.map { block -> //wir mappen jeden block aus form.sections auf ein Building Block object
-                        Block(
-                            block.name,
-                            block.type, //problem, we dont know what a building block looks like
-                            type = when (block.type.lowercase()) {
-                                "text" -> FieldType.TEXT
-                                "number" -> FieldType.NUMBER
+            val form = repository.getFormByTitle("Civic Service Request") //we want to get the selected form, then the structure will load
+                val buildingBlocks: List<UiBlock> =
+                    form?.blocks?.values?.map { block -> //wir mappen jeden block aus form.sections auf ein Building Block object
+                        UiBlock(
+                            block.label,
+                            block.data_type,
+                            block.required,//problem, we dont know what a building block looks like
+                            type = when (block.data_type.lowercase()) {
+                                "STRING" -> FieldType.TEXT
+                                "FLOAT" -> FieldType.NUMBER
+                                //"DATE" -> FieldType.DATE
                                 else -> FieldType.TEXT
-                            }
+                            },null
                         )
-                    }
+                    } ?: emptyList()
+
+            if (buildingBlocks != null) {
                 for (block in buildingBlocks) { //erlaubt es uns dynamisch blocks hinzuzufügen
                     if (block !in blocks) {
                         blocks.add(block)
                     }
                 }
+            }
 
+
+            Log.d("MyApp", "Blocks: $buildingBlocks")
                 _uiState.update { it.copy(blocks = buildingBlocks) }
 
             }
