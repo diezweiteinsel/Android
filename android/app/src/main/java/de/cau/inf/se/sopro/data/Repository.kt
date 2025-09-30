@@ -10,6 +10,7 @@ import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
 import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
+import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
@@ -33,7 +34,7 @@ interface Repository{
       status : Status,
       applicantId: Int
     ): List<Application>?
-    suspend fun createApplication(application: Application)
+    suspend fun createApplication(application: createApplication)
     suspend fun updateApplication(application: Application)
     suspend fun getFormByTitle(title: String): Form?
 }
@@ -54,6 +55,7 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
 
 
     override suspend fun updateApplication(application: Application) {
+
         val response = apiService.updateApplication(application)
         try {
             response.isSuccessful
@@ -62,15 +64,18 @@ class DefRepository(private val apiService : ApiService, private val applicantDa
         }
     }
 
-    override suspend fun createApplication(application: Application){
-        applicationDao.saveApplication(application)
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun createApplication(application: createApplication){
+
         val response = apiService.createApplication(application)
         try {
             response.isSuccessful
         }catch (e : IllegalArgumentException){ //is not an IllegalArgumentException
             print(e)
         }
-
+        val applicationId : Int? = response.body()
+        val now = LocalDateTime.now()
+        //applicationDao.saveApplication()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

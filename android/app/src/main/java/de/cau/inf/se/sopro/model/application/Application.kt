@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 ])
 data class Application(
     @PrimaryKey
-    val id: Int,
+    val id: Int? = null,
     val applicantId: Int,
     val formId: Int,
     val category: String,

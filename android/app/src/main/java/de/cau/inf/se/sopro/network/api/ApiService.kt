@@ -45,7 +45,7 @@ interface ApiService{
     ) : Response<List<Application>>
 
     @POST("/api/v1/applications")
-    suspend fun createApplication(application: Application) : Response<Int>
+    suspend fun createApplication(application: createApplication) : Response<Int>
 
 
     @PUT("/api/v1/applications/{applicationId}")
@@ -90,3 +90,9 @@ data class Section( //this is one form
     val fields: List<Block> = emptyList() //this list contains our building blocks for the application
 )
 
+@Serializable
+data class createApplication( //these are the exact variable names that our api expects regarding the underscores
+    val user_id : Int,
+    val form_id : Int,
+    val payload : Map<String, String>
+)

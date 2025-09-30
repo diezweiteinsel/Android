@@ -1,6 +1,8 @@
 package de.cau.inf.se.sopro.ui.submitApplication
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.OutlinedTextField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +15,7 @@ import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
+import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import kotlinx.coroutines.flow.update
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 
 class SubmitApplicationViewModel(private val repository: Repository) : ViewModel() {
@@ -29,17 +33,19 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
 
     val uiState: StateFlow<SubmitApplicationUiState> = _uiState.asStateFlow()
 
+
     fun onInit() {
         viewModelScope.launch {
             _uiState.value = SubmitApplicationUiState(isLoading = true)
             repository.getForms()
         }
     }
-
     fun onSubmit(navController: NavHostController){
+
+
         if(_uiState.value.values.isNotEmpty()){
-            viewModelScope.launch {
-                //repository.createApplication(Application(_uiState.value.values))
+            viewModelScope.launch { //in der folgenden Zeile muss noch getUserId und
+                repository.createApplication(createApplication(1,  1, _uiState.value.values))
                 navController.navigateTopLevel(AppDestination.YourApplicationDestination)
             }
         }
@@ -49,6 +55,7 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
         //todo
     }
     fun onCancelClicked(navController: NavHostController) {
+
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
     }
     fun createDynamicApplication() {
@@ -61,7 +68,7 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
                         UiBlock(
                             block.label,
                             block.data_type,
-                            block.required,//problem, we dont know what a building block looks like
+                            block.required,
                             type = when (block.data_type.lowercase()) {
                                 "STRING" -> FieldType.TEXT
                                 "FLOAT" -> FieldType.NUMBER
@@ -72,7 +79,7 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
                     } ?: emptyList()
 
             if (buildingBlocks != null) {
-                for (block in buildingBlocks) { //erlaubt es uns dynamisch blocks hinzuzufügen
+                for (block in buildingBlocks) { //allowing us to add blocks
                     if (block !in blocks) {
                         blocks.add(block)
                     }
@@ -80,13 +87,14 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
             }
 
 
-            Log.d("MyApp", "Blocks: $buildingBlocks")
-                _uiState.update { it.copy(blocks = buildingBlocks) }
+
+                _uiState.update {it.copy(blocks = buildingBlocks)}
 
             }
     }
     fun onValueChange(id: String, value: String) {
         _uiState.update {
+
             it.copy(
                 values = it.values.plus(Pair(id, value))
             )
