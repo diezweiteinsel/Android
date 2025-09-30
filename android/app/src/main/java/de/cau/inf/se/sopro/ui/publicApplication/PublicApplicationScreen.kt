@@ -25,7 +25,7 @@ import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PublicApplicationScreen(
-    navigationType: AppNavigationType, // TODO: navigation drawer or navigation rail
+    navigationType: AppNavigationType,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: PublicApplicationViewModel = viewModel()

@@ -87,6 +87,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
             when (result) {
                 is LoginResult.Success -> {
                     _loginSuccess.emit(true)
+                    repository.refreshApplications()
                 }
                 is LoginResult.UserNotFound -> {
                     _uiState.update {

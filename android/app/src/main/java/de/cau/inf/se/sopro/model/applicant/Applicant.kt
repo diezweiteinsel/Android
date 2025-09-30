@@ -16,7 +16,7 @@ enum class Usertype{
 @Entity
 data class Applicant(
     @PrimaryKey
-    val userid: Int?,
+    val userId: Int?,
     val username: String,
     val password: String,
     @Serializable(with = LocalDateTimeSerializer::class)

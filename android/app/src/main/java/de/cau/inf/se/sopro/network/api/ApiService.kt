@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.network.api
 
 
+import com.google.gson.annotations.SerializedName
 import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
@@ -14,8 +15,8 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.Date
 
 interface ApiService{
 
@@ -37,12 +38,18 @@ interface ApiService{
     @GET("/api/v1/forms") //get all Forms
     suspend fun getForms() : Response<List<Form>>
 
-    @GET("/api/v1/applications")
+    @GET("/api/v1/applications/{user_id}")
     suspend fun getApplications(
-        @Query("createdAt") createdAt: Date,
-        @Query("formID") formId: Int,
-        @Query("status") status : Status,
-        @Query("applicantId") applicantId: Int
+        @Path("user_id") userId: Int?,
+        @Query("form_id") formId: Int? = null
+        /*
+        @Query("user_id") userId: Int? = null,
+        @Query("form_id") formId: Int? = null,
+        @Query("status") status: Status? = null,
+        @Query("is_public") isPublic: Boolean? = null
+
+         */
+
     ) : Response<List<Application>>
 
     @POST("/api/v1/applications")
@@ -58,8 +65,12 @@ interface ApiService{
 //data classes
 @Serializable
 data class LoginResponse(
-    val access_token: String,
-    val token_type: String,
+    @SerializedName("access_token")
+    val accessToken: String?,
+    @SerializedName("token_type")
+    val tokenType: String,
+    @SerializedName("user_id")
+    val userId: Int,
     val roles: List<String>
 )
 

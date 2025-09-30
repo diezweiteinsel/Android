@@ -20,7 +20,7 @@ import de.cau.inf.se.sopro.persistence.dao.FormDao
     Applicant::class,
     Form::class
 ],
-    version = 3)
+    version = 4)
 @TypeConverters(Converters::class)
 
 abstract class LocDatabase : RoomDatabase(){

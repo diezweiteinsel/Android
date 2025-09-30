@@ -42,25 +42,26 @@ fun PublicApplicationCard(application: Application) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            /*
             Text(
                 text = application.category,
                 style = MaterialTheme.typography.titleMedium
             )
+
+             */
             Text(
                 text = "Submitted: ${application.createdAt.format(dateFormatter)}",
                 style = MaterialTheme.typography.bodySmall
             )
 
-            Text(
-                text = "By: ${application.applicantName}",
-                style = MaterialTheme.typography.bodyMedium
-            )
 
-
+            /*
             Text(
                 text = "Wow! Look at that ${application.category}!",
                 style = MaterialTheme.typography.bodyMedium
             )
+
+             */
 
 
             if (application.dynamicAttributes.isNotEmpty()) {
