@@ -26,9 +26,9 @@ class PublicApplicationViewModel : ViewModel() {
 
         viewModelScope.launch {
             _applications.value = listOf(
-                Application(1, 4, 1, "Fire", "Felix", LocalDateTime.now(), Status.APPROVED, true, false, mapOf("Beschreibung" to "Das wird so ein cooles Feuer wow.")),
-                Application(2, 6, 2, "Dog", "Bene", LocalDateTime.now().minusDays(3), Status.APPROVED, true, false),
-                Application(3, 9, 3, "Dog", "Paul", LocalDateTime.now().minusWeeks(2), Status.APPROVED, true, false)
+                Application(1, 4, 1, 1, Status.APPROVED, LocalDateTime.now(), 2, 2, false),
+                Application(2, 6, 2, 2, Status.APPROVED, LocalDateTime.now().minusDays(3), 1, 1, false),
+                Application(3, 9, 3, 3, Status.APPROVED, LocalDateTime.now().minusWeeks(2), 1, 1, true)
             )
         }
     }

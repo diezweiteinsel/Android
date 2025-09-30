@@ -43,10 +43,13 @@ fun ApplicationCard(application: Application) {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            /*
             Text(
                 text = application.category,
                 style = MaterialTheme.typography.titleMedium
             )
+
+             */
             Text(
                 text = "Submitted: ${application.createdAt.format(dateFormatter)}",
                 style = MaterialTheme.typography.bodySmall

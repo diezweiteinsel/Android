@@ -28,7 +28,7 @@ fun YourApplicationScreen(
     navigationType: AppNavigationType, // TODO: navigation drawer or navigation rail
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: YourApplicationViewModel = viewModel()
+    viewModel: YourApplicationViewModel
 ) {
     val applicationsState by viewModel.applications.collectAsStateWithLifecycle()
 

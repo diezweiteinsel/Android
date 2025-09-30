@@ -17,6 +17,7 @@ import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import java.time.LocalDateTime
 
 class Converters {
@@ -75,7 +76,21 @@ class Converters {
     fun toStringMap(map: Map<String, String>?): String {
         return gson.toJson(map ?: emptyMap<String, String>())
     }
+
+    @TypeConverter
+    fun fromJsonElementMap(value: String?): Map<String, JsonElement>? {
+        if (value == null) return null
+        return Json.decodeFromString(value)
+    }
+
+    @TypeConverter
+    fun toJsonElementMap(map: Map<String, JsonElement>?): String? {
+        if (map == null) return null
+        return Json.encodeToString(map)
+    }
 }
+
+
 
 object BlockListSerializer : KSerializer<List<Block>> {
 

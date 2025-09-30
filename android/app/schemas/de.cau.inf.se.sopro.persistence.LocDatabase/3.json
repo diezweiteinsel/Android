@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "e3f7230ff6503c8985b8e0f815539a7f",
+    "identityHash": "a0b8916c414c53e58daa7c3b3f6b4c3a",
     "entities": [
       {
         "tableName": "Application",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `applicantId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `category` TEXT NOT NULL, `applicantName` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `status` TEXT NOT NULL, `isPublic` INTEGER NOT NULL, `isEdited` INTEGER NOT NULL, `dynamicAttributes` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`applicantId`) REFERENCES `Applicant`(`userid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `adminId` INTEGER, `status` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `currentSnapshotId` INTEGER NOT NULL, `previousSnapshotId` INTEGER NOT NULL, `isPublic` INTEGER NOT NULL, `dynamicAttributes` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`userId`) REFERENCES `Applicant`(`userId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,8 +15,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "applicantId",
-            "columnName": "applicantId",
+            "fieldPath": "userId",
+            "columnName": "userId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -27,14 +27,13 @@
             "notNull": true
           },
           {
-            "fieldPath": "category",
-            "columnName": "category",
-            "affinity": "TEXT",
-            "notNull": true
+            "fieldPath": "adminId",
+            "columnName": "adminId",
+            "affinity": "INTEGER"
           },
           {
-            "fieldPath": "applicantName",
-            "columnName": "applicantName",
+            "fieldPath": "status",
+            "columnName": "status",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -45,20 +44,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "status",
-            "columnName": "status",
-            "affinity": "TEXT",
+            "fieldPath": "currentSnapshotId",
+            "columnName": "currentSnapshotId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "previousSnapshotId",
+            "columnName": "previousSnapshotId",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "isPublic",
             "columnName": "isPublic",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isEdited",
-            "columnName": "isEdited",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -81,21 +80,21 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "applicantId"
+              "userId"
             ],
             "referencedColumns": [
-              "userid"
+              "userId"
             ]
           }
         ]
       },
       {
         "tableName": "Applicant",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userid` INTEGER, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `createdAt` TEXT, `role` TEXT NOT NULL, `email` TEXT, `jwt` TEXT, PRIMARY KEY(`userid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `createdAt` TEXT, `role` TEXT NOT NULL, `email` TEXT, `jwt` TEXT, PRIMARY KEY(`userId`))",
         "fields": [
           {
-            "fieldPath": "userid",
-            "columnName": "userid",
+            "fieldPath": "userId",
+            "columnName": "userId",
             "affinity": "INTEGER"
           },
           {
@@ -135,7 +134,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "userid"
+            "userId"
           ]
         }
       },
@@ -184,7 +183,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e3f7230ff6503c8985b8e0f815539a7f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a0b8916c414c53e58daa7c3b3f6b4c3a')"
     ]
   }
 }

@@ -1,8 +1,12 @@
 package de.cau.inf.se.sopro.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -11,16 +15,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.R
+
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.yourApplication.ViewModelFactory
 import de.cau.inf.se.sopro.ui.yourApplication.YourApplicationScreen
+import de.cau.inf.se.sopro.ui.yourApplication.YourApplicationViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     navigationType: AppNavigationType,
@@ -36,7 +45,19 @@ fun AppNavHost(
             route = RootGraph.YourApplication.route,
             startDestination = RootGraph.YourApplication.startDestination.route
         ) {
-            composable(AppDestination.YourApplicationDestination.route) { YourApplicationScreen(navigationType, navController) }
+            composable(AppDestination.YourApplicationDestination.route) {
+                val application = LocalContext.current.applicationContext as CivitasApplication
+                val repository = application.container.repository
+
+                val factory = ViewModelFactory(repository)
+                val applicationViewModel: YourApplicationViewModel = viewModel(factory = factory)
+
+                YourApplicationScreen(
+                    navigationType = navigationType,
+                    navController = navController,
+                    viewModel = applicationViewModel
+                )
+            }
         }
         navigation(
             route = RootGraph.SubmitApplication.route,
