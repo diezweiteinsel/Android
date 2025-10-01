@@ -143,7 +143,7 @@ fun UrlEditor(
         OutlinedTextField(
             value = currentUrl,
             onValueChange = onUrlChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(0.7f),
             label = { Text("Change the URL") },
             isError = isError,
             supportingText = supportingText,

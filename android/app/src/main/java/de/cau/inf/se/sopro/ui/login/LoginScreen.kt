@@ -123,7 +123,7 @@ fun LoginContent(
                 value = uiState.username.value,
                 onValueChange = onUsernameChange,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.user_name_text_field)) },
                 isError = uiState.username.isError,
@@ -141,7 +141,7 @@ fun LoginContent(
                 value = uiState.password.value,
                 onValueChange = onPasswordChange,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.password_text_field)) },
                 isError = uiState.password.isError,
