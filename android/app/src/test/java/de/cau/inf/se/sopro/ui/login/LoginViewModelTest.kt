@@ -3,6 +3,7 @@ package de.cau.inf.se.sopro.ui.login
 import app.cash.turbine.test
 import de.cau.inf.se.sopro.data.LoginResult
 import de.cau.inf.se.sopro.data.Repository
+import de.cau.inf.se.sopro.di.UrlManager
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -22,13 +23,13 @@ class LoginViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: Repository // Mocked Repository
     private lateinit var viewModel: LoginViewModel
-
+    private lateinit var urlManager: UrlManager
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         repository = mockk(relaxed = true)
-        viewModel = LoginViewModel(repository)
+        viewModel = LoginViewModel(repository, urlManager )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
