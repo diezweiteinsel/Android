@@ -2,13 +2,34 @@
 <resources>
     <string name="app_name">Civitas</string>
     <string name="wrong_input">Falsche Eingabe!</string>
-    <string name="your_application_msg">Hier werden Sie ihre Anträge sehen können</string>
-    <string name="submit_msg">Hier werden Sie ihre Anträge erstellen können</string>
+    <string name="change_url">Ändern Sie die URL</string>
+    <string name="example_url">z.B. http://134.245.1.240:1203/</string>
     <string name="your_application_title">Ihre Anträge</string>
     <string name="submit_application_title">Neuer Antrag</string>
+    <string name="submit_application">Abschicken</string>
     <string name="public_application_title">Öffentliche Anträge</string>
+    <string name="log_out">Abmelden</string>
     <string name="login_title">Anmelden</string>
     <string name="login_button">Anmelden</string>
     <string name="user_name_text_field">Benutzername</string>
     <string name="password_text_field">Passwort</string>
+    <string name="options_title">Optionen</string>
+    <string name="options_save_button">Speichern</string>
+    <string name="logout_button">Abmelden</string>
+    <string name="back_button">Zurück</string>
+    <string name="logout_confirmation">Sicher, dass Sie sich abmelden möchten?</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="go_to_registration_screen">Sie haben noch keinen Account? Registrieren.</string>
+    <string name="go_to_your_application_screen">Offline Modus.</string>
+    <string name="username_is_empty">Bitte geben Sie einen Benutzernamen ein.</string>
+    <string name="user_not_found">Benutzer*in nicht gefunden!</string>
+    <string name="wrong_password">Falsches Passwort!</string>
+    <string name="registration_title">Registrierung</string>
+    <string name="registration_button">Registrieren</string>
+    <string name="confirm_password_text_field">Passwort bestätigen</string>
+    <string name="passwords_do_not_match">Passwörter stimmen nicht überein!</string>
+    <string name="go_to_login_screen">Sie haben schon einen Account? Anmelden.</string>
+    <string name="password_is_empty">Bitte geben Sie ein Passwort ein.</string>
+    <string name="password_too_short">Das Passwort benötigt mindestens 6 Zeichen.</string>
+    <string name="username_too_short">Der Benutzername benötigt mindestens 4 Zeichen.</string>
 </resources>

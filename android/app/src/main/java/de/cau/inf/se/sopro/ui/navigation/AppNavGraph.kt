@@ -51,8 +51,9 @@ fun AppNavHost(
                 val application = LocalContext.current.applicationContext as CivitasApplication
                 val repository = application.container.repository
                 val tokenManager = application.container.tokenManager
+                val urlManager = application.container.urlManager
 
-                val factory = ViewModelFactory(repository, tokenManager)
+                val factory = ViewModelFactory(repository, tokenManager, urlManager)
                 val applicationViewModel: YourApplicationViewModel = viewModel(factory = factory)
 
                 YourApplicationScreen(
@@ -75,7 +76,10 @@ fun AppNavHost(
             composable(AppDestination.PublicApplicationDestination.route) {
                 val application = LocalContext.current.applicationContext as CivitasApplication
                 val repository = application.container.repository
-                val factory = ViewModelFactory(repository, tokenManager = application.container.tokenManager)
+                val tokenManager = application.container.tokenManager
+                val urlManager = application.container.urlManager
+
+                val factory = ViewModelFactory(repository, tokenManager, urlManager)
                 val publicViewModel: PublicApplicationViewModel = viewModel(factory = factory)
 
                 PublicApplicationScreen(
@@ -100,7 +104,10 @@ fun AppNavHost(
             composable(AppDestination.OptionsDestination.route) {
                 val application = LocalContext.current.applicationContext as CivitasApplication
                 val repository = application.container.repository
-                val factory = ViewModelFactory(repository, tokenManager = application.container.tokenManager)
+                val tokenManager = application.container.tokenManager
+                val urlManager = application.container.urlManager
+
+                val factory = ViewModelFactory(repository, tokenManager, urlManager)
                 val optionsViewModel: OptionsViewModel = viewModel(factory = factory)
 
                 OptionsScreen(

@@ -129,7 +129,7 @@ class DefRepository(private val apiService : ApiService,
         val response = apiService.updateApplication(application)
         try {
             response.isSuccessful
-        }catch (e : IllegalArgumentException){ //is not an IllegalArgumentException
+        }catch (e : IllegalArgumentException){
             print(e)
         }
     }
@@ -140,7 +140,7 @@ class DefRepository(private val apiService : ApiService,
 
         try {
             response.isSuccessful
-        }catch (e : IllegalArgumentException){ //is not an IllegalArgumentException
+        }catch (e : IllegalArgumentException){
             print(e)
         }
 

@@ -118,7 +118,7 @@ fun RegistrationContent(
                 value = uiState.username.value,
                 onValueChanged = onUsernameChanged,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.user_name_text_field)) },
                 isError = uiState.username.isError,
@@ -136,7 +136,7 @@ fun RegistrationContent(
                 value = uiState.email.value,
                 onValueChanged = onEmailChanged,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text("Email") },
                 isError = uiState.email.isError,
@@ -154,7 +154,7 @@ fun RegistrationContent(
                 value = uiState.password.value,
                 onValueChanged = onPasswordChanged,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.password_text_field)) },
                 isError = uiState.password.isError,
@@ -172,7 +172,7 @@ fun RegistrationContent(
                 value = uiState.confirmPassword.value,
                 onValueChanged = onConfirmPasswordChanged,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.confirm_password_text_field)) },
                 isError = uiState.confirmPassword.isError,

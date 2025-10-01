@@ -17,7 +17,9 @@ fun ChangeURLTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null
+    label: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -25,7 +27,9 @@ fun ChangeURLTextField(
         modifier = modifier,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true
+        singleLine = true,
+        isError = isError,
+        supportingText = supportingText
     )
 }
 
@@ -33,7 +37,6 @@ fun ChangeURLTextField(
 fun SaveButton(onClick: () -> Unit) {
     ElevatedButton(onClick = { onClick() }) {
         Text(stringResource(R.string.options_save_button))
-
     }
 }
 

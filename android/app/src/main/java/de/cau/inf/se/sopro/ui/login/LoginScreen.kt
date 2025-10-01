@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +35,7 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.utils.UrlEditor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +70,9 @@ fun LoginScreen(
             onUsernameChange = viewModel::onUsernameChange,
             onPasswordChange = viewModel::onPasswordChange,
             onLoginClick = viewModel::onLoginClick,
+            onUrlChange = viewModel::onUrlChange,
+            onSaveUrl = viewModel::onSaveUrl,
+            onDismissRestartMessage = viewModel::onDismissRestartMessage,
             navController = navController
         )
     }
@@ -81,6 +87,9 @@ fun LoginContent(
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
+    onUrlChange: (String) -> Unit,
+    onSaveUrl: () -> Unit,
+    onDismissRestartMessage: () -> Unit,
     navController: NavHostController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -118,7 +127,7 @@ fun LoginContent(
                 value = uiState.username.value,
                 onValueChange = onUsernameChange,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.user_name_text_field)) },
                 isError = uiState.username.isError,
@@ -136,7 +145,7 @@ fun LoginContent(
                 value = uiState.password.value,
                 onValueChange = onPasswordChange,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.password_text_field)) },
                 isError = uiState.password.isError,
@@ -158,6 +167,32 @@ fun LoginContent(
 
             GoToYourApplicationScreen(navController = navController)
 
+            UrlEditor(
+                currentUrl = uiState.url,
+                onUrlChange = onUrlChange,
+                onSave = onSaveUrl,
+                isError = uiState.urlError != null,
+                supportingText = {
+                    if (uiState.urlError != null) {
+                        Text(text = uiState.urlError, color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            )
+        }
+
+        if (uiState.showRestartMessage) {
+            AlertDialog(
+                onDismissRequest = onDismissRestartMessage,
+                title = { Text("Gespeichert") },
+                text = { Text("Die neue URL wird nach einem Neustart der App verwendet.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = onDismissRestartMessage
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 }
