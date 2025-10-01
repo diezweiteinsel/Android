@@ -1,5 +1,6 @@
 package de.cau.inf.se.sopro.ui.login
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -137,7 +138,9 @@ data class LoginUiState(
     val url: String = "",
     val urlError: String? = null,
     val showRestartMessage: Boolean = false,
-    val healthStatus: HealthStatus = HealthStatus.IDLE
+    val healthStatus: HealthStatus = HealthStatus.IDLE,
+    @StringRes val urlErrorResId: Int? = null,
+    @StringRes val loginErrorResId: Int? = null
 )
 
 data class LoginFormFieldState(

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -141,8 +142,8 @@ fun OptionsContent(
     if (uiState.showRestartMessage) {
         AlertDialog(
             onDismissRequest = onDismissRestartMessage,
-            title = { Text("Gespeichert") },
-            text = { Text("Die neue URL wird nach einem Neustart der App verwendet.") },
+            title = { Text(stringResource(R.string.options_save_button)) },
+            text = { Text(stringResource(R.string.new_url_msg)) },
             confirmButton = {
                 TextButton(
                     onClick = onDismissRestartMessage

@@ -9,7 +9,7 @@ class UrlManager(context: Context) {
 
     companion object {
         private const val KEY_BASE_URL = "base_url"
-        const val DEFAULT_URL = "http://10.0.2.2:8083/"
+        const val DEFAULT_URL = "http://134.245.1.240:1203/"
     }
 
     fun saveUrl(url: String) {

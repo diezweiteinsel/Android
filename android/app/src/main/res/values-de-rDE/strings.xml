@@ -4,6 +4,9 @@
     <string name="wrong_input">Falsche Eingabe!</string>
     <string name="change_url">Ändern Sie die URL</string>
     <string name="example_url">z.B. http://134.245.1.240:1203/</string>
+    <string name="new_url_msg">Starten Sie die App neu, um die neue URL zu verwenden.</string>
+    <string name="change_server_options">Server Optionen ändern.</string>
+    <string name="ok">OK</string>
     <string name="your_application_title">Ihre Anträge</string>
     <string name="submit_application_title">Neuer Antrag</string>
     <string name="submit_application">Abschicken</string>
@@ -32,4 +35,8 @@
     <string name="password_is_empty">Bitte geben Sie ein Passwort ein.</string>
     <string name="password_too_short">Das Passwort benötigt mindestens 6 Zeichen.</string>
     <string name="username_too_short">Der Benutzername benötigt mindestens 4 Zeichen.</string>
+    <string name="reset">Standard URL wiederherstellen</string>
+    <string name="check_health">Verbindung testen</string>
+    <string name="wrong_url">Ungültige URL!</string>
+    <string name="unexpected_error">Unerwarteter Fehler</string>
 </resources>

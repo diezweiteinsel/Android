@@ -1,9 +1,11 @@
 package de.cau.inf.se.sopro.ui.login
 
 import android.util.Log
+import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
@@ -109,7 +111,7 @@ class LoginViewModel(
                 }
                 is LoginResult.GenericError -> {
                     _uiState.update {
-                        it.copy(loginError = "An unexpected error occurred.")
+                        it.copy(loginErrorResId = R.string.unexpected_error)
                     }
                 }
             }
@@ -122,7 +124,7 @@ class LoginViewModel(
             urlManager.saveUrl(currentUrl)
             _uiState.update { it.copy(showRestartMessage = true) }
         } else {
-            _uiState.update { it.copy(urlError = "Invalid URL") }
+            _uiState.update { it.copy(urlErrorResId = R.string.wrong_url) }
         }
     }
 

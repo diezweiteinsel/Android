@@ -7,6 +7,11 @@
     <string name="example_url">E.g. http://134.245.1.240:1203/</string>
     <string name="reset">Reset to default</string>
     <string name="check_health">Test Connection</string>
+    <string name="wrong_url">Invalid URL!</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="new_url_msg">Restart the app to use the new URL.</string>
+    <string name="change_server_options">Change server options.</string>
+    <string name="ok">OK</string>
 
 
     <!--YourApplication page-->
