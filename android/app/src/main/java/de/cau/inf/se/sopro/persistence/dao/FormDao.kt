@@ -19,5 +19,6 @@ interface FormDao {
     @Query("Select * From form Where form_name = :name")
     suspend fun getFormByName(name : String) : Form?
 
-
+    @Upsert
+    suspend fun insertAll(forms: List<Form>)
 }

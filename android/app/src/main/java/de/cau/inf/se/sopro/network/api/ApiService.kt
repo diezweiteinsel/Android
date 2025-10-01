@@ -15,7 +15,6 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService{
@@ -39,7 +38,7 @@ interface ApiService{
 
     @GET("/api/v1/applications")
     suspend fun getApplications(
-        @Query("user_id") userId: Int?,
+        @Query("user_id") userId: Int? = null,
         @Query("form_id") formId: Int? = null,
         @Query("status") status: Status? = null,
         @Query("is_public") isPublic: Boolean? = null

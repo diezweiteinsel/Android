@@ -13,6 +13,8 @@ import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import kotlinx.coroutines.flow.Flow
+import java.io.IOException
 import java.time.LocalDateTime
 
 interface Repository{
@@ -28,11 +30,23 @@ interface Repository{
 
     suspend fun getApplications(userId: Int?): List<Application>
 
+    suspend fun getPublicApplicationsAsFlow(): Flow<List<Application>>
+
+    fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
+
     suspend fun refreshApplications()
 
     suspend fun createApplication(application: Application)
+
     suspend fun updateApplication(application: Application)
+
     suspend fun getFormByTitle(title: String): Form?
+
+    fun logout()
+
+    suspend fun loginAndSync(username: String, password: String): LoginResult
+
+    suspend fun refreshPublicApplications()
 }
 class DefRepository(private val apiService : ApiService,
                     private val applicantDao: ApplicantDao,
@@ -40,32 +54,66 @@ class DefRepository(private val apiService : ApiService,
                     private val formDao: FormDao,
                     private val tokenManager: TokenManager
 ) : Repository{
-    //Localdatabase only
 
     override suspend fun getFormByTitle(title: String): Form?{
         val response = formDao.getFormByName(title)
         return response
     }
 
-    override suspend fun refreshApplications() {
-        val userId = tokenManager.getUserId()
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun loginAndSync(username: String, password: String): LoginResult {
+        val loginResult = authenticateLogin(username, password)
 
-        if (userId != null) {
+        if (loginResult is LoginResult.Success) {
             try {
-                val response = apiService.getApplications(userId = userId)
-
-                val networkApplications = response.body()
-
-                if (!networkApplications.isNullOrEmpty()) {
-                    applicationDao.deleteAll()
-                    applicationDao.insertAll(networkApplications)
-                }
+                refreshPublicApplications()
+                refreshApplications()
             } catch (e: Exception) {
-                Log.e("Repository", "Failed to refresh applications für user $userId", e)
+                Log.e("Repository", "Sync failed after login", e)
+                return LoginResult.GenericError
+            }
+        }
+
+        return loginResult
+    }
+
+    override suspend fun refreshApplications() {
+
+        val formsResponse = apiService.getForms()
+        if (formsResponse.isSuccessful) {
+            val formsFromServer = formsResponse.body()
+            if (!formsFromServer.isNullOrEmpty()) {
+
+                formDao.insertAll(formsFromServer)
             }
         } else {
-            Log.w("Repository", "Cannot refresh applications, no user ID found.")
+            throw IOException("Failed to fetch forms during refresh")
         }
+
+        val userId = tokenManager.getUserId()
+
+        if (userId == null) {
+            Log.w("Repository", "Cannot refresh applications, no user ID found.")
+            return
+        }
+
+        try {
+            val response = apiService.getApplications()
+
+            val networkApplications = response.body()
+
+            val correctedApplications = networkApplications!!.map { application ->
+                application.copy(userId = userId)
+            }
+
+            if (!networkApplications.isNullOrEmpty()) {
+                applicationDao.deleteAll()
+                applicationDao.upsertAll(correctedApplications)
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Failed to refresh applications for user $userId", e)
+        }
+
     }
 
     override suspend fun checkHealth(): Boolean{
@@ -101,7 +149,6 @@ class DefRepository(private val apiService : ApiService,
 
             if (response.isSuccessful && response.body() != null) {
                 val jwt = response.body()!!.accessToken
-                val userId = response.body()!!.userId
 
                 if (jwt != null) {
                     val decodedJWT = JWT(jwt)
@@ -110,6 +157,14 @@ class DefRepository(private val apiService : ApiService,
                     if (userId != null) {
                         tokenManager.saveJwt(jwt)
                         tokenManager.saveUserId(userId)
+
+                        val loggedInApplicant = Applicant(
+                            userId = userId,
+                            username = username,
+                            role = Usertype.APPLICANT
+                        )
+                        applicantDao.upsertApplicant(loggedInApplicant)
+
                         return LoginResult.Success
                     }else {
                         Log.e("Repository", "Token did not contain a valid userId")
@@ -157,11 +212,24 @@ class DefRepository(private val apiService : ApiService,
 
             if (response.isSuccessful) {
                 val newUserId = response.body()?.user_id
-                Log.d("Repository", "User created successfully with ID: $newUserId")
 
-                applicantDao.saveApplicant(Applicant(newUserId, username, password, LocalDateTime.now(), role))
+                if (newUserId != null) {
+                    Log.d("Repository", "User created successfully with ID: $newUserId")
 
-                return true
+                    applicantDao.saveApplicant(
+                        Applicant(
+                            newUserId,
+                            username,
+                            LocalDateTime.now().toString(),
+                            role
+                        )
+                    )
+
+                    return true
+                } else {
+                    Log.e("Repository", "Server response contained no user ID")
+                    return false
+                }
             } else {
 
                 val errorCode = response.code()
@@ -189,7 +257,7 @@ class DefRepository(private val apiService : ApiService,
 
     override suspend fun getApplications(userId: Int?): List<Application> {
         try {
-            val response = apiService.getApplications(userId = userId)
+            val response = apiService.getApplications()
 
             if (response.isSuccessful) {
                 return response.body() ?: emptyList()
@@ -201,6 +269,32 @@ class DefRepository(private val apiService : ApiService,
             Log.e("Repository", "Network Error: ${e.message}")
             return emptyList()
 
+        }
+    }
+
+    override fun getApplicationsAsFlow(userId: Int): Flow<List<Application>> {
+        return applicationDao.getApplicationsAsFlow(userId)
+    }
+
+    override fun logout() {
+        tokenManager.clearAll()
+    }
+
+    override suspend fun getPublicApplicationsAsFlow(): Flow<List<Application>> {
+        return applicationDao.getPublicApplicationsAsFlow()
+    }
+
+    override suspend fun refreshPublicApplications() {
+        try {
+            val response = apiService.getApplications(isPublic = true)
+            if (response.isSuccessful && response.body() != null) {
+                val publicApplications = response.body()!!
+
+                applicationDao.upsertAll(publicApplications)
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Failed to refresh public applications", e)
+            throw e
         }
     }
 }

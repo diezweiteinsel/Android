@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import de.cau.inf.se.sopro.data.Repository
+import de.cau.inf.se.sopro.data.TokenManager
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Status
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,24 +14,42 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
-class PublicApplicationViewModel : ViewModel() {
-    private val _applications = MutableStateFlow<List<Application>>(emptyList())
+class PublicApplicationViewModel(
+    private val repository: Repository,
+    private val tokenManager: TokenManager
+) : ViewModel() {
+    private val _publicApplications = MutableStateFlow<List<Application>>(emptyList())
+    val publicApplications: StateFlow<List<Application>> = _publicApplications
 
-    val applications: StateFlow<List<Application>> = _applications
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
-    init {
-        loadApplications()
+    val userId = tokenManager.getUserId()
+
+    fun refreshApplications() {
+        viewModelScope.launch {
+            try {
+                _isRefreshing.value = true
+                repository.refreshApplications()
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun loadApplications() {
+    fun loadPublicApplications() {
 
         viewModelScope.launch {
-            _applications.value = listOf(
-                Application(1, 4, 1, 1, Status.APPROVED, LocalDateTime.now(), 2, 2, false),
-                Application(2, 6, 2, 2, Status.APPROVED, LocalDateTime.now().minusDays(3), 1, 1, false),
-                Application(3, 9, 3, 3, Status.APPROVED, LocalDateTime.now().minusWeeks(2), 1, 1, true)
-            )
+            viewModelScope.launch {
+                val userId = tokenManager.getUserId()
+
+                if (userId != null) {
+                    repository.getPublicApplicationsAsFlow().collect { appsFromDb ->
+                        _publicApplications.value = appsFromDb
+                    }
+                }
+            }
         }
     }
 }

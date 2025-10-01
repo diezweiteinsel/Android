@@ -80,14 +80,13 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
 
         viewModelScope.launch {
-            val result = repository.authenticateLogin(
+            val result = repository.loginAndSync(
                 username.value,
                 password.value
             )
             when (result) {
                 is LoginResult.Success -> {
                     _loginSuccess.emit(true)
-                    repository.refreshApplications()
                 }
                 is LoginResult.UserNotFound -> {
                     _uiState.update {
