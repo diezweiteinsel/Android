@@ -2,6 +2,7 @@ package de.cau.inf.se.sopro.data
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.auth0.android.jwt.JWT
 import de.cau.inf.se.sopro.model.applicant.Applicant
@@ -10,6 +11,7 @@ import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.network.api.ApiService
 import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
+import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
@@ -38,7 +40,7 @@ interface Repository{
 
     suspend fun refreshApplications()
 
-    suspend fun createApplication(application: Application)
+    suspend fun createApplication(application: createApplication)
 
     suspend fun updateApplication(application: Application)
 
@@ -82,7 +84,7 @@ class DefRepository(private val apiService : ApiService,
     override suspend fun refreshApplications() {
 
         val formsResponse = apiService.getForms()
-        if (formsResponse.isSuccessful) {
+        if (formsResponse.isSuccessful) {           //getting succesful response from api
             val formsFromServer = formsResponse.body()
             if (!formsFromServer.isNullOrEmpty()) {
 
@@ -144,6 +146,7 @@ class DefRepository(private val apiService : ApiService,
 
 
     override suspend fun updateApplication(application: Application) {
+
         val response = apiService.updateApplication(application)
         try {
             response.isSuccessful
@@ -152,14 +155,16 @@ class DefRepository(private val apiService : ApiService,
         }
     }
 
-    override suspend fun createApplication(application: Application){
-        applicationDao.saveApplication(application)
+    override suspend fun createApplication(application: createApplication){
+        Log.d("Repository", "Response")
         val response = apiService.createApplication(application)
+
         try {
             response.isSuccessful
         }catch (e : IllegalArgumentException){
             print(e)
         }
+
 
     }
 
@@ -308,6 +313,7 @@ class DefRepository(private val apiService : ApiService,
     override suspend fun refreshPublicApplications() {
         try {
             val response = apiService.getApplications(isPublic = true)
+
             if (response.isSuccessful && response.body() != null) {
                 val publicApplications = response.body()!!
 

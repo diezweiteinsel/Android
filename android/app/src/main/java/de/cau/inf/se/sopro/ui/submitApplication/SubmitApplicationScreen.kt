@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -40,10 +41,9 @@ fun SubmitApplicationScreen(
 
 
 
-    //load Forms on init
     LaunchedEffect(uiState) {
         vm.onInit()
-        vm.createDynamicApplication()
+
     }
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
     // navigationType and navController stay the same. This avoids unnecessary work.
@@ -60,9 +60,12 @@ fun SubmitApplicationScreen(
             values = uiState.value.values, //look into Components submitUiState
             blocks = uiState.value.blocks,
             onValueChange = vm::onValueChange, //method from viewModel
-            onCancelClicked = { vm.onCancelClicked(navController)}, //button actions
-            onSubmit = {vm.onSubmit(navController)},
-            onCategoryChange = {vm.createDynamicApplication()})
+            onCancelClicked = {vm.onCancelClicked(navController)}, //button actions
+            onSubmit = vm::onSubmit,
+            onCategoryChange = vm::onCategoryChange,
+            categories = uiState.value.categories,
+            selectedCategory = uiState.value.selectedCategory)
+
         }
     }
 
@@ -76,24 +79,29 @@ fun SubmitApplicationContent(
     onValueChange: (String, String) -> Unit,
     onCancelClicked: () -> Unit,
     onSubmit: () -> Unit,
-    onCategoryChange: () -> Unit
-) { Column(
-        modifier = modifier.fillMaxSize().heightIn(0.dp,600.dp),
+    onCategoryChange: (String) -> Unit,
+    categories: List<String>,
+    selectedCategory: String
+) { Column(             //we are putting everything in a column
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SubmitApplicationForm(modifier = Modifier.fillMaxWidth(), onValueChange = onCategoryChange)
-        DynamicForm(modifier = Modifier.fillMaxWidth().weight(1f).verticalScroll(rememberScrollState()) ,blocks,
-            values = values, onValueChange = onValueChange)
+        SubmitApplicationCategory(modifier = Modifier.fillMaxWidth(), //this is our dropdown
+            onValueChange = onCategoryChange,
+            selectedCategory,categories )
 
-        Row(modifier= Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceEvenly){
-            CancelButton(modifier = Modifier.fillMaxWidth().padding(16.dp),
-                onClick = onCancelClicked
+
+        if(selectedCategory.isNotEmpty()) { //only if the applicant has chosen a category, we want to show the form/ the form is built
+            DynamicForm(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                blocks,
+                values = values,
+                onValueChange = onValueChange,
+                onCancelClicked = onCancelClicked,
+                onSubmit = onSubmit
             )
-            submitButton(modifier = modifier.fillMaxWidth().padding(16.dp), onClick = onSubmit)
         }
-
-        GoToYourApplicationScreen(navController = navController)
     }
 }
 

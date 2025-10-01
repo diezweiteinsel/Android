@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import de.cau.inf.se.sopro.model.application.Application
+import de.cau.inf.se.sopro.network.api.createApplication
 import kotlinx.coroutines.flow.Flow
 
 @Dao
