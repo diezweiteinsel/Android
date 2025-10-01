@@ -30,7 +30,7 @@
     <string name="back_button">Back</string>
     <string name="logout_confirmation">Are you sure you want to log out?</string>
     <string name="cancel">Cancel</string>
-    <string name="log_out">Log out (Not working)</string>
+    <string name="log_out">Log out</string>
 
 
     <!--Login page-->
@@ -39,7 +39,7 @@
     <string name="user_name_text_field">User Name</string>
     <string name="password_text_field">Password</string>
     <string name="go_to_registration_screen">Don\'t have an account? Register.</string>
-    <string name="go_to_your_application_screen">Directly go to your applications.</string>
+    <string name="go_to_your_application_screen">Offline mode.</string>
     <string name="username_is_empty">Please put in a username.</string>
     <string name="user_not_found">User not found!</string>
     <string name="wrong_password">Wrong password!</string>

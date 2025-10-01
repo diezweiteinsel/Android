@@ -1,39 +1,32 @@
 package de.cau.inf.se.sopro.model.application
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import de.cau.inf.se.sopro.model.applicant.Applicant
-import de.cau.inf.se.sopro.persistence.LocalDateTimeSerializer
-import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
+import com.google.gson.JsonElement
+import com.google.gson.annotations.SerializedName
 
-//First idea for an application class, still WIP
-@Serializable //Lets us turn the attributes into a JSON
-@Entity(foreignKeys = [
-    ForeignKey(
-        entity = Applicant::class,
-        parentColumns = ["userid"],
-        childColumns = ["applicantId"],
-        onDelete = ForeignKey.CASCADE
-    )
-])
+@Entity
 data class Application(
     @PrimaryKey
-    val id: Int? = null,
-    val applicantId: Int,
+    val id: Int,
+    @SerializedName("user_id")
+    val userId: Int,
+    @SerializedName("form_id")
     val formId: Int,
-    val category: String,
-    val applicantName: String,
-
-    @Serializable(with = LocalDateTimeSerializer::class)
-    val createdAt: LocalDateTime,
-
+    @SerializedName("admin_id")
+    val adminId: Int?,
     val status: Status,
+    @SerializedName("created_at")
+    val createdAt: String? = null,
+    @SerializedName("currentSnapshotID")
+    val currentSnapshotId: Int,
+    @SerializedName("previousSnapshotID")
+    val previousSnapshotId: Int,
+    @SerializedName("is_public")
     val isPublic: Boolean,
-    val isEdited: Boolean,
 
-    val dynamicAttributes: Map<String, String> = emptyMap()
+    @SerializedName("jsonPayload")
+    val dynamicAttributes: Map<String, JsonElement>? = emptyMap()
     )
 
 enum class Status {

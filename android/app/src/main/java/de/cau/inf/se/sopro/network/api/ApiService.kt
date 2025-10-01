@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.network.api
 
 
+import com.google.gson.annotations.SerializedName
 import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
@@ -15,7 +16,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
-import java.util.Date
 
 interface ApiService{
     @GET("api/v1/health") //check if the Database is running
@@ -38,10 +38,11 @@ interface ApiService{
 
     @GET("/api/v1/applications")
     suspend fun getApplications(
-        @Query("createdAt") createdAt: Date,
-        @Query("formID") formId: Int,
-        @Query("status") status : Status,
-        @Query("applicantId") applicantId: Int
+        @Query("user_id") userId: Int? = null,
+        @Query("form_id") formId: Int? = null,
+        @Query("status") status: Status? = null,
+        @Query("is_public") isPublic: Boolean? = null
+
     ) : Response<List<Application>>
 
     @POST("/api/v1/applications")
@@ -57,8 +58,12 @@ interface ApiService{
 //data classes
 @Serializable
 data class LoginResponse(
-    val access_token: String, //we are using names with underscore only because we are getting those variablenames from the api
-    val token_type: String,//for some reason using @SerialName didnt really work
+    @SerializedName("access_token")
+    val accessToken: String?,
+    @SerializedName("token_type")
+    val tokenType: String,
+    @SerializedName("user_id")
+    val userId: Int,
     val roles: List<String>
 )
 
