@@ -132,4 +132,19 @@ fun OptionsContent(
             )
         }
     }
+
+    if (uiState.showRestartMessage) {
+        AlertDialog(
+            onDismissRequest = onDismissRestartMessage,
+            title = { Text("Gespeichert") },
+            text = { Text("Die neue URL wird nach einem Neustart der App verwendet.") },
+            confirmButton = {
+                TextButton(
+                    onClick = onDismissRestartMessage
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 }
