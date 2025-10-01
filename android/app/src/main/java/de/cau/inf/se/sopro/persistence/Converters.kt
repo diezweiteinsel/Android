@@ -4,7 +4,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
+import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
@@ -17,11 +19,52 @@ import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
+
 import java.time.LocalDateTime
 
 class Converters {
     private val gson = Gson()
+
+    @TypeConverter
+    fun fromStatus(status: Status?): String? {
+        return status?.name
+    }
+
+    @TypeConverter
+    fun toStatus(value: String?): Status? {
+        return value?.let { Status.valueOf(it) }
+    }
+
+    @TypeConverter
+    fun fromBlockMap(value: String?): Map<String, Block>? {
+        if (value == null) {
+            return null
+        }
+        val mapType = object : TypeToken<Map<String, Block>>() {}.type
+        return gson.fromJson(value, mapType)
+    }
+
+    @TypeConverter
+    fun toBlockMap(map: Map<String, Block>?): String? {
+        return gson.toJson(map)
+    }
+
+    @TypeConverter
+    fun fromJsonElementMap(value: String?): Map<String, JsonElement>? {
+        if (value == null) {
+            return null
+        }
+        val mapType = object : TypeToken<Map<String, JsonElement>>() {}.type
+        return Gson().fromJson(value, mapType)
+    }
+
+    @TypeConverter
+    fun toJsonElementMap(map: Map<String, JsonElement>?): String? {
+        if (map == null) {
+            return null
+        }
+        return Gson().toJson(map)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
@@ -35,13 +78,13 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromStatus(value: String?): Status? {
-        return value?.let { Status.valueOf(it) }
+    fun fromUsertype(value: String?): Usertype? {
+        return value?.let { Usertype.valueOf(it) }
     }
 
     @TypeConverter
-    fun toStatus(status: Status?): String? {
-        return status?.name
+    fun toUsertype(usertype: Usertype?): String? {
+        return usertype?.name
     }
 
     @TypeConverter
@@ -75,18 +118,6 @@ class Converters {
     @TypeConverter
     fun toStringMap(map: Map<String, String>?): String {
         return gson.toJson(map ?: emptyMap<String, String>())
-    }
-
-    @TypeConverter
-    fun fromJsonElementMap(value: String?): Map<String, JsonElement>? {
-        if (value == null) return null
-        return Json.decodeFromString(value)
-    }
-
-    @TypeConverter
-    fun toJsonElementMap(map: Map<String, JsonElement>?): String? {
-        if (map == null) return null
-        return Json.encodeToString(map)
     }
 }
 

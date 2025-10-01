@@ -38,7 +38,7 @@ interface ApiService{
 
     @GET("/api/v1/applications")
     suspend fun getApplications(
-        @Query("user_id") userId: Int?,
+        @Query("user_id") userId: Int? = null,
         @Query("form_id") formId: Int? = null,
         @Query("status") status: Status? = null,
         @Query("is_public") isPublic: Boolean? = null

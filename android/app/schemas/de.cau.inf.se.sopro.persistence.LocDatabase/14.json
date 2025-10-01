@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 13,
-    "identityHash": "4b93e76180fbbe32db08d4ba63fd846c",
+    "version": 14,
+    "identityHash": "86270764ec37749c1c9d088aabe430f7",
     "entities": [
       {
         "tableName": "Application",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `adminId` INTEGER, `status` TEXT NOT NULL, `createdAt` TEXT, `currentSnapshotId` INTEGER NOT NULL, `previousSnapshotId` INTEGER NOT NULL, `isPublic` INTEGER NOT NULL, `dynamicAttributes` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`userId`) REFERENCES `Applicant`(`userId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `adminId` INTEGER, `status` TEXT NOT NULL, `createdAt` TEXT, `currentSnapshotId` INTEGER NOT NULL, `previousSnapshotId` INTEGER NOT NULL, `isPublic` INTEGER NOT NULL, `dynamicAttributes` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`userId`) REFERENCES `Applicant`(`userId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -63,8 +63,7 @@
           {
             "fieldPath": "dynamicAttributes",
             "columnName": "dynamicAttributes",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -178,7 +177,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4b93e76180fbbe32db08d4ba63fd846c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '86270764ec37749c1c9d088aabe430f7')"
     ]
   }
 }

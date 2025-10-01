@@ -13,11 +13,11 @@ class TokenManager(context: Context) {
     }
 
     fun saveJwt(jwt: String) {
-        prefs.edit().putString(AUTH_TOKEN, jwt).apply()
+        prefs.edit().putString(AUTH_TOKEN, jwt).commit()
     }
 
     fun saveUserId(id: Int) {
-        prefs.edit().putInt(USER_ID, id).apply()
+        prefs.edit().putInt(USER_ID, id).commit()
     }
 
     fun getUserId(): Int? {
@@ -30,13 +30,13 @@ class TokenManager(context: Context) {
     }
 
     fun clearJwt() {
-        prefs.edit().remove(AUTH_TOKEN).apply()
+        prefs.edit().remove(AUTH_TOKEN).commit()
     }
 
     fun clearAll() {
         prefs.edit()
             .remove(AUTH_TOKEN)
             .remove(USER_ID)
-            .apply()
+            .commit()
     }
 }

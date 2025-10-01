@@ -18,17 +18,14 @@ interface ApplicationDao {
     fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
 
     @Query("Select * from Application where isPublic = 1")
-    fun getPublicApplications() : Flow<List<Application>>
+    fun getPublicApplicationsAsFlow() : Flow<List<Application>>
 
     @Query("DELETE FROM Application")
     suspend fun deleteAll()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(applications: List<Application>)
+    @Upsert
+    suspend fun upsertAll(applications: List<Application>)
 
     @Insert
     suspend fun saveApplication(application: Application)
-
-    @Upsert
-    suspend fun updateApplication(application: Application)
 }

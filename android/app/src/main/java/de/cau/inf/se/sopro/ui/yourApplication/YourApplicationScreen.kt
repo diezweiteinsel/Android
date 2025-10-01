@@ -13,6 +13,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ fun YourApplicationScreen(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { viewModel.refreshApplications() } // Ruft die Refresh-Funktion im ViewModel auf
+        onRefresh = { viewModel.refreshApplications() }
     )
 
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
@@ -49,6 +50,11 @@ fun YourApplicationScreen(
     val bottomBar = remember(navigationType, navController) {
         createBottomBar(navigationType, currentTab = AppDestination.YourApplicationDestination, navController)
     }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadApplications()
+    }
+
     ScreenScaffold(
         titleRes = R.string.your_application_title,
         bottomBar = bottomBar

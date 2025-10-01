@@ -22,6 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
     val repository : Repository
+    val tokenManager: TokenManager
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -41,7 +42,8 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     // Set the currently used web backend URL
     private val USED_URL = BASE_URL_LOOPBACK_FOR_EMULATOR
 
-    private val tokenManager: TokenManager by lazy {
+
+    override val tokenManager: TokenManager by lazy {
         TokenManager(context)
     }
 

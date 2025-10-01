@@ -23,6 +23,7 @@ import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
 import de.cau.inf.se.sopro.ui.options.OptionsViewModel
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
+import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationViewModel
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.ui.yourApplication.ViewModelFactory
@@ -49,8 +50,9 @@ fun AppNavHost(
             composable(AppDestination.YourApplicationDestination.route) {
                 val application = LocalContext.current.applicationContext as CivitasApplication
                 val repository = application.container.repository
+                val tokenManager = application.container.tokenManager
 
-                val factory = ViewModelFactory(repository)
+                val factory = ViewModelFactory(repository, tokenManager)
                 val applicationViewModel: YourApplicationViewModel = viewModel(factory = factory)
 
                 YourApplicationScreen(
@@ -70,7 +72,18 @@ fun AppNavHost(
             route = RootGraph.PublicApplication.route,
             startDestination = RootGraph.PublicApplication.startDestination.route
         ) {
-            composable(AppDestination.PublicApplicationDestination.route) { PublicApplicationScreen(navigationType, navController) }
+            composable(AppDestination.PublicApplicationDestination.route) {
+                val application = LocalContext.current.applicationContext as CivitasApplication
+                val repository = application.container.repository
+                val factory = ViewModelFactory(repository, tokenManager = application.container.tokenManager)
+                val publicViewModel: PublicApplicationViewModel = viewModel(factory = factory)
+
+                PublicApplicationScreen(
+                    navigationType,
+                    navController,
+                    viewModel = publicViewModel
+                )
+            }
         }
         navigation(
             route = RootGraph.Login.route,
@@ -87,7 +100,7 @@ fun AppNavHost(
             composable(AppDestination.OptionsDestination.route) {
                 val application = LocalContext.current.applicationContext as CivitasApplication
                 val repository = application.container.repository
-                val factory = ViewModelFactory(repository)
+                val factory = ViewModelFactory(repository, tokenManager = application.container.tokenManager)
                 val optionsViewModel: OptionsViewModel = viewModel(factory = factory)
 
                 OptionsScreen(

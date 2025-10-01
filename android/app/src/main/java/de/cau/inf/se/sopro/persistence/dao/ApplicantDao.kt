@@ -22,4 +22,6 @@ interface ApplicantDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE) //we want to be able to create users with the same username and password
     suspend fun saveApplicant(applicant: Applicant)
 
+    @Upsert
+    suspend fun upsertApplicant(applicant: Applicant)
 }
