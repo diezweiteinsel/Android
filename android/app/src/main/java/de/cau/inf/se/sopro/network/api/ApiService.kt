@@ -7,6 +7,7 @@ import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
+import de.cau.inf.se.sopro.ui.submitApplication.FieldPayload
 import kotlinx.serialization.Serializable
 import retrofit2.Response
 import retrofit2.http.Body
@@ -37,7 +38,7 @@ interface ApiService{
     suspend fun getForms() : Response<List<Form>>
 
     @GET("/api/v1/applications")
-    suspend fun getApplications(
+    suspend fun getApplications( //criteria for filtering applications
         @Query("user_id") userId: Int? = null,
         @Query("form_id") formId: Int? = null,
         @Query("status") status: Status? = null,
@@ -46,7 +47,8 @@ interface ApiService{
     ) : Response<List<Application>>
 
     @POST("/api/v1/applications")
-    suspend fun createApplication(application: createApplication) : Response<Int>
+    suspend fun createApplication(@Body request : createApplication) : Response<CreateResponse>
+    //create Application with desired body
 
 
     @PUT("/api/v1/applications/{applicationId}")
@@ -68,7 +70,7 @@ data class LoginResponse(
 )
 
 @Serializable
-data class CreateApplicantResponse(
+data class CreateApplicantResponse( //our response if an applicant is created from api
     val user_id: Int
 )
 
@@ -95,9 +97,11 @@ data class Section( //this is one form
     val fields: List<Block> = emptyList() //this list contains our building blocks for the application
 )
 
-@Serializable
+
 data class createApplication( //these are the exact variable names that our api expects regarding the underscores
-    val user_id : Int,
     val form_id : Int,
-    val payload : Map<String, String>
+    val payload : Map<Int, FieldPayload>
+)
+data class CreateResponse( //our response if an application is created
+    val id: Int
 )

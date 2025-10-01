@@ -43,6 +43,7 @@ fun SubmitApplicationScreen(
 
     LaunchedEffect(uiState) {
         vm.onInit()
+
     }
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
     // navigationType and navController stay the same. This avoids unnecessary work.
@@ -59,8 +60,8 @@ fun SubmitApplicationScreen(
             values = uiState.value.values, //look into Components submitUiState
             blocks = uiState.value.blocks,
             onValueChange = vm::onValueChange, //method from viewModel
-            onCancelClicked = { vm.onCancelClicked(navController)}, //button actions
-            onSubmit = {vm.onSubmit(navController)},
+            onCancelClicked = {vm.onCancelClicked(navController)}, //button actions
+            onSubmit = vm::onSubmit,
             onCategoryChange = vm::onCategoryChange,
             categories = uiState.value.categories,
             selectedCategory = uiState.value.selectedCategory)
@@ -78,19 +79,29 @@ fun SubmitApplicationContent(
     onValueChange: (String, String) -> Unit,
     onCancelClicked: () -> Unit,
     onSubmit: () -> Unit,
-    onCategoryChange: () -> Unit,
+    onCategoryChange: (String) -> Unit,
     categories: List<String>,
     selectedCategory: String
-) { Column(
+) { Column(             //we are putting everything in a column
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SubmitApplicationCategory(modifier = Modifier.fillMaxWidth(),onValueChange = onCategoryChange,selectedCategory,categories )
+        SubmitApplicationCategory(modifier = Modifier.fillMaxWidth(), //this is our dropdown
+            onValueChange = onCategoryChange,
+            selectedCategory,categories )
 
-        DynamicForm(modifier = Modifier.fillMaxWidth().weight(1f) ,blocks,
-            values = values, onValueChange = onValueChange, onCancelClicked = onCancelClicked, onSubmit = onSubmit)
 
+        if(selectedCategory.isNotEmpty()) { //only if the applicant has chosen a category, we want to show the form/ the form is built
+            DynamicForm(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                blocks,
+                values = values,
+                onValueChange = onValueChange,
+                onCancelClicked = onCancelClicked,
+                onSubmit = onSubmit
+            )
+        }
     }
 }
 

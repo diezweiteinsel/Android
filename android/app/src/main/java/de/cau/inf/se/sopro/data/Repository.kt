@@ -2,6 +2,7 @@ package de.cau.inf.se.sopro.data
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.auth0.android.jwt.JWT
 import de.cau.inf.se.sopro.model.applicant.Applicant
@@ -37,7 +38,7 @@ interface Repository{
 
     suspend fun refreshApplications()
 
-    suspend fun createApplication(application: Application)
+    suspend fun createApplication(application: createApplication)
 
     suspend fun updateApplication(application: Application)
 
@@ -81,7 +82,7 @@ class DefRepository(private val apiService : ApiService,
     override suspend fun refreshApplications() {
 
         val formsResponse = apiService.getForms()
-        if (formsResponse.isSuccessful) {
+        if (formsResponse.isSuccessful) {           //getting succesful response from api
             val formsFromServer = formsResponse.body()
             if (!formsFromServer.isNullOrEmpty()) {
 
@@ -133,18 +134,17 @@ class DefRepository(private val apiService : ApiService,
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun createApplication(application: createApplication){
-
+        Log.d("Repository", "Response")
         val response = apiService.createApplication(application)
+
         try {
             response.isSuccessful
         }catch (e : IllegalArgumentException){ //is not an IllegalArgumentException
             print(e)
         }
-        val applicationId : Int? = response.body()
-        val now = LocalDateTime.now()
-        //applicationDao.saveApplication()
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -292,6 +292,7 @@ class DefRepository(private val apiService : ApiService,
     override suspend fun refreshPublicApplications() {
         try {
             val response = apiService.getApplications(isPublic = true)
+
             if (response.isSuccessful && response.body() != null) {
                 val publicApplications = response.body()!!
 

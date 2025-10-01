@@ -45,7 +45,7 @@ import org.junit.experimental.categories.Categories
 fun SubmitApplicationCategory(
 
     modifier: Modifier = Modifier,
-    onValueChange: () -> Unit,
+    onValueChange: (String) -> Unit,
     selectedCategory: String,
     categories: List<String>
 ) {
@@ -56,7 +56,7 @@ fun SubmitApplicationCategory(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(text = if(selectedCategory.isNotEmpty()) selectedCategory else "choose category")
+            Text(text = selectedCategory.ifEmpty { "choose category" })
         }
         DropdownMenu(
             expanded = expanded,
@@ -67,7 +67,7 @@ fun SubmitApplicationCategory(
                 DropdownMenuItem(
                     text = { Text(category) },
                     onClick = {
-                        onValueChange()
+                        onValueChange(category)
                         expanded = false
                     }
                 )
@@ -123,7 +123,7 @@ fun DynamicForm(
             }
             Spacer(Modifier.height(16.dp))
         }
-        item {
+        item { //our submit and cancel buttons
             Row(modifier= Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly){
                 CancelButton(modifier = Modifier.padding(16.dp),
                     onClick = onCancelClicked
@@ -158,6 +158,7 @@ fun SubmitButton(modifier: Modifier= Modifier, onClick: () -> Unit){
     }
 }
 
+//all our dataclasses for the submit application screen
 data class SubmitApplicationUiState( //this is our uiState, which we want to be a single source of truth
     val isLoading: Boolean = false,
     val values : Map<String, String> = emptyMap(), //userinput
@@ -167,13 +168,18 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
     val selectedCategory: String = ""
 )
 
-    enum class FieldType { TEXT, NUMBER, DATE}
+    enum class FieldType { TEXT, NUMBER, DATE} //fieldtypes to generate
     data class UiBlock( //this is how we define a block for now
         val label: String,
         val datatype: String,
         val required: Boolean,
         val type: FieldType,
         val constraintsJson: List<String>?
+    )
+    data class FieldPayload( //for our payload to submit the application
+    val label: String,
+    val value: String,
+    val data_type: String
     )
     var blocks = mutableListOf(UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
         UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
