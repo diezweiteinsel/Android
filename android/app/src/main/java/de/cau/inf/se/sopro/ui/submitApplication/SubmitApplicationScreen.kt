@@ -41,10 +41,8 @@ fun SubmitApplicationScreen(
 
 
 
-    //load Forms on init
     LaunchedEffect(uiState) {
         vm.onInit()
-        vm.createDynamicApplication()
     }
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
     // navigationType and navController stay the same. This avoids unnecessary work.
@@ -63,9 +61,10 @@ fun SubmitApplicationScreen(
             onValueChange = vm::onValueChange, //method from viewModel
             onCancelClicked = { vm.onCancelClicked(navController)}, //button actions
             onSubmit = {vm.onSubmit(navController)},
-            onCategoryChange = {vm.createDynamicApplication()},
-            makePublic = uiState.value.makePublic,
-            onCheckedChange = {vm.onCheckedChange(it)})
+            onCategoryChange = vm::onCategoryChange,
+            categories = uiState.value.categories,
+            selectedCategory = uiState.value.selectedCategory)
+
         }
     }
 
@@ -80,20 +79,18 @@ fun SubmitApplicationContent(
     onCancelClicked: () -> Unit,
     onSubmit: () -> Unit,
     onCategoryChange: () -> Unit,
-    makePublic: Boolean = false,
-    onCheckedChange: (Boolean) -> Unit = {}
+    categories: List<String>,
+    selectedCategory: String
 ) { Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SubmitApplicationForm(modifier = Modifier.fillMaxWidth(), onValueChange = onCategoryChange)
+        SubmitApplicationCategory(modifier = Modifier.fillMaxWidth(),onValueChange = onCategoryChange,selectedCategory,categories )
 
         DynamicForm(modifier = Modifier.fillMaxWidth().weight(1f) ,blocks,
-            values = values, onValueChange = onValueChange, onCancelClicked = onCancelClicked, onSubmit = onSubmit,makePublic,onCheckedChange)
+            values = values, onValueChange = onValueChange, onCancelClicked = onCancelClicked, onSubmit = onSubmit)
 
-
-        //GoToYourApplicationScreen(navController = navController)
     }
 }
 

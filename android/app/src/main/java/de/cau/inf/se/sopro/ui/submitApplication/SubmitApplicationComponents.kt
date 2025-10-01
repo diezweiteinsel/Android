@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -34,40 +38,42 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.utils.DynamicSelectTextField
+import org.junit.experimental.categories.Categories
+
 
 @Composable
 fun SubmitApplicationCategory(
-    modifier: Modifier = Modifier
-) {
 
-
-
-    //The text field for the categories for the applications
-
-}
-@Composable
-fun SubmitApplicationForm(
     modifier: Modifier = Modifier,
-    onValueChange: () -> Unit
+    onValueChange: () -> Unit,
+    selectedCategory: String,
+    categories: List<String>
 ) {
-    val categories = Suggestion.CATEGORIES
-    //this is here to remember the state of our textfield
-    var searchQuery by remember { mutableStateOf("") }
-    DynamicSelectTextField(
-        //we have to declare all these attributes every time we want a new DynamicSelectTextField
-        searchQuery = searchQuery,
-        { query -> searchQuery = query },
-        { option ->
-            searchQuery = option
-        },
-        categories,
-        "Category",
-        modifier = modifier.then(
-            Modifier
-                .padding(dimensionResource(id = R.dimen.padding_small))
-        )
-    )
-
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = modifier) {
+        Button(
+            onClick = { expanded = true },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(text = if(selectedCategory.isNotEmpty()) selectedCategory else "choose category")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(category) },
+                    onClick = {
+                        onValueChange()
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,8 +85,6 @@ fun DynamicForm(
     onValueChange: (String, String) -> Unit,
     onCancelClicked: () -> Unit,
     onSubmit: () -> Unit,
-    makePublic : Boolean,
-    onCheckedChange: (Boolean) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 200.dp),
@@ -116,19 +120,6 @@ fun DynamicForm(
                             }
                         }
                 )
-                FieldType.CHECKBOX -> {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .clickable { onCheckedChange }
-                    ) {
-                        Checkbox(checked = makePublic, onCheckedChange = onCheckedChange, modifier = Modifier.padding(end = 8.dp))
-                        Text(block.label)
-                    }
-                }
-
             }
             Spacer(Modifier.height(16.dp))
         }
@@ -172,10 +163,11 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
     val values : Map<String, String> = emptyMap(), //userinput
     val errorMessage: String? = null,
     val blocks: List<UiBlock> = emptyList(), //the blocks of our form
-    val makePublic: Boolean = false
+    val categories: List<String> = emptyList(),
+    val selectedCategory: String = ""
 )
 
-    enum class FieldType { TEXT, NUMBER, DATE, CHECKBOX }
+    enum class FieldType { TEXT, NUMBER, DATE}
     data class UiBlock( //this is how we define a block for now
         val label: String,
         val datatype: String,
@@ -183,7 +175,6 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
         val type: FieldType,
         val constraintsJson: List<String>?
     )
-
     var blocks = mutableListOf(UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
         UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
         UiBlock("E-Mail", "STRING", false,FieldType.TEXT, constraintsJson = emptyList()))
