@@ -189,11 +189,11 @@ fun LoginContent(
             Row(
                 modifier = Modifier
                     .padding(top = 24.dp)
-                    .clickable { isExpanded = !isExpanded }, // Schaltet den Zustand um
+                    .clickable { isExpanded = !isExpanded },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Change server options",
+                    text = stringResource(R.string.change_server_options),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -225,13 +225,13 @@ fun LoginContent(
         if (uiState.showRestartMessage) {
             AlertDialog(
                 onDismissRequest = onDismissRestartMessage,
-                title = { Text("Gespeichert") },
-                text = { Text("Die neue URL wird nach einem Neustart der App verwendet.") },
+                title = { Text(stringResource(R.string.options_save_button)) },
+                text = { Text(stringResource(R.string.new_url_msg)) },
                 confirmButton = {
                     TextButton(
                         onClick = onDismissRestartMessage
                     ) {
-                        Text("OK")
+                        Text(stringResource(R.string.ok))
                     }
                 }
             )
