@@ -57,8 +57,8 @@ interface ApiService{
 //data classes
 @Serializable
 data class LoginResponse(
-    val access_token: String,
-    val token_type: String,
+    val access_token: String, //we are using names with underscore only because we are getting those variablenames from the api
+    val token_type: String,//for some reason using @SerialName didnt really work
     val roles: List<String>
 )
 

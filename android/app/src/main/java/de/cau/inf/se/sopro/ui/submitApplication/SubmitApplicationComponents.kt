@@ -7,26 +7,16 @@ import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,14 +31,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import androidx.room.ColumnInfo
 import de.cau.inf.se.sopro.R
-import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.ui.utils.DynamicSelectTextField
-import kotlinx.serialization.json.JsonObject
-import java.util.concurrent.ThreadLocalRandom.current
 
 @Composable
 fun SubmitApplicationCategory(
@@ -152,7 +137,8 @@ fun DynamicForm(
                 CancelButton(modifier = Modifier.padding(16.dp),
                     onClick = onCancelClicked
                 )
-                SubmitButton(modifier = modifier.padding(16.dp), onClick = onSubmit)
+                SubmitButton(modifier = modifier.padding(16.dp)
+                    , onClick = onSubmit)
             }
         }
         }
@@ -173,7 +159,10 @@ fun CancelButton( // Renamed to follow Composable naming conventions (PascalCase
 
 @Composable
 fun SubmitButton(modifier: Modifier= Modifier, onClick: () -> Unit){
-    ElevatedButton(onClick = { onClick() }) {
+    ElevatedButton(modifier = modifier
+        .padding(horizontal = 8.dp)
+        .height(48.dp),onClick = { onClick() },
+        shape = RoundedCornerShape(12.dp)){
         Text(stringResource(R.string.submit_application))
     }
 }
@@ -184,7 +173,6 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
     val errorMessage: String? = null,
     val blocks: List<UiBlock> = emptyList(), //the blocks of our form
     val makePublic: Boolean = false
-
 )
 
     enum class FieldType { TEXT, NUMBER, DATE, CHECKBOX }

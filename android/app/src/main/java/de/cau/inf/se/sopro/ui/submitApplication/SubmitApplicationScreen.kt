@@ -63,7 +63,9 @@ fun SubmitApplicationScreen(
             onValueChange = vm::onValueChange, //method from viewModel
             onCancelClicked = { vm.onCancelClicked(navController)}, //button actions
             onSubmit = {vm.onSubmit(navController)},
-            onCategoryChange = {vm.createDynamicApplication()})
+            onCategoryChange = {vm.createDynamicApplication()},
+            makePublic = uiState.value.makePublic,
+            onCheckedChange = {vm.onCheckedChange(it)})
         }
     }
 
@@ -77,16 +79,18 @@ fun SubmitApplicationContent(
     onValueChange: (String, String) -> Unit,
     onCancelClicked: () -> Unit,
     onSubmit: () -> Unit,
-    onCategoryChange: () -> Unit
+    onCategoryChange: () -> Unit,
+    makePublic: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit = {}
 ) { Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        //SubmitApplicationForm(modifier = Modifier.fillMaxWidth(), onValueChange = onCategoryChange)
+        SubmitApplicationForm(modifier = Modifier.fillMaxWidth(), onValueChange = onCategoryChange)
 
-        DynamicForm(modifier = Modifier.fillMaxWidth().weight(1f).verticalScroll(rememberScrollState()) ,blocks,
-            values = values, onValueChange = onValueChange, onCancelClicked = onCancelClicked, onSubmit = onSubmit)
+        DynamicForm(modifier = Modifier.fillMaxWidth().weight(1f) ,blocks,
+            values = values, onValueChange = onValueChange, onCancelClicked = onCancelClicked, onSubmit = onSubmit,makePublic,onCheckedChange)
 
 
         //GoToYourApplicationScreen(navController = navController)

@@ -41,8 +41,6 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
         }
     }
     fun onSubmit(navController: NavHostController){
-
-
         if(_uiState.value.values.isNotEmpty()){
             viewModelScope.launch { //in der folgenden Zeile muss noch getUserId und
                 repository.createApplication(createApplication(1,  1, _uiState.value.values))
@@ -57,6 +55,11 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
     fun onCancelClicked(navController: NavHostController) {
 
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
+    }
+    fun onCheckedChange(value: Boolean) {
+        _uiState.update {
+            it.copy(makePublic = value)
+        }
     }
     fun createDynamicApplication() {
         Log.d("MyApp", "createDynamicApplication() executed")
