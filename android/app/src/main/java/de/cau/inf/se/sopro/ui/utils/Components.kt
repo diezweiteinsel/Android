@@ -1,5 +1,10 @@
 package de.cau.inf.se.sopro.ui.utils
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -14,10 +19,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import de.cau.inf.se.sopro.R
 
 
@@ -114,6 +121,39 @@ fun DynamicSelectTextField(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun UrlEditor(
+    currentUrl: String, // Die aktuell im Textfeld angezeigte URL
+    onUrlChange: (String) -> Unit, // Was passiert, wenn der Text sich ändert
+    onSave: () -> Unit, // Was passiert, wenn der Speicher-Button geklickt wird
+    isError: Boolean, // Wird ein Fehler angezeigt?
+    supportingText: @Composable (() -> Unit)?, // Der Fehlertext selbst
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(48.dp))
+
+        OutlinedTextField(
+            value = currentUrl,
+            onValueChange = onUrlChange,
+            modifier = Modifier.fillMaxWidth(0.7f),
+            label = { Text("Change the URL") },
+            isError = isError,
+            supportingText = supportingText,
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(onClick = onSave) {
+            Text("Save")
         }
     }
 }

@@ -33,6 +33,7 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.utils.UrlEditor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +68,8 @@ fun LoginScreen(
             onUsernameChange = viewModel::onUsernameChange,
             onPasswordChange = viewModel::onPasswordChange,
             onLoginClick = viewModel::onLoginClick,
+            onUrlChange = viewModel::onUrlChange,
+            onSaveUrl = viewModel::onSaveUrl,
             navController = navController
         )
     }
@@ -81,6 +84,8 @@ fun LoginContent(
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
+    onUrlChange: (String) -> Unit,
+    onSaveUrl: () -> Unit,
     navController: NavHostController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -118,7 +123,7 @@ fun LoginContent(
                 value = uiState.username.value,
                 onValueChange = onUsernameChange,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.user_name_text_field)) },
                 isError = uiState.username.isError,
@@ -136,7 +141,7 @@ fun LoginContent(
                 value = uiState.password.value,
                 onValueChange = onPasswordChange,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
                 label = { Text(stringResource(R.string.password_text_field)) },
                 isError = uiState.password.isError,
@@ -158,6 +163,17 @@ fun LoginContent(
 
             GoToYourApplicationScreen(navController = navController)
 
+            UrlEditor(
+                currentUrl = uiState.url,
+                onUrlChange = onUrlChange,
+                onSave = onSaveUrl,
+                isError = uiState.urlError != null,
+                supportingText = {
+                    if (uiState.urlError != null) {
+                        Text(text = uiState.urlError, color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            )
         }
     }
 }

@@ -23,55 +23,45 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface AppContainer {
     val repository : Repository
     val tokenManager: TokenManager
+    val urlManager: UrlManager
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
-    private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+    override val urlManager: UrlManager by lazy {
+        UrlManager(context)
     }
-
-    // This is the default URL of the web backend running locally on the host.
-    private val BASE_URL_LOCALHOST = "http://localhost:8000"
-
-    // The Android App running within the emulator can access the web backend
-    // running locally on the same host via the loopback address 10.0.2.2
-    //private val BASE_URL_LOOPBACK_FOR_EMULATOR = "http://134.245.1.240:1203"
-    private val BASE_URL_LOOPBACK_FOR_EMULATOR = "http://10.0.2.2:8083/"
-
-    // Set the currently used web backend URL
-    private val USED_URL = BASE_URL_LOOPBACK_FOR_EMULATOR
-
 
     override val tokenManager: TokenManager by lazy {
         TokenManager(context)
     }
 
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    private val authInterceptor = AuthInterceptor(tokenManager)
+
+    private val authClient: OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .addInterceptor(authInterceptor)
+        .build()
+
+    private val retrofit: Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(authClient)
+        .baseUrl(urlManager.getUrl())
+        .build()
+
+    private val api: ApiService = retrofit.create(ApiService::class.java)
 
     private val applicantDao: ApplicantDao = LocDatabase.getDatabase(context).applicantDao()
     private val applicationDao: ApplicationDao = LocDatabase.getDatabase(context).applicationDao()
     private val formDao: FormDao = LocDatabase.getDatabase(context).formDao()
-    private val authInterceptor = AuthInterceptor(tokenManager)
-
-
-    // Create instance of OkHttpClient with interceptor that adds
-    // credentials for HTTP Basic Authentication to each request
-    var authClient: OkHttpClient =
-        OkHttpClient().newBuilder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(authInterceptor)
-            .build()
-        private val retrofit: Retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(authClient)
-            .baseUrl(USED_URL)
-            .build()
-        private val api: ApiService = retrofit.create(ApiService::class.java)
 
     override val repository: Repository by lazy {
-        DefRepository( api,applicantDao,applicationDao,formDao,tokenManager)
+        DefRepository(api, applicantDao, applicationDao, formDao, tokenManager)
+
     }
-
-
 }
 

@@ -15,6 +15,7 @@ import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.data.LoginResult
 import de.cau.inf.se.sopro.data.Repository
+import de.cau.inf.se.sopro.di.UrlManager
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,7 +27,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(private val repository: Repository) : ViewModel() {
+class LoginViewModel(
+    private val repository: Repository,
+    private val urlManager: UrlManager
+) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
@@ -111,6 +115,24 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    fun onSaveUrl() {
+        val currentUrl = _uiState.value.url
+        if (currentUrl.isNotBlank() && (currentUrl.startsWith("http://") || currentUrl.startsWith("https://"))) {
+            urlManager.saveUrl(currentUrl)
+            _uiState.update { it.copy(showRestartMessage = true) }
+        } else {
+            _uiState.update { it.copy(urlError = "Invalid URL") }
+        }
+    }
+
+    fun onDismissRestartMessage() {
+        _uiState.update { it.copy(showRestartMessage = false) }
+    }
+
+    fun onUrlChange(newUrl: String) {
+        _uiState.update { it.copy(url = newUrl, urlError = null) }
+    }
+
 
     companion object {
 
@@ -119,8 +141,9 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
                 val application =
                     this[AndroidViewModelFactory.APPLICATION_KEY] as CivitasApplication
                 val repository = application.container.repository
+                val urlManager = application.container.urlManager
                 //val savedStateHandle = this.createSavedStateHandle()
-                LoginViewModel(repository)
+                LoginViewModel(repository, urlManager)
             }
         }
     }

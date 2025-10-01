@@ -132,7 +132,10 @@ private fun LoginScreenPreview() {
 data class LoginUiState(
     val username: FormFieldState = FormFieldState(),
     val password: FormFieldState = FormFieldState(),
-    val loginError: String? = null
+    val loginError: String? = null,
+    val url: String = "",
+    val urlError: String? = null,
+    val showRestartMessage: Boolean = false
 )
 
 data class LoginFormFieldState(

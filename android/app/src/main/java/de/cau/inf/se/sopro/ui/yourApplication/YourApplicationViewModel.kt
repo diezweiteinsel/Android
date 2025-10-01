@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.data.TokenManager
+import de.cau.inf.se.sopro.di.UrlManager
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.ui.login.LoginViewModel
 import de.cau.inf.se.sopro.ui.options.OptionsViewModel
@@ -56,7 +57,8 @@ class YourApplicationViewModel(
 
 class ViewModelFactory(
     private val repository: Repository,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val urlManager: UrlManager
 ) : ViewModelProvider.Factory {
     @RequiresApi(Build.VERSION_CODES.O)
 
@@ -69,12 +71,12 @@ class ViewModelFactory(
 
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return LoginViewModel(repository) as T
+            return LoginViewModel(repository, urlManager) as T
         }
 
         if (modelClass.isAssignableFrom(OptionsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return OptionsViewModel(repository) as T
+            return OptionsViewModel(repository, urlManager) as T
         }
 
         if (modelClass.isAssignableFrom(PublicApplicationViewModel::class.java)) {
