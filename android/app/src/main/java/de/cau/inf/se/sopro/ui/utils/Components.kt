@@ -127,11 +127,11 @@ fun DynamicSelectTextField(
 
 @Composable
 fun UrlEditor(
-    currentUrl: String, // Die aktuell im Textfeld angezeigte URL
-    onUrlChange: (String) -> Unit, // Was passiert, wenn der Text sich ändert
-    onSave: () -> Unit, // Was passiert, wenn der Speicher-Button geklickt wird
-    isError: Boolean, // Wird ein Fehler angezeigt?
-    supportingText: @Composable (() -> Unit)?, // Der Fehlertext selbst
+    currentUrl: String,
+    onUrlChange: (String) -> Unit,
+    onSave: () -> Unit,
+    isError: Boolean,
+    supportingText: @Composable (() -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -144,7 +144,8 @@ fun UrlEditor(
             value = currentUrl,
             onValueChange = onUrlChange,
             modifier = Modifier.fillMaxWidth(0.7f),
-            label = { Text("Change the URL") },
+            label = { Text(stringResource(id = R.string.change_url)) },
+            placeholder = { Text(stringResource(id = R.string.example_url)) },
             isError = isError,
             supportingText = supportingText,
             singleLine = true
@@ -153,7 +154,7 @@ fun UrlEditor(
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = onSave) {
-            Text("Save")
+            Text( stringResource(id = R.string.options_save_button) )
         }
     }
 }
