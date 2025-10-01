@@ -21,6 +21,7 @@ import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.utils.HealthStatus
 
 
 //All the parts that get displayed on the LoginScreen
@@ -135,7 +136,8 @@ data class LoginUiState(
     val loginError: String? = null,
     val url: String = "",
     val urlError: String? = null,
-    val showRestartMessage: Boolean = false
+    val showRestartMessage: Boolean = false,
+    val healthStatus: HealthStatus = HealthStatus.IDLE
 )
 
 data class LoginFormFieldState(

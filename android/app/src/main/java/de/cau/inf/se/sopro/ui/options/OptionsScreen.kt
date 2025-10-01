@@ -16,9 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -61,8 +59,10 @@ fun OptionsScreen(navigationType: AppNavigationType,
             onLogoutClick = viewModel::onLogoutClick,
             onConfirmLogout = viewModel::onConfirmLogout,
             onUrlChange = viewModel::onUrlChange,
+            toDefault = viewModel::toDefaultUrl,
             onDismissLogoutDialog = viewModel::onDismissLogoutDialog,
-            onDismissRestartMessage = { viewModel.onDismissRestartMessage() }
+            onDismissRestartMessage = { viewModel.onDismissRestartMessage() },
+            checkHealth = viewModel::checkHealth
         )
     }
 }
@@ -71,9 +71,11 @@ fun OptionsScreen(navigationType: AppNavigationType,
 fun OptionsContent(
     modifier: Modifier = Modifier,
     onSave: () -> Unit,
-    uiState: OptionsUiState,
+    uiState: OptionsViewModel.OptionsUiState,
     onLogoutClick: () -> Unit,
     onConfirmLogout: () -> Unit,
+    toDefault: () -> Unit,
+    checkHealth: () -> Unit,
     onUrlChange: (String) -> Unit,
     onDismissLogoutDialog: () -> Unit,
     onDismissRestartMessage: () -> Unit
@@ -114,7 +116,10 @@ fun OptionsContent(
                     if (uiState.urlError != null) {
                         Text(text = uiState.urlError, color = MaterialTheme.colorScheme.error)
                     }
-                }
+                },
+                toDefault = toDefault,
+                checkHealth = checkHealth,
+                healthStatus = uiState.healthStatus
             )
 
             Spacer(Modifier.weight(1f))

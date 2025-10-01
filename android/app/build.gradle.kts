@@ -116,6 +116,7 @@ dependencies {
     implementation("com.auth0.android:jwtdecode:2.0.2")
     implementation("androidx.compose.material:material:1.9.2")
     implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 }
 ksp{
     arg("room.schemaLocation", "$projectDir/schemas");

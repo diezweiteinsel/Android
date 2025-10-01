@@ -18,6 +18,7 @@ import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.di.UrlManager
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
+import de.cau.inf.se.sopro.ui.utils.HealthStatus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -125,6 +126,33 @@ class LoginViewModel(
         }
     }
 
+    fun toDefaultUrl() {
+        val defaultUrl = UrlManager.DEFAULT_URL
+
+        urlManager.saveUrl(defaultUrl)
+
+        _uiState.update {
+            it.copy(
+                url = defaultUrl,
+                showRestartMessage = true,
+                urlError = null
+            )
+        }
+    }
+
+    fun checkHealth() {
+        val urlToCheck = _uiState.value.url
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(healthStatus = HealthStatus.LOADING) }
+
+            val isSuccess = repository.checkHealth(urlToCheck)
+
+            val newStatus = if (isSuccess) HealthStatus.SUCCESS else HealthStatus.FAILURE
+            _uiState.update { it.copy(healthStatus = newStatus) }
+        }
+    }
+
     fun onDismissRestartMessage() {
         _uiState.update { it.copy(showRestartMessage = false) }
     }
@@ -148,3 +176,4 @@ class LoginViewModel(
         }
     }
 }
+
