@@ -5,6 +5,8 @@
     <string name="wrong_input">Invalid input!</string>
     <string name="change_url">Change the URL</string>
     <string name="example_url">E.g. http://134.245.1.240:1203/</string>
+    <string name="reset">Reset to default</string>
+    <string name="check_health">Test Connection</string>
 
 
     <!--YourApplication page-->

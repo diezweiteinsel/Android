@@ -18,6 +18,7 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 
 interface AppContainer {
@@ -49,6 +50,7 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(ScalarsConverterFactory.create())
         .client(authClient)
         .baseUrl(urlManager.getUrl())
         .build()

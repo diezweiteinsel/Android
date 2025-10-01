@@ -1,9 +1,12 @@
 package de.cau.inf.se.sopro.ui.options
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.di.UrlManager
+import de.cau.inf.se.sopro.ui.login.LoginViewModel
+import de.cau.inf.se.sopro.ui.utils.HealthStatus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -25,6 +28,33 @@ class OptionsViewModel(
     fun onUrlChange(newUrl: String) {
         _uiState.update {
             it.copy(url = newUrl, urlError = null)
+        }
+    }
+
+    fun toDefaultUrl() {
+        val defaultUrl = UrlManager.DEFAULT_URL
+
+        urlManager.saveUrl(defaultUrl)
+
+        _uiState.update {
+            it.copy(
+                url = defaultUrl,
+                showRestartMessage = true,
+                urlError = null
+            )
+        }
+    }
+
+    fun checkHealth() {
+        val urlToCheck = _uiState.value.url
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(healthStatus = HealthStatus.LOADING) }
+
+            val isSuccess = repository.checkHealth(urlToCheck)
+
+            val newStatus = if (isSuccess) HealthStatus.SUCCESS else HealthStatus.FAILURE
+            _uiState.update { it.copy(healthStatus = newStatus) }
         }
     }
 
@@ -61,20 +91,19 @@ class OptionsViewModel(
         }
     }
 
-    fun onRestartMessageDismissed() {
-        _uiState.update { it.copy(showRestartMessage = false) }
-    }
 
     fun onDismissRestartMessage() {
         _uiState.update { currentState ->
             currentState.copy(showRestartMessage = false)
         }
     }
+
+    data class OptionsUiState(
+        val showLogoutDialog: Boolean = false,
+        val showRestartMessage: Boolean = false,
+        val url: String = "",
+        val urlError: String? = null,
+        val healthStatus: HealthStatus = HealthStatus.IDLE
+    )
 }
 
-data class OptionsUiState(
-    val showLogoutDialog: Boolean = false,
-    val showRestartMessage: Boolean = false,
-    val url: String = "",
-    val urlError: String? = null
-)

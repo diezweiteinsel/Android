@@ -14,11 +14,13 @@ import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.time.LocalDateTime
 
 interface Repository{
-    suspend fun checkHealth() : Boolean
+    suspend fun checkHealth(url: String) : Boolean
 
     suspend fun authenticateLogin(username: String,
                                   password: String) : LoginResult
@@ -116,9 +118,28 @@ class DefRepository(private val apiService : ApiService,
 
     }
 
-    override suspend fun checkHealth(): Boolean{
-        val response = apiService.checkHealth()
-        return response.isSuccessful
+    override suspend fun checkHealth(url: String): Boolean {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            return false
+        }
+
+        return try {
+            val tempBaseUrl = if (url.endsWith("/")) url else "$url/"
+
+            val tempRetrofit = Retrofit.Builder()
+                .baseUrl(tempBaseUrl)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build()
+
+            val tempApiService = tempRetrofit.create(ApiService::class.java)
+
+            val response = tempApiService.checkHealth()
+
+            response.isSuccessful
+        } catch (e: Exception) {
+            Log.e("Repository", "Dynamic health check failed for URL: $url", e)
+            false
+        }
     }
 
 

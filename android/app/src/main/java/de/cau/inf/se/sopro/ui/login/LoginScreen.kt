@@ -1,27 +1,36 @@
 package de.cau.inf.se.sopro.ui.login
 
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -33,7 +42,6 @@ import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
-import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.ui.utils.UrlEditor
 
@@ -72,7 +80,9 @@ fun LoginScreen(
             onLoginClick = viewModel::onLoginClick,
             onUrlChange = viewModel::onUrlChange,
             onSaveUrl = viewModel::onSaveUrl,
+            toDefault = viewModel::toDefaultUrl,
             onDismissRestartMessage = viewModel::onDismissRestartMessage,
+            checkHealth = viewModel::checkHealth,
             navController = navController
         )
     }
@@ -89,6 +99,8 @@ fun LoginContent(
     onLoginClick: () -> Unit,
     onUrlChange: (String) -> Unit,
     onSaveUrl: () -> Unit,
+    toDefault: () -> Unit,
+    checkHealth: () -> Unit,
     onDismissRestartMessage: () -> Unit,
     navController: NavHostController
 ) {
@@ -167,17 +179,47 @@ fun LoginContent(
 
             GoToYourApplicationScreen(navController = navController)
 
-            UrlEditor(
-                currentUrl = uiState.url,
-                onUrlChange = onUrlChange,
-                onSave = onSaveUrl,
-                isError = uiState.urlError != null,
-                supportingText = {
-                    if (uiState.urlError != null) {
-                        Text(text = uiState.urlError, color = MaterialTheme.colorScheme.error)
-                    }
-                }
+            var isExpanded by remember { mutableStateOf(false) }
+
+            val rotationAngle by animateFloatAsState(
+                targetValue = if (isExpanded) 180f else 0f,
+                label = "iconRotation"
             )
+
+            Row(
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .clickable { isExpanded = !isExpanded }, // Schaltet den Zustand um
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Change server options",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier.rotate(rotationAngle)
+                )
+            }
+
+            AnimatedVisibility(visible = isExpanded) {
+                UrlEditor(
+                    currentUrl = uiState.url,
+                    onUrlChange = onUrlChange,
+                    onSave = onSaveUrl,
+                    isError = uiState.urlError != null,
+                    supportingText = {
+                        if (uiState.urlError != null) {
+                            Text(text = uiState.urlError, color = MaterialTheme.colorScheme.error)
+                        }
+                    },
+                    toDefault = toDefault,
+                    checkHealth = checkHealth,
+                    healthStatus = uiState.healthStatus
+                )
+            }
         }
 
         if (uiState.showRestartMessage) {
