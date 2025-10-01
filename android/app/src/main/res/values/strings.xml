@@ -3,11 +3,8 @@
     <!--General-->
     <string name="app_name">Civitas</string>
     <string name="wrong_input">Invalid input!</string>
-
-
-    <!--Placeholders-->
-    <string name="your_application_msg">Here you are gonna be able to see your applications</string>
-    <string name="submit_msg">You will be able to submit an application here</string>
+    <string name="change_url">Change the URL</string>
+    <string name="example_url">E.g. http://134.245.1.240:1203/</string>
 
 
     <!--YourApplication page-->
