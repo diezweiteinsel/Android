@@ -80,6 +80,7 @@ fun ApplicationCard(
             Status.APPROVED -> if (isDark) StatusApprovedDark else StatusApprovedLight
             Status.REJECTED -> if (isDark) StatusRejectedDark else StatusRejectedLight
             Status.PENDING -> if (isDark) StatusPendingDark else StatusPendingLight
+            null -> if (isDark) StatusPendingDark else StatusPendingLight
         }
     }
 
@@ -107,7 +108,7 @@ fun ApplicationCard(
                 fontWeight = FontWeight.Bold
             )
 
-            if (application.isPublic)
+            if (application.isPublic == true)
                 Text(
                     text = "This application is public and visible to anyone.",
                     style = MaterialTheme.typography.bodyMedium,
@@ -160,7 +161,9 @@ fun ApplicationCard(
 
 @Composable
 fun DynamicAttributeView(attribute: DynamicAttribute) {
-    val valueAsString = if (attribute.value.isJsonPrimitive) {
+    val valueAsString = if (attribute.value.isJsonNull) {
+        "N/A"
+    } else if (attribute.value.isJsonPrimitive) {
         attribute.value.asString
     } else {
         attribute.value.toString()

@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 18,
-    "identityHash": "fba4376cc445746bec667ca92ac49231",
+    "version": 20,
+    "identityHash": "f106b9c6294ed95b5195a5a2652eddf9",
     "entities": [
       {
         "tableName": "Application",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `adminId` INTEGER, `status` TEXT NOT NULL, `createdAt` TEXT, `currentSnapshotId` INTEGER, `previousSnapshotId` INTEGER, `isPublic` INTEGER NOT NULL, `dynamicAttributes` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `userId` INTEGER NOT NULL, `formId` INTEGER NOT NULL, `adminId` INTEGER, `status` TEXT NOT NULL, `createdAt` TEXT, `currentSnapshotId` INTEGER NOT NULL, `previousSnapshotId` INTEGER NOT NULL, `isPublic` INTEGER NOT NULL, `dynamicAttributes` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,12 +45,14 @@
           {
             "fieldPath": "currentSnapshotId",
             "columnName": "currentSnapshotId",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "previousSnapshotId",
             "columnName": "previousSnapshotId",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "isPublic",
@@ -157,7 +159,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fba4376cc445746bec667ca92ac49231')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f106b9c6294ed95b5195a5a2652eddf9')"
     ]
   }
 }
