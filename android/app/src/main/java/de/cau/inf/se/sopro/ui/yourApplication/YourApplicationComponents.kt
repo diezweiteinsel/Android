@@ -161,7 +161,7 @@ fun ApplicationCard(
 
 @Composable
 fun DynamicAttributeView(attribute: DynamicAttribute) {
-    val valueAsString = if (attribute.value.isJsonNull) {
+    val valueAsString = if (attribute.value == null || attribute.value.isJsonNull) {
         "N/A"
     } else if (attribute.value.isJsonPrimitive) {
         attribute.value.asString
