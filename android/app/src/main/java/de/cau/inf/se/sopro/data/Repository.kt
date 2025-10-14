@@ -2,7 +2,6 @@ package de.cau.inf.se.sopro.data
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.auth0.android.jwt.JWT
 import de.cau.inf.se.sopro.model.applicant.Applicant

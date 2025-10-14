@@ -1,7 +1,6 @@
 package de.cau.inf.se.sopro.model.application
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 

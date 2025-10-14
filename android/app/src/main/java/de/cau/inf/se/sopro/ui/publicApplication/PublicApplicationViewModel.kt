@@ -7,11 +7,9 @@ import androidx.lifecycle.viewModelScope
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.data.TokenManager
 import de.cau.inf.se.sopro.model.application.Application
-import de.cau.inf.se.sopro.model.application.Status
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class PublicApplicationViewModel(

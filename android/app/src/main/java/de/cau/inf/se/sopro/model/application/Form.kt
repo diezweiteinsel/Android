@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import de.cau.inf.se.sopro.persistence.BConverters
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 //First idea for a form class, still WIP

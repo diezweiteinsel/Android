@@ -1,35 +1,23 @@
 package de.cau.inf.se.sopro.ui.submitApplication
 
-import android.os.Build
+
 import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.compose.material3.OutlinedTextField
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
-import dagger.hilt.android.internal.Contexts.getApplication
 import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
-import de.cau.inf.se.sopro.data.TokenManager
-import de.cau.inf.se.sopro.model.application.Application
-import de.cau.inf.se.sopro.model.application.Block
-import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
-import kotlinx.coroutines.flow.update
-
-
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 
 class SubmitApplicationViewModel(private val repository: Repository) : ViewModel() {

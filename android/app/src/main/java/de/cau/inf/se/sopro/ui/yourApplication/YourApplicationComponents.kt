@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.gson.Gson
@@ -60,7 +59,7 @@ fun ApplicationCard(
 
     val formattedDate = remember(application.createdAt) {
         if (application.createdAt == null) {
-            "N/A" // Fallback, falls kein Datum vorhanden ist
+            "N/A" // Fallback, if the date is null
         } else {
             try {
                 val dateTime = LocalDateTime.parse(application.createdAt)
@@ -108,7 +107,7 @@ fun ApplicationCard(
                 fontWeight = FontWeight.Bold
             )
 
-            if (application.isPublic == true)
+            if (application.isPublic)
                 Text(
                     text = "This application is public and visible to anyone.",
                     style = MaterialTheme.typography.bodyMedium,

@@ -2,9 +2,9 @@ package de.cau.inf.se.sopro.network.api
 
 
 import com.google.gson.annotations.SerializedName
-import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
+import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.ui.submitApplication.FieldPayload

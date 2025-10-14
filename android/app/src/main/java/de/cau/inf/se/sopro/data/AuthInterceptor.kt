@@ -1,9 +1,5 @@
 package de.cau.inf.se.sopro.data
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
-import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import okhttp3.Interceptor
 import okhttp3.Response
 

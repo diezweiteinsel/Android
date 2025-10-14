@@ -1,11 +1,9 @@
 package de.cau.inf.se.sopro.ui.options
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.di.UrlManager
-import de.cau.inf.se.sopro.ui.login.LoginViewModel
 import de.cau.inf.se.sopro.ui.utils.HealthStatus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
