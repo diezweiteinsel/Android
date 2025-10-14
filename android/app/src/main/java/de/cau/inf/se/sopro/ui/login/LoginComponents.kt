@@ -77,6 +77,17 @@ fun PasswordTextField(
 }
 
 @Composable
+fun ShowErrorText(errorResId: Int?) {
+    if (errorResId != null) {
+        Text(
+            text = stringResource(id = errorResId),
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+        )
+    }
+}
+
+@Composable
 fun GoToRegistrationScreen(navController: NavController) {
     Text(
         text = (stringResource(R.string.go_to_registration_screen)),

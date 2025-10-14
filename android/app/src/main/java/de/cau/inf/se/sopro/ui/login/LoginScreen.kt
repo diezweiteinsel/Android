@@ -171,6 +171,8 @@ fun LoginContent(
                 }
             )
 
+            ShowErrorText(errorResId = uiState.loginErrorResId)
+
             LoginButton(
                 onClick = onLoginClick
             )

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.network.api.createApplication
@@ -29,4 +30,22 @@ interface ApplicationDao {
 
     @Insert
     suspend fun saveApplication(application: Application)
+
+    @Transaction
+    suspend fun clearAndUpsertPublic(publicApplications: List<Application>) {
+        deletePublic()
+        upsertAll(publicApplications)
+    }
+
+    @Transaction
+    suspend fun clearAndUpsertUserSpecific(userApplications: List<Application>, userId: Int) {
+        deleteUserSpecific(userId)
+        upsertAll(userApplications)
+    }
+
+    @Query("DELETE FROM Application WHERE isPublic = 1")
+    suspend fun deletePublic()
+
+    @Query("DELETE FROM Application WHERE userId = :userId")
+    suspend fun deleteUserSpecific(userId: Int)
 }

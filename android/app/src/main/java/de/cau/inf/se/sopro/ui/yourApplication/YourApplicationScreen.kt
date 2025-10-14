@@ -88,7 +88,7 @@ fun YourApplicationContent(
     LazyColumn(modifier = modifier) {
         items(
             items = applications,
-            key = { application -> application.id }
+            key = { application -> "${application.id}-${application.formId}" }
         ) { application ->
             ApplicationCard(application = application)
         }

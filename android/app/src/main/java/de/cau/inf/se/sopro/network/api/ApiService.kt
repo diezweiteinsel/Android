@@ -42,7 +42,7 @@ interface ApiService{
         @Query("user_id") userId: Int? = null,
         @Query("form_id") formId: Int? = null,
         @Query("status") status: Status? = null,
-        @Query("is_public") isPublic: Boolean? = null
+        @Query("public") isPublic: Boolean? = null
 
     ) : Response<List<Application>>
 

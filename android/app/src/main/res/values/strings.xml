@@ -47,6 +47,7 @@
     <string name="username_is_empty">Please put in a username.</string>
     <string name="user_not_found">User not found!</string>
     <string name="wrong_password">Wrong password!</string>
+    <string name="network_error">No connection to the server!</string>
 
 
     <!--Registration page-->

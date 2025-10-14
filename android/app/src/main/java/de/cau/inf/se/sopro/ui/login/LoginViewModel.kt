@@ -114,6 +114,11 @@ class LoginViewModel(
                         it.copy(loginErrorResId = R.string.unexpected_error)
                     }
                 }
+                is LoginResult.NetworkError -> {
+                    _uiState.update {
+                        it.copy(loginErrorResId = R.string.network_error)
+                    }
+                }
             }
         }
     }

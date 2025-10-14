@@ -9,6 +9,7 @@ import de.cau.inf.se.sopro.model.applicant.Applicant
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Form
+import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
 import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
 import de.cau.inf.se.sopro.network.api.createApplication
@@ -84,7 +85,7 @@ class DefRepository(private val apiService : ApiService,
     override suspend fun refreshApplications() {
 
         val formsResponse = apiService.getForms()
-        if (formsResponse.isSuccessful) {           //getting succesful response from api
+        if (formsResponse.isSuccessful) {           //getting successful response from api
             val formsFromServer = formsResponse.body()
             if (!formsFromServer.isNullOrEmpty()) {
 
@@ -104,20 +105,40 @@ class DefRepository(private val apiService : ApiService,
         try {
             val response = apiService.getApplications()
 
-            val networkApplications = response.body()
+            if (response.isSuccessful && response.body() != null) {
+                val networkApplications = response.body()!!
 
-            val correctedApplications = networkApplications!!.map { application ->
-                application.copy(userId = userId)
-            }
+                val correctedApplications = networkApplications.map { application ->
+                    application.copy(userId = userId)
+                }
 
-            if (!networkApplications.isNullOrEmpty()) {
-                applicationDao.deleteAll()
-                applicationDao.upsertAll(correctedApplications)
+                applicationDao.clearAndUpsertUserSpecific(correctedApplications, userId)
+            } else {
+                Log.w("Repository", "Fetching user applications was not successful. Code: ${response.code()}")
             }
         } catch (e: Exception) {
             Log.e("Repository", "Failed to refresh applications for user $userId", e)
         }
 
+    }
+
+    suspend fun syncAllData() {
+        try {
+            val formsResponse = apiService.getForms()
+            if (formsResponse.isSuccessful) {
+                val formsFromServer = formsResponse.body()
+                if (!formsFromServer.isNullOrEmpty()) {
+                    formDao.insertAll(formsFromServer)
+                }
+            } else {
+                Log.e("Repository", "Failed to fetch forms during sync. Code: ${formsResponse.code()}")
+            }
+        } catch(e: Exception) {
+            Log.e("Repository", "Exception while syncing forms.", e)
+        }
+
+        refreshPublicApplications()
+        refreshApplications()
     }
 
     override suspend fun checkHealth(url: String): Boolean {
@@ -209,9 +230,13 @@ class DefRepository(private val apiService : ApiService,
                     else -> LoginResult.GenericError
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: java.io.IOException) {
+            Log.e("Repository", "Authentication failed with a network exception", e)
+            return LoginResult.NetworkError
+        }
+        catch (e: Exception) {
             Log.e("Repository", "Authentication failed with an exception", e)
-            LoginResult.GenericError
+            return LoginResult.GenericError
         }
     }
 
@@ -312,12 +337,15 @@ class DefRepository(private val apiService : ApiService,
 
     override suspend fun refreshPublicApplications() {
         try {
-            val response = apiService.getApplications(isPublic = true)
+            val response = apiService.getApplications(
+                isPublic = true,
+                status = Status.APPROVED
+            )
 
             if (response.isSuccessful && response.body() != null) {
                 val publicApplications = response.body()!!
 
-                applicationDao.upsertAll(publicApplications)
+                applicationDao.clearAndUpsertPublic(publicApplications)
             }
         } catch (e: Exception) {
             Log.e("Repository", "Failed to refresh public applications", e)
@@ -330,5 +358,6 @@ sealed class LoginResult {
     data object Success : LoginResult()
     data object UserNotFound : LoginResult()
     data object WrongPassword : LoginResult()
+    data object NetworkError : LoginResult()
     data object GenericError : LoginResult()
 }

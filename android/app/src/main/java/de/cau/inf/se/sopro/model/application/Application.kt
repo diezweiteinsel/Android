@@ -5,9 +5,8 @@ import androidx.room.PrimaryKey
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
-@Entity
+@Entity(primaryKeys = ["id", "formId"])
 data class Application(
-    @PrimaryKey
     val id: Int,
     @SerializedName("user_id")
     val userId: Int,
