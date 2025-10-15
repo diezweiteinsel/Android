@@ -27,6 +27,7 @@
     <string name="username_is_empty">Bitte geben Sie einen Benutzernamen ein.</string>
     <string name="user_not_found">Benutzer*in nicht gefunden!</string>
     <string name="wrong_password">Falsches Passwort!</string>
+    <string name="network_error">Keine Verbindung zum Server!</string>
     <string name="registration_title">Registrierung</string>
     <string name="registration_button">Registrieren</string>
     <string name="confirm_password_text_field">Passwort bestätigen</string>
