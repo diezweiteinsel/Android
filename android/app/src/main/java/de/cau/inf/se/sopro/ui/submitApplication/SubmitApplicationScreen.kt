@@ -39,10 +39,7 @@ fun SubmitApplicationScreen(
 
 
 
-    LaunchedEffect(uiState) {
-        vm.onInit()
-
-    }
+    LaunchedEffect(Unit) { vm.onInit() }
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
     // navigationType and navController stay the same. This avoids unnecessary work.
     val bottomBar = remember(navigationType, navController) {
@@ -58,14 +55,14 @@ fun SubmitApplicationScreen(
             values = uiState.value.values, //look into Components submitUiState
             blocks = uiState.value.blocks,
             onValueChange = vm::onValueChange, //method from viewModel
-            onCancelClicked = {vm.onCancelClicked(navController)}, //button actions
+            onCancelClicked = { vm.onCancelClicked(navController) }, //button actions
             onSubmit = vm::onSubmit,
             onCategoryChange = vm::onCategoryChange,
             categories = uiState.value.categories,
-            selectedCategory = uiState.value.selectedCategory)
-
-        }
+            selectedCategory = uiState.value.selectedCategory
+        )
     }
+}
 
 
 @Composable

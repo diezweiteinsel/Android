@@ -28,6 +28,10 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
 
 
     fun onInit() {  //when we navigate to the submit application screen, we want to load the forms
+        if (_uiState.value.categories.isNotEmpty()) {
+            return
+        }
+
         Log.d("MyApp", "onInit() executed")
         viewModelScope.launch {
             _uiState.value = SubmitApplicationUiState(isLoading = true)
@@ -133,7 +137,5 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
             }
         }
     }
-
-
 }
 

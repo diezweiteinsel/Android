@@ -47,10 +47,14 @@ fun SubmitApplicationCategory(
     Box(modifier = modifier) {
         Button(
             onClick = { expanded = true },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text(text = selectedCategory.ifEmpty { "choose category" })
+            Text(
+                text = selectedCategory.ifEmpty { stringResource(id = R.string.choose_form) }
+            )
         }
         DropdownMenu(
             expanded = expanded,
@@ -122,12 +126,14 @@ fun DynamicForm(
                 CancelButton(modifier = Modifier.padding(16.dp),
                     onClick = onCancelClicked
                 )
-                SubmitButton(modifier = modifier.padding(16.dp)
-                    , onClick = onSubmit)
+                SubmitButton(
+                    modifier = modifier.padding(16.dp),
+                    onClick = onSubmit
+                )
             }
         }
-        }
     }
+}
 
 @Composable
 fun CancelButton( // Renamed to follow Composable naming conventions (PascalCase)
@@ -162,19 +168,21 @@ data class SubmitApplicationUiState( //this is our uiState, which we want to be 
     val selectedCategory: String = ""
 )
 
-    enum class FieldType { TEXT, NUMBER, DATE} //fieldtypes to generate
-    data class UiBlock( //this is how we define a block for now
-        val label: String,
-        val datatype: String,
-        val required: Boolean,
-        val type: FieldType,
-        val constraintsJson: List<String>?
-    )
-    data class FieldPayload( //for our payload to submit the application
+enum class FieldType { TEXT, NUMBER, DATE} //fieldtypes to generate
+data class UiBlock( //this is how we define a block for now
     val label: String,
-    val value: String,
-    val data_type: String
-    )
-    var blocks = mutableListOf(UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
-        UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
-        UiBlock("E-Mail", "STRING", false,FieldType.TEXT, constraintsJson = emptyList()))
+    val datatype: String,
+    val required: Boolean,
+    val type: FieldType,
+    val constraintsJson: List<String>?
+)
+
+data class FieldPayload( //for our payload to submit the application
+val label: String,
+val value: String,
+val data_type: String
+)
+var blocks = mutableListOf(UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
+    UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
+    UiBlock("E-Mail", "STRING", false,FieldType.TEXT, constraintsJson = emptyList())
+)
