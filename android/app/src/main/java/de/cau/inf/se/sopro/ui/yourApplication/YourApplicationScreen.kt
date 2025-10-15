@@ -4,6 +4,7 @@ package de.cau.inf.se.sopro.ui.yourApplication
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -61,11 +62,12 @@ fun YourApplicationScreen(
         Box(
             modifier = modifier
                 .padding(innerPadding)
+                .fillMaxSize()
                 .pullRefresh(pullRefreshState)
         ) {
             YourApplicationContent(
                 applications = applicationsState,
-                modifier.padding(innerPadding)
+                modifier = Modifier.fillMaxSize()
             )
 
             PullRefreshIndicator(
