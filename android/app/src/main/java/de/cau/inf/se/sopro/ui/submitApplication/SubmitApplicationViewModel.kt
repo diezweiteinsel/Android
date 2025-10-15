@@ -47,8 +47,10 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
         if(_uiState.value.values.isNotEmpty()){ //check if something was filled out
             viewModelScope.launch {
                 val payload = mutableMapOf<Int, FieldPayload>()
-                for(i in 1 until _uiState.value.blocks.size){
-                    payload.put(i, FieldPayload(_uiState.value.blocks[i].label,uiState.value.values[_uiState.value.blocks[i].label].toString(),_uiState.value.blocks[i].datatype),)
+                for (i in _uiState.value.blocks.indices) {
+                    val block = _uiState.value.blocks[i]
+                    val value = uiState.value.values[block.label] ?: ""
+                    payload[i + 1] = FieldPayload(block.label, value, block.datatype)
                 }
                 Log.d("MyApp", "payload: $payload")
                 repository.createApplication(createApplication(curFormId,payload ))

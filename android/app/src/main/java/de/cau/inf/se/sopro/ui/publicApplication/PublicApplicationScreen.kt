@@ -4,6 +4,7 @@ package de.cau.inf.se.sopro.ui.publicApplication
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +28,6 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.yourApplication.ApplicationCard
 import de.cau.inf.se.sopro.ui.yourApplication.CardDisplayMode
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,11 +64,12 @@ fun PublicApplicationScreen(
         Box(
             modifier = modifier
                 .padding(innerPadding)
+                .fillMaxSize()
                 .pullRefresh(pullRefreshState)
         ) {
             PublicApplicationContent(
                 applications = applicationsState,
-                modifier.padding(innerPadding)
+                modifier = Modifier.fillMaxSize()
             )
 
             PullRefreshIndicator(
@@ -92,7 +93,7 @@ fun PublicApplicationContent(
             items = applications,
             key = { application -> "${application.id}-${application.formId}" }
         ) { application ->
-            ApplicationCard(application = application, CardDisplayMode.Public)
+            PublicApplicationCard(application = application, CardDisplayMode.Public)
         }
     }
 }
