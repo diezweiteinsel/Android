@@ -37,9 +37,9 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
             _uiState.value = SubmitApplicationUiState(isLoading = true)
             val forms = repository.getForms() //we get the forms from the repository
             for (form in forms!!) {
-                if (form.form_name !in _uiState.value.categories) { //for every form we update our categories which are displayed in the dropdown
+                if (form.formName !in _uiState.value.categories) { //for every form we update our categories which are displayed in the dropdown
                     _uiState.update {
-                        it.copy(categories = it.categories.plus(form.form_name) as List<String>) //we add the form name to our categories
+                        it.copy(categories = it.categories.plus(form.formName) as List<String>) //we add the form name to our categories
                     }
                 }
                 Log.d("MyApp", "categories: ${_uiState.value.categories}") //Logging
@@ -88,9 +88,9 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
                     form?.blocks?.values?.map { block -> //wir mappen jeden block aus form.sections auf ein Building Block object
                         UiBlock(
                             block.label,
-                            block.data_type,
+                            block.dataType,
                             block.required,
-                            type = when (block.data_type.lowercase()) {//differentiation between the different field types
+                            type = when (block.dataType.lowercase()) {//differentiation between the different field types
                                 "STRING" -> FieldType.TEXT
                                 "FLOAT" -> FieldType.NUMBER
                                 "DATE" -> FieldType.DATE

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 22,
-    "identityHash": "3bec387fdb784798d929314cc514d8a9",
+    "version": 23,
+    "identityHash": "8832c353d38c7c8d4c339ba87df844c9",
     "entities": [
       {
         "tableName": "Application",
@@ -121,7 +121,7 @@
       },
       {
         "tableName": "Form",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `formName` TEXT, `blocks` TEXT, `isActive` INTEGER NOT NULL, `version` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `form_name` TEXT, `blocks` TEXT, `is_active` INTEGER NOT NULL, `version` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -130,7 +130,7 @@
           },
           {
             "fieldPath": "formName",
-            "columnName": "formName",
+            "columnName": "form_name",
             "affinity": "TEXT"
           },
           {
@@ -140,7 +140,7 @@
           },
           {
             "fieldPath": "isActive",
-            "columnName": "isActive",
+            "columnName": "is_active",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -160,7 +160,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3bec387fdb784798d929314cc514d8a9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8832c353d38c7c8d4c339ba87df844c9')"
     ]
   }
 }
