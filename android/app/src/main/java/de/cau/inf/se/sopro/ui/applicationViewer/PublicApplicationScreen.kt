@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.publicApplication
+package de.cau.inf.se.sopro.ui.applicationViewer
 
 
 import android.os.Build
@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.model.application.Application
@@ -42,7 +41,7 @@ fun PublicApplicationScreen(
     modifier: Modifier = Modifier,
     viewModel: PublicApplicationViewModel = hiltViewModel()
 ) {
-    val applicationsState by viewModel.publicApplications.collectAsStateWithLifecycle()
+    val applicationsState by viewModel.applications.collectAsStateWithLifecycle()
     val formNamesMapState by viewModel.formNamesMap.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
@@ -58,7 +57,7 @@ fun PublicApplicationScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadPublicApplications()
+        viewModel.loadApplications()
     }
 
     ScreenScaffold(
