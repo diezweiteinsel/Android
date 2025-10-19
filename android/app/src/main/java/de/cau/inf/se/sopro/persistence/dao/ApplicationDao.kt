@@ -46,4 +46,7 @@ interface ApplicationDao {
 
     @Query("DELETE FROM Application WHERE userId = :userId")
     suspend fun deleteUserSpecific(userId: Int)
+
+    @Query("DELETE FROM Application")
+    suspend fun clearAll()
 }

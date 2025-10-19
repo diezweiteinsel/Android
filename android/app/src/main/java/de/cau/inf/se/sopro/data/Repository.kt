@@ -14,6 +14,7 @@ import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
+import de.cau.inf.se.sopro.persistence.dao.BlockDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,7 @@ interface Repository {
     suspend fun authenticateLogin(username: String, password: String): LoginResult
     suspend fun loginAndSync(username: String, password: String): LoginResult
     suspend fun createApplicant(username: String, email: String, password: String, role: Usertype): Boolean
-    fun logout()
+    suspend fun logout()
 
     // --- User Applications ---
     fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
@@ -51,6 +52,7 @@ class DefRepository @Inject constructor(
     private val applicantDao: ApplicantDao,
     private val applicationDao: ApplicationDao,
     private val formDao: FormDao,
+    private val blockDao: BlockDao,
     private val tokenManager: TokenManager
 ) : Repository{
 
@@ -176,8 +178,12 @@ class DefRepository @Inject constructor(
         }
     }
 
-    override fun logout() {
+    override suspend fun logout() {
         tokenManager.clearAll()
+        applicationDao.clearAll()
+        blockDao.clearAll()
+        applicantDao.clearAll()
+        formDao.clearAll()
     }
 
     override suspend fun getFormByTitle(title: String): Form?{

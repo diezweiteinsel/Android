@@ -72,10 +72,9 @@ class OptionsViewModel @Inject constructor(
     }
 
     fun onConfirmLogout() {
-        repository.logout()
-        onDismissLogoutDialog()
-
         viewModelScope.launch {
+            repository.logout()
+            onDismissLogoutDialog()
             _logoutEvent.emit(Unit)
         }
     }

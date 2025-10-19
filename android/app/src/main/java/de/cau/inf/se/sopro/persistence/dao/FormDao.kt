@@ -21,4 +21,7 @@ interface FormDao {
 
     @Upsert
     suspend fun insertAll(forms: List<Form>)
+
+    @Query("DELETE FROM Form")
+    suspend fun clearAll()
 }
