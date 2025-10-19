@@ -37,7 +37,7 @@ class YourApplicationViewModel(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                repository.refreshApplications()
+                repository.refreshApplicationsAndForms()
                 loadFormsMap()
             } finally {
                 _isRefreshing.value = false

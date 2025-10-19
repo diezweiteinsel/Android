@@ -28,6 +28,7 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.utils.components.ApplicationCard
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)

@@ -21,37 +21,30 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.time.LocalDateTime
 
-interface Repository{
-    suspend fun checkHealth(url: String) : Boolean
-
-    suspend fun authenticateLogin(username: String,
-                                  password: String) : LoginResult
-    suspend fun createApplicant(username: String,
-                                email: String,
-                                password: String,
-                                role: Usertype): Boolean
-    suspend fun getForms(): List<Form>?
-
-    suspend fun getApplications(userId: Int?): List<Application>
-
-    suspend fun getPublicApplicationsAsFlow(): Flow<List<Application>>
-
-    fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
-
-    suspend fun refreshApplications()
-
-    suspend fun createApplication(application: createApplication)
-
-    suspend fun updateApplication(application: Application)
-
-    suspend fun getFormByTitle(title: String): Form?
-
+interface Repository {
+    // --- Authentification & User ---
+    suspend fun authenticateLogin(username: String, password: String): LoginResult
+    suspend fun loginAndSync(username: String, password: String): LoginResult
+    suspend fun createApplicant(username: String, email: String, password: String, role: Usertype): Boolean
     fun logout()
 
-    suspend fun loginAndSync(username: String, password: String): LoginResult
+    // --- User Applications ---
+    fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
+    suspend fun refreshApplicationsAndForms()
+    suspend fun createApplication(application: createApplication)
 
+    // --- Public Applications ---
+    fun getPublicApplicationsAsFlow(): Flow<List<Application>>
     suspend fun refreshPublicApplications()
+
+    // --- Forms ---
+    suspend fun getForms(): List<Form>?
+    suspend fun getFormByTitle(title: String): Form?
+
+    // --- Health Check / Other ---
+    suspend fun checkHealth(url: String): Boolean
 }
+
 class DefRepository(private val apiService : ApiService,
                     private val applicantDao: ApplicantDao,
                     private val applicationDao: ApplicationDao,
@@ -59,135 +52,7 @@ class DefRepository(private val apiService : ApiService,
                     private val tokenManager: TokenManager
 ) : Repository{
 
-    override suspend fun getFormByTitle(title: String): Form?{
-        val response = formDao.getFormByName(title)
-        return response
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun loginAndSync(username: String, password: String): LoginResult {
-        val loginResult = authenticateLogin(username, password)
-
-        if (loginResult is LoginResult.Success) {
-            try {
-                refreshPublicApplications()
-                refreshApplications()
-            } catch (e: Exception) {
-                Log.e("Repository", "Sync failed after login", e)
-                return LoginResult.GenericError
-            }
-        }
-
-        return loginResult
-    }
-
-    override suspend fun refreshApplications() {
-
-        val formsResponse = apiService.getForms()
-        if (formsResponse.isSuccessful) {           //getting successful response from api
-            val formsFromServer = formsResponse.body()
-            if (!formsFromServer.isNullOrEmpty()) {
-
-                formDao.insertAll(formsFromServer)
-            }
-        } else {
-            throw IOException("Failed to fetch forms during refresh")
-        }
-
-        val userId = tokenManager.getUserId()
-
-        if (userId == null) {
-            Log.w("Repository", "Cannot refresh applications, no user ID found.")
-            return
-        }
-
-        try {
-            val response = apiService.getApplications()
-
-            if (response.isSuccessful && response.body() != null) {
-                val networkApplications = response.body()!!
-
-                val correctedApplications = networkApplications.map { application ->
-                    application.copy(userId = userId)
-                }
-
-                applicationDao.clearAndUpsertUserSpecific(correctedApplications, userId)
-            } else {
-                Log.w("Repository", "Fetching user applications was not successful. Code: ${response.code()}")
-            }
-        } catch (e: Exception) {
-            Log.e("Repository", "Failed to refresh applications for user $userId", e)
-        }
-
-    }
-
-    suspend fun syncAllData() {
-        try {
-            val formsResponse = apiService.getForms()
-            if (formsResponse.isSuccessful) {
-                val formsFromServer = formsResponse.body()
-                if (!formsFromServer.isNullOrEmpty()) {
-                    formDao.insertAll(formsFromServer)
-                }
-            } else {
-                Log.e("Repository", "Failed to fetch forms during sync. Code: ${formsResponse.code()}")
-            }
-        } catch(e: Exception) {
-            Log.e("Repository", "Exception while syncing forms.", e)
-        }
-
-        refreshPublicApplications()
-        refreshApplications()
-    }
-
-    override suspend fun checkHealth(url: String): Boolean {
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            return false
-        }
-
-        return try {
-            val tempBaseUrl = if (url.endsWith("/")) url else "$url/"
-
-            val tempRetrofit = Retrofit.Builder()
-                .baseUrl(tempBaseUrl)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build()
-
-            val tempApiService = tempRetrofit.create(ApiService::class.java)
-
-            val response = tempApiService.checkHealth()
-
-            response.isSuccessful
-        } catch (e: Exception) {
-            Log.e("Repository", "Dynamic health check failed for URL: $url", e)
-            false
-        }
-    }
-
-
-    override suspend fun updateApplication(application: Application) {
-
-        val response = apiService.updateApplication(application)
-        try {
-            response.isSuccessful
-        }catch (e : IllegalArgumentException){
-            print(e)
-        }
-    }
-
-    override suspend fun createApplication(application: createApplication){
-        Log.d("Repository", "Response")
-        val response = apiService.createApplication(application)
-
-        try {
-            response.isSuccessful
-        }catch (e : IllegalArgumentException){
-            print(e)
-        }
-
-
-    }
-
+    // --- Authentification & User ---
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun authenticateLogin(username: String, password: String): LoginResult {
         return try {
@@ -239,7 +104,22 @@ class DefRepository(private val apiService : ApiService,
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun loginAndSync(username: String, password: String): LoginResult {
+        val loginResult = authenticateLogin(username, password)
 
+        if (loginResult is LoginResult.Success) {
+            try {
+                refreshPublicApplications()
+                refreshApplicationsAndForms()
+            } catch (e: Exception) {
+                Log.e("Repository", "Sync failed after login", e)
+                return LoginResult.GenericError
+            }
+        }
+
+        return loginResult
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun createApplicant(
@@ -294,6 +174,93 @@ class DefRepository(private val apiService : ApiService,
         }
     }
 
+    override fun logout() {
+        tokenManager.clearAll()
+    }
+
+    override suspend fun getFormByTitle(title: String): Form?{
+        val response = formDao.getFormByName(title)
+        return response
+    }
+
+    override suspend fun refreshApplicationsAndForms() {
+
+        val formsResponse = apiService.getForms()
+        if (formsResponse.isSuccessful) {           //getting successful response from api
+            val formsFromServer = formsResponse.body()
+            if (!formsFromServer.isNullOrEmpty()) {
+
+                formDao.insertAll(formsFromServer)
+            }
+        } else {
+            throw IOException("Failed to fetch forms during refresh")
+        }
+
+        val userId = tokenManager.getUserId()
+
+        if (userId == null) {
+            Log.w("Repository", "Cannot refresh applications, no user ID found.")
+            return
+        }
+
+        try {
+            val response = apiService.getApplications()
+
+            if (response.isSuccessful && response.body() != null) {
+                val networkApplications = response.body()!!
+
+                val correctedApplications = networkApplications.map { application ->
+                    application.copy(userId = userId)
+                }
+
+                applicationDao.clearAndUpsertUserSpecific(correctedApplications, userId)
+            } else {
+                Log.w("Repository", "Fetching user applications was not successful. Code: ${response.code()}")
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Failed to refresh applications for user $userId", e)
+        }
+
+    }
+
+    override suspend fun checkHealth(url: String): Boolean {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            return false
+        }
+
+        return try {
+            val tempBaseUrl = if (url.endsWith("/")) url else "$url/"
+
+            val tempRetrofit = Retrofit.Builder()
+                .baseUrl(tempBaseUrl)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build()
+
+            val tempApiService = tempRetrofit.create(ApiService::class.java)
+
+            val response = tempApiService.checkHealth()
+
+            response.isSuccessful
+        } catch (e: Exception) {
+            Log.e("Repository", "Dynamic health check failed for URL: $url", e)
+            false
+        }
+    }
+
+
+    override suspend fun createApplication(application: createApplication){
+        Log.d("Repository", "Response")
+        val response = apiService.createApplication(application)
+
+        try {
+            response.isSuccessful
+        }catch (e : IllegalArgumentException){
+            print(e)
+        }
+
+
+    }
+
     override suspend fun getForms(): List<Form>? {  //convert forms into objects method will call this
 
         val response = apiService.getForms()
@@ -305,32 +272,13 @@ class DefRepository(private val apiService : ApiService,
         return response.body()
     }
 
-    override suspend fun getApplications(userId: Int?): List<Application> {
-        try {
-            val response = apiService.getApplications()
-
-            if (response.isSuccessful) {
-                return response.body() ?: emptyList()
-            } else {
-                Log.e("Repository", "API Error: ${response.code()} - ${response.message()}")
-                return emptyList()
-            }
-        } catch (e: Exception) {
-            Log.e("Repository", "Network Error: ${e.message}")
-            return emptyList()
-
-        }
-    }
-
     override fun getApplicationsAsFlow(userId: Int): Flow<List<Application>> {
         return applicationDao.getApplicationsAsFlow(userId)
     }
 
-    override fun logout() {
-        tokenManager.clearAll()
-    }
 
-    override suspend fun getPublicApplicationsAsFlow(): Flow<List<Application>> {
+
+    override fun getPublicApplicationsAsFlow(): Flow<List<Application>> {
         return applicationDao.getPublicApplicationsAsFlow()
     }
 

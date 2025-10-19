@@ -29,7 +29,8 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.yourApplication.CardDisplayMode
+import de.cau.inf.se.sopro.ui.utils.components.ApplicationCard
+import de.cau.inf.se.sopro.ui.utils.components.CardDisplayMode
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -99,10 +100,11 @@ fun PublicApplicationContent(
         ) { application ->
             val formName = formNamesMap[application.formId] ?: stringResource(id = R.string.unknown_form)
 
-            PublicApplicationCard(
+            ApplicationCard(
                 application = application,
                 formName = formName,
-                CardDisplayMode.Public
+                CardDisplayMode.Public,
+                false
             )
         }
     }
