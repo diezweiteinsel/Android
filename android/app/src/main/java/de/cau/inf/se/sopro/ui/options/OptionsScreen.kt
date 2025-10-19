@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -31,7 +32,7 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.utils.UrlEditor
+import de.cau.inf.se.sopro.ui.utils.components.UrlEditor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +40,7 @@ import de.cau.inf.se.sopro.ui.utils.UrlEditor
 fun OptionsScreen(navigationType: AppNavigationType,
                   navController: NavHostController,
                   modifier: Modifier = Modifier,
-                  viewModel: OptionsViewModel = viewModel()
+                  viewModel: OptionsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

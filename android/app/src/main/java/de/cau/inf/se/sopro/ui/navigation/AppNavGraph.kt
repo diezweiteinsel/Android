@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDestination
@@ -26,7 +27,6 @@ import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationViewModel
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.yourApplication.ViewModelFactory
 import de.cau.inf.se.sopro.ui.yourApplication.YourApplicationScreen
 import de.cau.inf.se.sopro.ui.yourApplication.YourApplicationViewModel
 
@@ -48,18 +48,10 @@ fun AppNavHost(
             startDestination = RootGraph.YourApplication.startDestination.route
         ) {
             composable(AppDestination.YourApplicationDestination.route) {
-                val application = LocalContext.current.applicationContext as CivitasApplication
-                val repository = application.container.repository
-                val tokenManager = application.container.tokenManager
-                val urlManager = application.container.urlManager
-
-                val factory = ViewModelFactory(repository, tokenManager, urlManager)
-                val applicationViewModel: YourApplicationViewModel = viewModel(factory = factory)
 
                 YourApplicationScreen(
                     navigationType = navigationType,
-                    navController = navController,
-                    viewModel = applicationViewModel
+                    navController = navController
                 )
             }
         }
@@ -67,26 +59,16 @@ fun AppNavHost(
             route = RootGraph.SubmitApplication.route,
             startDestination = RootGraph.SubmitApplication.startDestination.route
         ) {
-            composable(AppDestination.SubmitApplicationDestination.route) { SubmitApplicationScreen(navigationType, navController) }
+            composable(AppDestination.SubmitApplicationDestination.route) {
+                SubmitApplicationScreen(navigationType, navController)
+            }
         }
         navigation(
             route = RootGraph.PublicApplication.route,
             startDestination = RootGraph.PublicApplication.startDestination.route
         ) {
             composable(AppDestination.PublicApplicationDestination.route) {
-                val application = LocalContext.current.applicationContext as CivitasApplication
-                val repository = application.container.repository
-                val tokenManager = application.container.tokenManager
-                val urlManager = application.container.urlManager
-
-                val factory = ViewModelFactory(repository, tokenManager, urlManager)
-                val publicViewModel: PublicApplicationViewModel = viewModel(factory = factory)
-
-                PublicApplicationScreen(
-                    navigationType,
-                    navController,
-                    viewModel = publicViewModel
-                )
+                PublicApplicationScreen(navigationType, navController)
             }
         }
         navigation(
@@ -101,21 +83,7 @@ fun AppNavHost(
         }
         navigation(route = RootGraph.Options.route,
             startDestination = RootGraph.Options.startDestination.route){
-            composable(AppDestination.OptionsDestination.route) {
-                val application = LocalContext.current.applicationContext as CivitasApplication
-                val repository = application.container.repository
-                val tokenManager = application.container.tokenManager
-                val urlManager = application.container.urlManager
-
-                val factory = ViewModelFactory(repository, tokenManager, urlManager)
-                val optionsViewModel: OptionsViewModel = viewModel(factory = factory)
-
-                OptionsScreen(
-                    navigationType,
-                    navController,
-                    viewModel = optionsViewModel
-                )
-            }
+            composable(AppDestination.OptionsDestination.route) { OptionsScreen(navigationType, navController) }
         }
     }
 }

@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.model.applicant.Usertype
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -20,7 +22,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RegistrationViewModel(private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState> = _uiState.asStateFlow()
 
@@ -119,17 +124,6 @@ class RegistrationViewModel(private val repository: Repository) : ViewModel() {
             }
 
 
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CivitasApplication
-                val repository = application.container.repository
-
-                RegistrationViewModel(repository)
-            }
         }
     }
 }

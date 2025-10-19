@@ -2,9 +2,11 @@ package de.cau.inf.se.sopro.ui.options
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.di.UrlManager
 import de.cau.inf.se.sopro.ui.utils.HealthStatus
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -12,7 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OptionsViewModel(
+@HiltViewModel
+class OptionsViewModel @Inject constructor(
     private val repository: Repository,
     private val urlManager: UrlManager
 ) : ViewModel() {

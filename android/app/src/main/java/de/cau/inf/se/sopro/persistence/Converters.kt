@@ -8,6 +8,7 @@ import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import de.cau.inf.se.sopro.model.applicant.Usertype
 import de.cau.inf.se.sopro.model.application.Block
+import de.cau.inf.se.sopro.model.application.Constraints
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import kotlinx.serialization.KSerializer
@@ -89,15 +90,21 @@ class Converters {
     fun fromForm(value: String?): Form? {
         return value?.let { gson.fromJson(it, Form::class.java) }
     }
+
     @TypeConverter
-    fun fromBlockList(blocks: List<Block>?): String? {
-        return blocks?.let { Json.encodeToString(BlockListSerializer, it) }
+    fun fromBlockList(jsonString: String?): List<Block>? {
+        if (jsonString == null) {
+            return null
+        }
+        val listType = object : TypeToken<List<Block>>() {}.type
+        return gson.fromJson(jsonString, listType)
     }
 
     @TypeConverter
-    fun toBlockList(jsonString: String?): List<Block>? {
-        return jsonString?.let { Json.decodeFromString(BlockListSerializer, it) }
+    fun toBlockList(blocks: List<Block>?): String? {
+        return gson.toJson(blocks)
     }
+
     @TypeConverter
     fun toForm(form: Form?): String? {
         return gson.toJson(form)
@@ -117,36 +124,17 @@ class Converters {
     fun toStringMap(map: Map<String, String>?): String {
         return gson.toJson(map ?: emptyMap<String, String>())
     }
-}
 
-
-
-object BlockListSerializer : KSerializer<List<Block>> {
-
-    override val descriptor: SerialDescriptor = ListSerializer(Block.serializer()).descriptor
-
-    override fun serialize(encoder: Encoder, value: List<Block>) {
-        val json = Json.encodeToString(ListSerializer(Block.serializer()), value)
-        encoder.encodeString(json)
-    }
-    override fun deserialize(decoder: Decoder): List<Block> {
-        val json = decoder.decodeString()
-        return Json.decodeFromString(ListSerializer(Block.serializer()), json)
+    @TypeConverter
+    fun fromConstraints(jsonString: String?): Constraints? {
+        if (jsonString == null) {
+            return null
+        }
+        return gson.fromJson(jsonString, Constraints::class.java)
     }
 
-}
-object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
-
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("LocalDateTime", PrimitiveKind.STRING)
-
-    override fun serialize(encoder: Encoder, value: LocalDateTime) {
-
-        encoder.encodeString(value.toString())
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun deserialize(decoder: Decoder): LocalDateTime {
-        return LocalDateTime.parse(decoder.decodeString())
+    @TypeConverter
+    fun toConstraints(constraints: Constraints?): String? {
+        return gson.toJson(constraints)
     }
 }

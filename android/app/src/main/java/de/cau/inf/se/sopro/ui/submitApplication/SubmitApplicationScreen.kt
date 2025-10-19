@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -34,7 +35,7 @@ fun SubmitApplicationScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val vm: SubmitApplicationViewModel = viewModel(factory = SubmitApplicationViewModel.Factory)
+    val vm: SubmitApplicationViewModel = hiltViewModel()
     val uiState = vm.uiState.collectAsStateWithLifecycle()
 
 

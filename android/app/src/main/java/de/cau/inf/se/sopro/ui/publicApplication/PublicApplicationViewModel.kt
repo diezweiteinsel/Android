@@ -4,21 +4,17 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.data.TokenManager
 import de.cau.inf.se.sopro.model.application.Application
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-data class PublicApplicationsUiState(
-    val applications: List<Application> = emptyList(),
-    val formNamesMap: Map<Int, String> = emptyMap(),
-    val isRefreshing: Boolean = false
-)
-
-@RequiresApi(Build.VERSION_CODES.O)
-class PublicApplicationViewModel(
+@HiltViewModel
+class PublicApplicationViewModel @Inject constructor(
     private val repository: Repository,
     private val tokenManager: TokenManager
 ) : ViewModel() {
@@ -35,7 +31,7 @@ class PublicApplicationViewModel(
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
-                repository.refreshApplications()
+                repository.refreshApplicationsAndForms()
                 loadFormsMap()
             } finally {
                 _isRefreshing.value = false

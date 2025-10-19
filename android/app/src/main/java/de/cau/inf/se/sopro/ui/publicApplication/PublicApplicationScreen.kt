@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -29,7 +30,8 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.yourApplication.CardDisplayMode
+import de.cau.inf.se.sopro.ui.utils.components.ApplicationCard
+import de.cau.inf.se.sopro.ui.utils.components.CardDisplayMode
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -38,7 +40,7 @@ fun PublicApplicationScreen(
     navigationType: AppNavigationType,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: PublicApplicationViewModel = viewModel()
+    viewModel: PublicApplicationViewModel = hiltViewModel()
 ) {
     val applicationsState by viewModel.publicApplications.collectAsStateWithLifecycle()
     val formNamesMapState by viewModel.formNamesMap.collectAsStateWithLifecycle()
@@ -99,10 +101,11 @@ fun PublicApplicationContent(
         ) { application ->
             val formName = formNamesMap[application.formId] ?: stringResource(id = R.string.unknown_form)
 
-            PublicApplicationCard(
+            ApplicationCard(
                 application = application,
                 formName = formName,
-                CardDisplayMode.Public
+                CardDisplayMode.Public,
+                false
             )
         }
     }

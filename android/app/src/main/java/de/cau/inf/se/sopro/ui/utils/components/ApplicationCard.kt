@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.yourApplication
+package de.cau.inf.se.sopro.ui.utils.components
 
 import android.os.Build
 import android.util.Log
@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -21,13 +20,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.annotations.SerializedName
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.ui.theme.StatusApprovedDark
@@ -39,50 +36,21 @@ import de.cau.inf.se.sopro.ui.theme.StatusRejectedLight
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.util.Locale
 
-enum class CardDisplayMode {
-    StatusColor,
-    Public
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ApplicationCard(
     application: Application,
     formName: String,
-    displayMode: CardDisplayMode = CardDisplayMode.StatusColor
+    displayMode: CardDisplayMode = CardDisplayMode.StatusColor,
+    showPublicStatusIndicator: Boolean = true
 ) {
 
     var isExpanded by remember { mutableStateOf(false) }
 
-    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm 'Uhr'")
-
-    val formattedDate = remember(application.createdAt) {
-        if (application.createdAt == null) {
-            "N/A" // Fallback, if the date is null
-        } else {
-            try {
-                val dateTime = LocalDateTime.parse(application.createdAt)
-                dateTime.format(dateFormatter)
-            } catch (e: DateTimeParseException) {
-                application.createdAt
-            }
-        }
-    }
-
-    val isDark = isSystemInDarkTheme()
-
-    val cardColor = if (displayMode == CardDisplayMode.Public) {
-        MaterialTheme.colorScheme.primaryContainer
-    } else {
-        when (application.status) {
-            Status.APPROVED -> if (isDark) StatusApprovedDark else StatusApprovedLight
-            Status.REJECTED -> if (isDark) StatusRejectedDark else StatusRejectedLight
-            Status.PENDING -> if (isDark) StatusPendingDark else StatusPendingLight
-            null -> if (isDark) StatusPendingDark else StatusPendingLight
-        }
-    }
+    val formattedDate = rememberFormattedDate(application.createdAt)
+    val cardColor = rememberApplicationCardColor(displayMode, application.status)
 
     Card(
         modifier = Modifier
@@ -111,7 +79,7 @@ fun ApplicationCard(
                 fontWeight = FontWeight.Bold
             )
 
-            if (application.isPublic)
+            if (showPublicStatusIndicator && application.isPublic)
                 Text(
                     text = "This application is public and visible to anyone.",
                     style = MaterialTheme.typography.bodyMedium,
@@ -162,42 +130,47 @@ fun ApplicationCard(
     }
 }
 
+enum class CardDisplayMode {
+    StatusColor,
+    Public
+}
+
 @Composable
-fun DynamicAttributeView(attribute: DynamicAttribute) {
-    val valueAsString = if (attribute.value == null || attribute.value.isJsonNull) {
-        "N/A"
-    } else if (attribute.value.isJsonPrimitive) {
-        attribute.value.asString
-    } else {
-        attribute.value.toString()
-    }
+private fun rememberApplicationCardColor(
+    displayMode: CardDisplayMode,
+    status: Status?
+): Color {
+    val isDark = isSystemInDarkTheme()
+    val publicColor = MaterialTheme.colorScheme.primaryContainer
 
-    val formattedLabel = attribute.label.replace('_', ' ').replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "$formattedLabel:",
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(0.2f)
-        )
-        Text(
-            text = valueAsString,
-            modifier = Modifier.weight(0.8f)
-        )
+    return remember(displayMode, status, isDark, publicColor) {
+        if (displayMode == CardDisplayMode.Public) {
+            publicColor
+        } else {
+            when (status) {
+                Status.APPROVED -> if (isDark) StatusApprovedDark else StatusApprovedLight
+                Status.REJECTED -> if (isDark) StatusRejectedDark else StatusRejectedLight
+                Status.PENDING -> if (isDark) StatusPendingDark else StatusPendingLight
+                null -> if (isDark) StatusPendingDark else StatusPendingLight
+            }
+        }
     }
 }
 
-data class DynamicAttribute(
-    @SerializedName("label")
-    val label: String,
-
-    @SerializedName("value")
-    val value: JsonElement
-)
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+private fun rememberFormattedDate(createdAt: String?): String {
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm 'Uhr'") }
+    return remember(createdAt) {
+        if (createdAt == null) {
+            "N/A"
+        } else {
+            try {
+                val dateTime = LocalDateTime.parse(createdAt)
+                dateTime.format(dateFormatter)
+            } catch (e: DateTimeParseException) {
+                createdAt
+            }
+        }
+    }
+}
