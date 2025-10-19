@@ -50,6 +50,7 @@ enum class CardDisplayMode {
 @Composable
 fun ApplicationCard(
     application: Application,
+    formName: String,
     displayMode: CardDisplayMode = CardDisplayMode.StatusColor
 ) {
 
@@ -97,6 +98,9 @@ fun ApplicationCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            Text(
+                text = formName
+            )
             Text(
                 text = "Submitted: $formattedDate",
                 style = MaterialTheme.typography.bodySmall

@@ -11,6 +11,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+data class PublicApplicationsUiState(
+    val applications: List<Application> = emptyList(),
+    val formNamesMap: Map<Int, String> = emptyMap(),
+    val isRefreshing: Boolean = false
+)
+
 @RequiresApi(Build.VERSION_CODES.O)
 class PublicApplicationViewModel(
     private val repository: Repository,
@@ -19,16 +25,18 @@ class PublicApplicationViewModel(
     private val _publicApplications = MutableStateFlow<List<Application>>(emptyList())
     val publicApplications: StateFlow<List<Application>> = _publicApplications
 
+    private val _formNamesMap = MutableStateFlow<Map<Int, String>>(emptyMap())
+    val formNamesMap: StateFlow<Map<Int, String>> = _formNamesMap
+
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
-
-    val userId = tokenManager.getUserId()
 
     fun refreshApplications() {
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
                 repository.refreshApplications()
+                loadFormsMap()
             } finally {
                 _isRefreshing.value = false
             }
@@ -37,16 +45,25 @@ class PublicApplicationViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun loadPublicApplications() {
-
         viewModelScope.launch {
-            viewModelScope.launch {
-                val userId = tokenManager.getUserId()
+            val userId = tokenManager.getUserId()
 
-                if (userId != null) {
-                    repository.getPublicApplicationsAsFlow().collect { appsFromDb ->
-                        _publicApplications.value = appsFromDb
-                    }
+            if (userId != null) {
+                repository.getPublicApplicationsAsFlow().collect { appsFromDb ->
+                    _publicApplications.value = appsFromDb
                 }
+            }
+        }
+        loadFormsMap()
+    }
+
+    private fun loadFormsMap() {
+        viewModelScope.launch {
+            val allForms = repository.getForms()
+            if (allForms != null) {
+                val formMap = allForms.filter { it.id != null && it.formName != null }
+                    .associateBy({ it.id!! }, { it.formName!! })
+                _formNamesMap.value = formMap
             }
         }
     }

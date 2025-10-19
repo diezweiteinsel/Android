@@ -25,6 +25,9 @@ class YourApplicationViewModel(
     private val _applications = MutableStateFlow<List<Application>>(emptyList())
     val applications: StateFlow<List<Application>> = _applications
 
+    private val _formNamesMap = MutableStateFlow<Map<Int, String>>(emptyMap())
+    val formNamesMap: StateFlow<Map<Int, String>> = _formNamesMap
+
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
@@ -35,6 +38,7 @@ class YourApplicationViewModel(
             try {
                 _isRefreshing.value = true
                 repository.refreshApplications()
+                loadFormsMap()
             } finally {
                 _isRefreshing.value = false
             }
@@ -50,6 +54,18 @@ class YourApplicationViewModel(
                 repository.getApplicationsAsFlow(userId).collect { appsFromDb ->
                     _applications.value = appsFromDb
                 }
+            }
+        }
+        loadFormsMap()
+    }
+
+    private fun loadFormsMap() {
+        viewModelScope.launch {
+            val allForms = repository.getForms()
+            if (allForms != null) {
+                val formMap = allForms.filter { it.id != null && it.formName != null }
+                    .associateBy({ it.id!! }, { it.formName!! })
+                _formNamesMap.value = formMap
             }
         }
     }

@@ -16,6 +16,7 @@
 
     <!--YourApplication page-->
     <string name="your_application_title">Your Applications</string>
+    <string name="unknown_form">Unknown Form</string>
 
 
     <!--SubmitApplication page-->
