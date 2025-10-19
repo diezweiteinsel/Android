@@ -43,6 +43,7 @@ import java.time.format.DateTimeParseException
 @Composable
 fun PublicApplicationCard(
     application: Application,
+    formName: String,
     displayMode: CardDisplayMode = CardDisplayMode.StatusColor
 ) {
 
@@ -91,7 +92,7 @@ fun PublicApplicationCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "${application.formId}"
+                text = formName
             )
             Text(
                 text = "Submitted: $formattedDate",

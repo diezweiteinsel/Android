@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -40,6 +41,7 @@ fun PublicApplicationScreen(
     viewModel: PublicApplicationViewModel = viewModel()
 ) {
     val applicationsState by viewModel.publicApplications.collectAsStateWithLifecycle()
+    val formNamesMapState by viewModel.formNamesMap.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     val pullRefreshState = rememberPullRefreshState(
@@ -69,6 +71,7 @@ fun PublicApplicationScreen(
         ) {
             PublicApplicationContent(
                 applications = applicationsState,
+                formNamesMap = formNamesMapState,
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -86,6 +89,7 @@ fun PublicApplicationScreen(
 @Composable
 fun PublicApplicationContent(
     applications: List<Application>,
+    formNamesMap: Map<Int, String>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -93,7 +97,13 @@ fun PublicApplicationContent(
             items = applications,
             key = { application -> "${application.id}-${application.formId}" }
         ) { application ->
-            PublicApplicationCard(application = application, CardDisplayMode.Public)
+            val formName = formNamesMap[application.formId] ?: stringResource(id = R.string.unknown_form)
+
+            PublicApplicationCard(
+                application = application,
+                formName = formName,
+                CardDisplayMode.Public
+            )
         }
     }
 }
