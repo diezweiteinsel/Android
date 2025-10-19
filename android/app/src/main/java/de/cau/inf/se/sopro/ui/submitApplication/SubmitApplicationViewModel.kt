@@ -3,13 +3,9 @@ package de.cau.inf.se.sopro.ui.submitApplication
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.ui.navigation.AppDestination

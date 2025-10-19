@@ -15,18 +15,13 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
-import de.cau.inf.se.sopro.ui.core.createBottomBar
-import de.cau.inf.se.sopro.ui.navigation.AppDestination
-import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.ui.utils.components.ApplicationCard
 import de.cau.inf.se.sopro.ui.utils.components.CardDisplayMode
 

@@ -19,14 +19,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.applicationViewer.ApplicationListScreen
+import de.cau.inf.se.sopro.ui.applicationViewer.PublicApplicationViewModel
+import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationViewModel
+import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
-import de.cau.inf.se.sopro.ui.applicationViewer.PublicApplicationViewModel
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationViewModel
-import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.utils.components.CardDisplayMode
 
 

@@ -2,7 +2,6 @@ package de.cau.inf.se.sopro.ui.applicationViewer
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.data.Repository
@@ -11,7 +10,6 @@ import de.cau.inf.se.sopro.model.application.Application
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel

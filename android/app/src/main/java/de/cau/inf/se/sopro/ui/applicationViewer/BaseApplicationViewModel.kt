@@ -2,7 +2,6 @@ package de.cau.inf.se.sopro.ui.applicationViewer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.data.TokenManager
 import de.cau.inf.se.sopro.model.application.Application
