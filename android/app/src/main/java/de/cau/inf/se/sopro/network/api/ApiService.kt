@@ -8,7 +8,6 @@ import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.ui.submitApplication.FieldPayload
-import kotlinx.serialization.Serializable
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -57,8 +56,7 @@ interface ApiService{
 
 }
 
-//data classes
-@Serializable
+//data classe
 data class LoginResponse(
     @SerializedName("access_token")
     val accessToken: String?,
@@ -69,12 +67,10 @@ data class LoginResponse(
     val roles: List<String>
 )
 
-@Serializable
 data class CreateApplicantResponse( //our response if an applicant is created from api
     val user_id: Int
 )
 
-@Serializable
 data class CreateApplicantRequest(
     val username: String,
     val email: String,
@@ -83,14 +79,12 @@ data class CreateApplicantRequest(
 )
 
 //data classes for getForms()
-@Serializable
 data class FormResponse(
     val id: Int,
     val formName: String, //das ist der responsename
     val blocks: List<Section> //this list contains our building blocks for the application
 )
 
-@Serializable
 data class Section( //this is one form
     val sectionID: Int = 0,
     val title: String = "",

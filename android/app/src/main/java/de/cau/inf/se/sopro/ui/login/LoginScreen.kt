@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -52,7 +53,7 @@ fun LoginScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+    val viewModel: LoginViewModel = hiltViewModel()
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

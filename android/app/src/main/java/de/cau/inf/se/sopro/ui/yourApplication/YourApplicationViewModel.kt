@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.data.TokenManager
 import de.cau.inf.se.sopro.di.UrlManager
@@ -12,13 +13,14 @@ import de.cau.inf.se.sopro.model.application.Application
 import de.cau.inf.se.sopro.ui.login.LoginViewModel
 import de.cau.inf.se.sopro.ui.options.OptionsViewModel
 import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
-class YourApplicationViewModel(
+@HiltViewModel
+class YourApplicationViewModel @Inject constructor(
     private val repository: Repository,
     private val tokenManager: TokenManager
 ) : ViewModel() {
@@ -68,38 +70,5 @@ class YourApplicationViewModel(
                 _formNamesMap.value = formMap
             }
         }
-    }
-}
-
-class ViewModelFactory(
-    private val repository: Repository,
-    private val tokenManager: TokenManager,
-    private val urlManager: UrlManager
-) : ViewModelProvider.Factory {
-    @RequiresApi(Build.VERSION_CODES.O)
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-
-        if (modelClass.isAssignableFrom(YourApplicationViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return YourApplicationViewModel(repository, tokenManager) as T
-        }
-
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return LoginViewModel(repository, urlManager) as T
-        }
-
-        if (modelClass.isAssignableFrom(OptionsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return OptionsViewModel(repository, urlManager) as T
-        }
-
-        if (modelClass.isAssignableFrom(PublicApplicationViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return PublicApplicationViewModel(repository, tokenManager) as T
-        }
-
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -8,19 +8,21 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
-class SubmitApplicationViewModel(private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class SubmitApplicationViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     private val _uiState = MutableStateFlow(SubmitApplicationUiState()) //our mutable uiState
 
     val uiState: StateFlow<SubmitApplicationUiState> = _uiState.asStateFlow()
@@ -124,18 +126,6 @@ class SubmitApplicationViewModel(private val repository: Repository) : ViewModel
     fun onCancelClicked(navController:NavHostController) {
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
 
-    }
-    companion object { //viewmodel factory to be able to use our repository
-
-        val Factory = viewModelFactory {
-            initializer {
-                val application =
-                    this[AndroidViewModelFactory.APPLICATION_KEY] as CivitasApplication
-                val repository = application.container.repository
-                //val savedStateHandle = this.createSavedStateHandle()
-                SubmitApplicationViewModel(repository)
-            }
-        }
     }
 }
 

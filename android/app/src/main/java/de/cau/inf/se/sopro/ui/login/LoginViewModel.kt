@@ -9,12 +9,14 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.data.LoginResult
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.di.UrlManager
 import de.cau.inf.se.sopro.ui.utils.HealthStatus
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -23,8 +25,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val repository: Repository,
     private val urlManager: UrlManager
 ) : ViewModel() {
@@ -160,21 +162,6 @@ class LoginViewModel(
 
     fun onUrlChange(newUrl: String) {
         _uiState.update { it.copy(url = newUrl, urlError = null) }
-    }
-
-
-    companion object {
-
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application =
-                    this[AndroidViewModelFactory.APPLICATION_KEY] as CivitasApplication
-                val repository = application.container.repository
-                val urlManager = application.container.urlManager
-                //val savedStateHandle = this.createSavedStateHandle()
-                LoginViewModel(repository, urlManager)
-            }
-        }
     }
 }
 

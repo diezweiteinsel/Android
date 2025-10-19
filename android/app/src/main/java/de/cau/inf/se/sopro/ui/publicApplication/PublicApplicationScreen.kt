@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -39,7 +40,7 @@ fun PublicApplicationScreen(
     navigationType: AppNavigationType,
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: PublicApplicationViewModel = viewModel()
+    viewModel: PublicApplicationViewModel = hiltViewModel()
 ) {
     val applicationsState by viewModel.publicApplications.collectAsStateWithLifecycle()
     val formNamesMapState by viewModel.formNamesMap.collectAsStateWithLifecycle()

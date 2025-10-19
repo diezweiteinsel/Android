@@ -15,6 +15,7 @@ import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -45,11 +46,12 @@ interface Repository {
     suspend fun checkHealth(url: String): Boolean
 }
 
-class DefRepository(private val apiService : ApiService,
-                    private val applicantDao: ApplicantDao,
-                    private val applicationDao: ApplicationDao,
-                    private val formDao: FormDao,
-                    private val tokenManager: TokenManager
+class DefRepository @Inject constructor(
+    private val apiService : ApiService,
+    private val applicantDao: ApplicantDao,
+    private val applicationDao: ApplicationDao,
+    private val formDao: FormDao,
+    private val tokenManager: TokenManager
 ) : Repository{
 
     // --- Authentification & User ---

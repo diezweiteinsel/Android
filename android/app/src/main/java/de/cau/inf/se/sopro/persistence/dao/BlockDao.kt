@@ -13,7 +13,7 @@ interface BlockDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addBlock(block: Block)
 
-    @Query("Select * from Block")
+    @Query("Select * from Blocks")
     suspend fun getAll(): List<Block>
 }
 
