@@ -4,7 +4,11 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -14,14 +18,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import de.cau.inf.se.sopro.R
-
+import de.cau.inf.se.sopro.ui.applicationViewer.ApplicationListScreen
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
-import de.cau.inf.se.sopro.ui.applicationViewer.PublicApplicationScreen
+import de.cau.inf.se.sopro.ui.applicationViewer.PublicApplicationViewModel
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationScreen
+import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationViewModel
+import de.cau.inf.se.sopro.ui.core.createBottomBar
+import de.cau.inf.se.sopro.ui.utils.components.CardDisplayMode
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,9 +48,30 @@ fun AppNavHost(
         ) {
             composable(AppDestination.YourApplicationDestination.route) {
 
-                YourApplicationScreen(
-                    navigationType = navigationType,
-                    navController = navController
+                val viewModel: YourApplicationViewModel = hiltViewModel()
+
+                val applications by viewModel.applications.collectAsStateWithLifecycle()
+                val formNamesMap by viewModel.formNamesMap.collectAsStateWithLifecycle()
+                val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+
+                val bottomBar = remember(navigationType, navController) {
+                    createBottomBar(
+                        navigationType = navigationType,
+                        currentTab = AppDestination.YourApplicationDestination,
+                        navController = navController
+                    )
+                }
+
+                ApplicationListScreen(
+                    titleRes = R.string.your_application_title,
+                    displayMode = CardDisplayMode.StatusColor,
+                    showPublicStatusIndicator = true,
+                    applications = applications,
+                    formNamesMap = formNamesMap,
+                    isRefreshing = isRefreshing,
+                    onRefresh = viewModel::refreshApplications,
+                    onLoad = viewModel::loadApplications,
+                    bottomBar = bottomBar
                 )
             }
         }
@@ -61,7 +88,30 @@ fun AppNavHost(
             startDestination = RootGraph.PublicApplication.startDestination.route
         ) {
             composable(AppDestination.PublicApplicationDestination.route) {
-                PublicApplicationScreen(navigationType, navController)
+                val viewModel: PublicApplicationViewModel = hiltViewModel()
+
+                val applications by viewModel.applications.collectAsStateWithLifecycle()
+                val formNamesMap by viewModel.formNamesMap.collectAsStateWithLifecycle()
+                val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+
+                val bottomBar = remember(navigationType, navController) {
+                    createBottomBar(
+                        navigationType = navigationType,
+                        currentTab = AppDestination.PublicApplicationDestination,
+                        navController = navController
+                    )
+                }
+
+                ApplicationListScreen(
+                    titleRes = R.string.public_application_title,
+                    displayMode = CardDisplayMode.Public,
+                    applications = applications,
+                    formNamesMap = formNamesMap,
+                    isRefreshing = isRefreshing,
+                    onRefresh = viewModel::refreshApplications,
+                    onLoad = viewModel::loadApplications,
+                    bottomBar = bottomBar
+                )
             }
         }
         navigation(
