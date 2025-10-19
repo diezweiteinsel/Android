@@ -34,6 +34,8 @@ import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.utils.components.PasswordTextField
+import de.cau.inf.se.sopro.ui.utils.components.StandardTextField
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,9 +116,9 @@ fun RegistrationContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            NewUsernameTextField(
+            StandardTextField(
                 value = uiState.username.value,
-                onValueChanged = onUsernameChanged,
+                onValueChange = onUsernameChanged,
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
@@ -132,9 +134,9 @@ fun RegistrationContent(
                 }
             )
 
-            EmailTextField(
+            StandardTextField(
                 value = uiState.email.value,
-                onValueChanged = onEmailChanged,
+                onValueChange = onEmailChanged,
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
@@ -150,9 +152,9 @@ fun RegistrationContent(
                 }
             )
 
-            NewPasswordTextField(
+            PasswordTextField(
                 value = uiState.password.value,
-                onValueChanged = onPasswordChanged,
+                onValueChange = onPasswordChanged,
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),
@@ -168,9 +170,9 @@ fun RegistrationContent(
                 }
             )
 
-            ConfirmPasswordTextField(
+            PasswordTextField(
                 value = uiState.confirmPassword.value,
-                onValueChanged = onConfirmPasswordChanged,
+                onValueChange = onConfirmPasswordChanged,
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .padding(bottom = 16.dp),

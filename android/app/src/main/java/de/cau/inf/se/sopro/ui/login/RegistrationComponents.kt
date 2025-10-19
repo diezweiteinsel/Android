@@ -17,100 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
+import de.cau.inf.se.sopro.ui.utils.components.FormFieldState
 
 
 //All the parts that get displayed on the RegistrationScreen
-@Composable
-fun NewUsernameTextField(
-    value: String,
-    onValueChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChanged,
-        modifier = modifier,
-        label = label,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true,
-        isError = isError,
-        supportingText = supportingText
-    )
-}
-
-@Composable
-fun EmailTextField(
-    value: String,
-    onValueChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChanged,
-        modifier = modifier,
-        label = label,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        singleLine = true,
-        isError = isError,
-        supportingText = supportingText
-    )
-}
-
-@Composable
-fun NewPasswordTextField(
-    value: String,
-    onValueChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChanged,
-        modifier = modifier,
-        label = label,
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true,
-        isError = isError,
-        supportingText = supportingText
-    )
-}
-
 @Composable
 fun RegistrationButton(onClick: () -> Unit) {
     ElevatedButton(onClick = { onClick() }) {
         Text(stringResource(R.string.registration_button))
     }
-}
-
-@Composable
-fun ConfirmPasswordTextField(
-    value: String,
-    onValueChanged: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    label: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChanged,
-        modifier = modifier,
-        label = label,
-        visualTransformation = PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true,
-        isError = isError,
-        supportingText = supportingText
-    )
 }
 
 @Composable
@@ -133,7 +48,6 @@ fun GoToLoginScreen(navController: NavController) {
     )
 }
 
-
 data class RegistrationUiState(
     val username: FormFieldState = FormFieldState(),
     val email: FormFieldState = FormFieldState(),
@@ -141,14 +55,3 @@ data class RegistrationUiState(
     val confirmPassword: FormFieldState = FormFieldState(),
     val registrationError: String? = null
 )
-
-data class FormFieldState(
-    val value: String = "",
-    val errorMessageResId: Int? = null
-) {
-
-    val isError: Boolean
-        get() = errorMessageResId != null
-}
-
-
