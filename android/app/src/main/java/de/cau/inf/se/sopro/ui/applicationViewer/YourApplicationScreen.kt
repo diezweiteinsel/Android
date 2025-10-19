@@ -1,4 +1,4 @@
-package de.cau.inf.se.sopro.ui.yourApplication
+package de.cau.inf.se.sopro.ui.applicationViewer
 
 
 import android.os.Build
@@ -30,6 +30,7 @@ import de.cau.inf.se.sopro.ui.core.createBottomBar
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.ui.utils.components.ApplicationCard
+import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)

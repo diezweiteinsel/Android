@@ -5,9 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -16,19 +13,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.R
 
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
-import de.cau.inf.se.sopro.ui.options.OptionsViewModel
-import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationScreen
-import de.cau.inf.se.sopro.ui.publicApplication.PublicApplicationViewModel
+import de.cau.inf.se.sopro.ui.applicationViewer.PublicApplicationScreen
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
-import de.cau.inf.se.sopro.ui.yourApplication.YourApplicationScreen
-import de.cau.inf.se.sopro.ui.yourApplication.YourApplicationViewModel
+import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationScreen
 
 
 @RequiresApi(Build.VERSION_CODES.O)
