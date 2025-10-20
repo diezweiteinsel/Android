@@ -16,6 +16,7 @@ import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
 import de.cau.inf.se.sopro.persistence.dao.BlockDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import de.cau.inf.se.sopro.ui.submitApplication.FieldPayload
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit
@@ -34,6 +35,9 @@ interface Repository {
     fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
     suspend fun refreshApplicationsAndForms()
     suspend fun createApplication(application: createApplication)
+    suspend fun getApplicationById(id: Int): Application?
+    suspend fun getFormById(id: Int): Form?
+    suspend fun updateApplication(id: Int, payload: Map<Int, FieldPayload>)
 
     // --- Public Applications ---
     fun getPublicApplicationsAsFlow(): Flow<List<Application>>
@@ -176,6 +180,21 @@ class DefRepository @Inject constructor(
             Log.e("Repository", "An exception occurred during registration: ${e.message}", e)
             return false
         }
+    }
+
+    // --- User Applications ---
+    override suspend fun getApplicationById(id: Int): Application? {
+        //TODO
+        return TODO("Provide the return value")
+    }
+
+    override suspend fun getFormById(id: Int): Form? {
+        //TODO
+        return TODO("Provide the return value")
+    }
+
+    override suspend fun updateApplication(id: Int, payload: Map<Int, FieldPayload>) {
+        //TODO
     }
 
     override suspend fun logout() {

@@ -22,13 +22,13 @@ import de.cau.inf.se.sopro.ui.applicationViewer.ApplicationListScreen
 import de.cau.inf.se.sopro.ui.applicationViewer.PublicApplicationViewModel
 import de.cau.inf.se.sopro.ui.applicationViewer.YourApplicationViewModel
 import de.cau.inf.se.sopro.ui.core.createBottomBar
+import de.cau.inf.se.sopro.ui.editApplication.EditApplicationScreen
 import de.cau.inf.se.sopro.ui.login.LoginScreen
 import de.cau.inf.se.sopro.ui.login.RegistrationScreen
 import de.cau.inf.se.sopro.ui.options.OptionsScreen
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitApplicationScreen
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import de.cau.inf.se.sopro.ui.utils.components.CardDisplayMode
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -116,17 +116,26 @@ fun AppNavHost(
         }
         navigation(
             route = RootGraph.Login.route,
-            startDestination = RootGraph.Login.startDestination.route
-        ) {
+            startDestination = RootGraph.Login.startDestination.route){
             composable(AppDestination.LoginDestination.route) { LoginScreen(navigationType, navController) }
-            }
-        navigation(route = RootGraph.Registration.route,
+        }
+        navigation(
+            route = RootGraph.Registration.route,
             startDestination = RootGraph.Registration.startDestination.route){
             composable(AppDestination.RegistrationDestination.route) { RegistrationScreen(navigationType,navController) }
         }
-        navigation(route = RootGraph.Options.route,
+        navigation(
+            route = RootGraph.Options.route,
             startDestination = RootGraph.Options.startDestination.route){
             composable(AppDestination.OptionsDestination.route) { OptionsScreen(navigationType, navController) }
+        }
+        navigation(
+            route = RootGraph.EditApplication.route,
+            startDestination = RootGraph.EditApplication.startDestination.route
+        ) {
+            composable(AppDestination.EditApplicationDestination.route) {
+                EditApplicationScreen(navigationType, navController)
+            }
         }
     }
 }
@@ -144,6 +153,7 @@ sealed class RootGraph(
     data object Login : RootGraph("login_graph", AppDestination.LoginDestination)
     data object Registration : RootGraph("registration_graph", AppDestination.RegistrationDestination)
     data object Options : RootGraph("options_graph", AppDestination.OptionsDestination)
+    data object EditApplication : RootGraph("edit_application_graph", AppDestination.EditApplicationDestination)
 }
 
 
@@ -161,7 +171,7 @@ sealed class AppDestination(
     data object LoginDestination : NavMenuDestination("login", R.string.login_title)
     data object RegistrationDestination : NavMenuDestination("registration", R.string.registration_title)
     data object OptionsDestination : NavMenuDestination("options",R.string.options_title)
-
+    data object EditApplicationDestination : NavMenuDestination("edit_application",R.string.edit_application_title)
 }
 
 
@@ -178,6 +188,7 @@ fun AppDestination.NavMenuDestination.toGraphRoute(): String = when (this) {
     AppDestination.LoginDestination -> RootGraph.Login.route
     AppDestination.RegistrationDestination -> RootGraph.Registration.route
     AppDestination.OptionsDestination -> RootGraph.Options.route
+    AppDestination.EditApplicationDestination -> RootGraph.EditApplication.route
 }
 
 fun NavHostController.navigateTopLevel(dest: AppDestination.NavMenuDestination) =

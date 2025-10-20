@@ -1,5 +1,7 @@
 package de.cau.inf.se.sopro
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -35,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -43,9 +44,9 @@ import androidx.navigation.compose.rememberNavController
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.navigation.AppNavHost
 import de.cau.inf.se.sopro.ui.navigation.navigateTopLevel
-import de.cau.inf.se.sopro.ui.theme.CivitasAppTheme
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CivitasApp(
     windowSize: WindowWidthSizeClass,
@@ -253,31 +254,3 @@ private val drawerItems = listOf(
     NavigationItemContent(AppDestination.PublicApplicationDestination, Icons.Default.LocationOn, R.string.public_application_title),
     NavigationItemContent(AppDestination.OptionsDestination,Icons.Default.Settings,R.string.options_title)
 )
-
-
-
-// Previews
-@Preview(
-    name = "Permanent Navigation Drawer",
-    showBackground = true,
-    widthDp = 1200, heightDp = 800
-)
-@Composable
-fun CivitasAppPermanentDrawerPreview() {
-    CivitasAppTheme {
-        CivitasApp(windowSize = WindowWidthSizeClass.Expanded)
-    }
-}
-
-@Preview(
-    name = "Bottom Navigation Bar",
-    showBackground = true,
-    widthDp = 360,
-    heightDp = 640
-)
-@Composable
-fun CivitasAppBottomNavigationBarPreview() {
-    CivitasAppTheme {
-        CivitasApp(windowSize = WindowWidthSizeClass.Compact)
-    }
-}

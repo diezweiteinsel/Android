@@ -43,6 +43,10 @@ abstract class BaseApplicationViewModel(
         }
     }
 
+    fun onEditClicked() {
+
+    }
+
     abstract val applications: StateFlow<List<Application>>
     abstract fun loadApplications()
 }

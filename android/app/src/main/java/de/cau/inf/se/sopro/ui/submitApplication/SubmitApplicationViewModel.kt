@@ -121,7 +121,6 @@ class SubmitApplicationViewModel @Inject constructor(private val repository: Rep
     }
     fun onCancelClicked(navController:NavHostController) {
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
-
     }
 }
 
