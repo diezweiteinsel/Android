@@ -55,6 +55,7 @@ import de.cau.inf.se.sopro.R
 fun ApplicationCard(
     application: Application,
     formName: String,
+    onEditClicked: () -> Unit = {},
     displayMode: CardDisplayMode = CardDisplayMode.StatusColor,
     showPublicStatusIndicator: Boolean = true
 ) {
@@ -149,7 +150,7 @@ fun ApplicationCard(
             }
 
             if (showPublicStatusIndicator) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onEditClicked }) {
                     Icon(
                         imageVector = Icons.Filled.Create,
                         contentDescription = null

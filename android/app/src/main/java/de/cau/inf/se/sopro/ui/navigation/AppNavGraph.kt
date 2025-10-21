@@ -71,7 +71,12 @@ fun AppNavHost(
                     isRefreshing = isRefreshing,
                     onRefresh = viewModel::refreshApplications,
                     onLoad = viewModel::loadApplications,
-                    bottomBar = bottomBar
+                    bottomBar = bottomBar,
+                    onEditClicked = { applicationId ->
+                        navController.navigate(
+                            AppDestination.EditApplicationDestination.route
+                        )
+                    }
                 )
             }
         }

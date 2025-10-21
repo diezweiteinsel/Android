@@ -182,7 +182,8 @@ val label: String,
 val value: String,
 val data_type: String
 )
-var blocks = mutableListOf(UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
+var blocks = mutableListOf(
+    UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
     UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
     UiBlock("E-Mail", "STRING", false,FieldType.TEXT, constraintsJson = emptyList())
 )

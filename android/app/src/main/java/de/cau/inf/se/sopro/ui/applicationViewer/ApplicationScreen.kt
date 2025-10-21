@@ -38,6 +38,7 @@ fun ApplicationListScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onLoad: () -> Unit,
+    onEditClicked: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val pullRefreshState = rememberPullRefreshState(
@@ -64,6 +65,7 @@ fun ApplicationListScreen(
                 formNamesMap = formNamesMap,
                 displayMode = displayMode,
                 showPublicStatusIndicator = showPublicStatusIndicator,
+                onEditClicked = onEditClicked,
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -83,7 +85,8 @@ fun ApplicationListContent(
     formNamesMap: Map<Int, String>,
     modifier: Modifier = Modifier,
     displayMode: CardDisplayMode,
-    showPublicStatusIndicator: Boolean
+    showPublicStatusIndicator: Boolean,
+    onEditClicked: (Int) -> Unit = {}
 ) {
     LazyColumn(modifier = modifier) {
         items(
@@ -96,7 +99,8 @@ fun ApplicationListContent(
                 application = application,
                 formName = formName,
                 displayMode = displayMode,
-                showPublicStatusIndicator = showPublicStatusIndicator
+                showPublicStatusIndicator = showPublicStatusIndicator,
+                onEditClicked = { onEditClicked(application.id) }
             )
         }
     }
