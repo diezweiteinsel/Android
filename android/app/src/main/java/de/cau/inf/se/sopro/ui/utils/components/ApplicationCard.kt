@@ -149,7 +149,7 @@ fun ApplicationCard(
                 }
             }
 
-            if (showPublicStatusIndicator) {
+            if (application.status == Status.PENDING) {
                 IconButton(onClick = onEditClicked) {
                     Icon(
                         imageVector = Icons.Filled.Create,

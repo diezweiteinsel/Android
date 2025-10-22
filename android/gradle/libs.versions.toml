@@ -34,6 +34,7 @@ roomCompiler = "2.8.1"
 uiGraphics = "1.9.3"
 runtimeVersion = "1.9.3"
 material3Version = "1.4.0"
+navigationevent = "1.0.0-beta01"
 
 [libraries]
 # AndroidX / Compose
@@ -85,6 +86,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtimeVersion" }
 material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3Version" }
+androidx-navigationevent = { group = "androidx.navigationevent", name = "navigationevent", version.ref = "navigationevent" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

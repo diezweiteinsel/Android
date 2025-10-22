@@ -38,7 +38,7 @@ interface Repository {
     suspend fun createApplication(application: createApplication)
     suspend fun getApplicationByCompositeKey(appId: Int, formId: Int): Application?
     suspend fun getFormById(id: Int): Form?
-    suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>)
+    suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>): UpdateResult
 
     // --- Public Applications ---
     fun getPublicApplicationsAsFlow(): Flow<List<Application>>
@@ -192,8 +192,8 @@ class DefRepository @Inject constructor(
         return formDao.getFormById(id)
     }
 
-    override suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>) {
-        try {
+    override suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>): UpdateResult {
+        return try {
             val requestBody = UpdateApplicationRequest(
                 formId = formId,
                 applicationId = appId,
@@ -206,14 +206,20 @@ class DefRepository @Inject constructor(
                 requestBody = requestBody
             )
 
-            if (!response.isSuccessful) {
-                Log.e("Repository", "Failed to update application $appId (form $formId). Code: ${response.code()}")
-            } else {
-                Log.d("Repository", "Application $appId (form $formId) updated successfully.")
+            if (response.isSuccessful) {
+                Log.d("Repository", "Application $appId updated successfully.")
                 refreshApplicationsAndForms()
+                UpdateResult.Success
+            } else {
+                Log.e("Repository", "Failed to update application $appId. Code: ${response.code()}")
+                UpdateResult.HttpError(response.code(), response.errorBody()?.string())
             }
+        } catch (e: IOException) {
+            Log.e("Repository", "Network exception during updateApplication for app $appId", e)
+            UpdateResult.NetworkError
         } catch (e: Exception) {
-            Log.e("Repository", "Exception during updateApplication", e)
+            Log.e("Repository", "Unknown exception during updateApplication for app $appId", e)
+            UpdateResult.HttpError(500, "An unknown error occurred")
         }
     }
 
@@ -354,4 +360,11 @@ sealed class LoginResult {
     data object WrongPassword : LoginResult()
     data object NetworkError : LoginResult()
     data object GenericError : LoginResult()
+}
+
+sealed class UpdateResult {
+    data object Success : UpdateResult()
+    data class HttpError(val code: Int, val message: String?) : UpdateResult()
+    data object NetworkError : UpdateResult()
+    data object UnknownError : UpdateResult()
 }

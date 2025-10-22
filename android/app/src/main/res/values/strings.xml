@@ -28,6 +28,12 @@
     <!--EditApplication page-->
     <string name="edit_application_title">Edit your application</string>
     <string name="save_changes">Save Changes</string>
+    <string name="error_application_not_found">Application not found</string>
+    <string name="error_invalid_data">Invalid data</string>
+    <string name="error_server_internal">Server internal error</string>
+    <string name="error_network">Network error</string>
+    <string name="error_generic_update">Generic update error</string>
+
 
 
     <!--PublicApplication page-->

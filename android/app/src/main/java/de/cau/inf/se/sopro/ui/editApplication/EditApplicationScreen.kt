@@ -25,6 +25,8 @@ import de.cau.inf.se.sopro.ui.submitApplication.DynamicForm
 import de.cau.inf.se.sopro.ui.submitApplication.SubmitButton
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalFocusManager
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,8 +35,18 @@ fun EditApplicationScreen(
     navController: NavHostController,
     viewModel: EditApplicationViewModel = hiltViewModel()
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is EditApplicationViewModel.NavigationEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
 
     ScreenScaffold(
         titleRes = R.string.edit_application_title
@@ -55,8 +67,8 @@ fun EditApplicationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                blocks = uiState.value.blocks,
-                values = uiState.value.values,
+                blocks = uiState.blocks,
+                values = uiState.values,
                 onValueChange = viewModel::onValueChange
             )
 
