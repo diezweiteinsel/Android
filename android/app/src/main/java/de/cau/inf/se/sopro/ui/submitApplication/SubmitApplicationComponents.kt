@@ -1,5 +1,6 @@
 package de.cau.inf.se.sopro.ui.submitApplication
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -80,12 +81,10 @@ fun DynamicForm(
     modifier: Modifier = Modifier,
     blocks: List<UiBlock>,
     values: Map<String, String>,
-    onValueChange: (String, String) -> Unit,
-    onCancelClicked: () -> Unit,
-    onSubmit: () -> Unit,
+    onValueChange: (String, String) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 200.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
     ) {
         items(blocks) { block -> //using items() to loop through the blocks and dynamically create a composable for each block
             when (block.type) {
@@ -119,25 +118,13 @@ fun DynamicForm(
                         }
                 )
             }
-            Spacer(Modifier.height(16.dp))
-        }
-        item { //our submit and cancel buttons
-            Row(modifier= Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly){
-                CancelButton(modifier = Modifier.padding(16.dp),
-                    onClick = onCancelClicked
-                )
-                SubmitButton(
-                    modifier = modifier.padding(16.dp),
-                    onClick = onSubmit
-                )
-            }
         }
     }
 }
 
 @Composable
-fun CancelButton( // Renamed to follow Composable naming conventions (PascalCase)
-    modifier : Modifier= Modifier, // Provide a default Modifier
+fun CancelButton(
+    modifier : Modifier= Modifier,
     onClick: () -> Unit
 ) {
     ElevatedButton(modifier = modifier
@@ -149,12 +136,19 @@ fun CancelButton( // Renamed to follow Composable naming conventions (PascalCase
 }
 
 @Composable
-fun SubmitButton(modifier: Modifier= Modifier, onClick: () -> Unit){
-    ElevatedButton(modifier = modifier
-        .padding(horizontal = 8.dp)
-        .height(48.dp),onClick = { onClick() },
-        shape = RoundedCornerShape(12.dp)){
-        Text(stringResource(R.string.submit_application))
+fun SubmitButton(
+    modifier: Modifier= Modifier,
+    onClick: () -> Unit,
+    @StringRes textResId: Int = R.string.submit_application
+){
+    ElevatedButton(
+        modifier = modifier
+            .padding(horizontal = 8.dp)
+            .height(48.dp),
+        onClick = { onClick() },
+        shape = RoundedCornerShape(12.dp)
+    ){
+        Text(stringResource(id = textResId))
     }
 }
 
@@ -181,9 +175,4 @@ data class FieldPayload( //for our payload to submit the application
 val label: String,
 val value: String,
 val data_type: String
-)
-var blocks = mutableListOf(
-    UiBlock("Vorname", "STRING",  true,FieldType.TEXT, emptyList()),
-    UiBlock("Nachname", "STRING", true,FieldType.TEXT,constraintsJson = emptyList()),
-    UiBlock("E-Mail", "STRING", false,FieldType.TEXT, constraintsJson = emptyList())
 )

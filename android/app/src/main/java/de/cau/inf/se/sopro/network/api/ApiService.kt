@@ -15,6 +15,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService{
@@ -50,8 +51,12 @@ interface ApiService{
     //create Application with desired body
 
 
-    @PUT("/api/v1/applications/{applicationId}")
-    suspend fun updateApplication(application: Application) : Response<List<Int>>
+    @PUT("/api/v1/applications/{form_id}/{application_id}") // <-- IDs back in the path
+    suspend fun updateApplication(
+        @Path("form_id") formId: Int,
+        @Path("application_id") applicationId: Int,
+        @Body requestBody: UpdateApplicationRequest
+    ): Response<Unit>
 
 
 }

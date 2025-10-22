@@ -11,6 +11,7 @@ import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
 import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
+import de.cau.inf.se.sopro.network.api.UpdateApplicationRequest
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
@@ -35,9 +36,9 @@ interface Repository {
     fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
     suspend fun refreshApplicationsAndForms()
     suspend fun createApplication(application: createApplication)
-    suspend fun getApplicationById(id: Int): Application?
+    suspend fun getApplicationByCompositeKey(appId: Int, formId: Int): Application?
     suspend fun getFormById(id: Int): Form?
-    suspend fun updateApplication(id: Int, payload: Map<Int, FieldPayload>)
+    suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>)
 
     // --- Public Applications ---
     fun getPublicApplicationsAsFlow(): Flow<List<Application>>
@@ -183,18 +184,37 @@ class DefRepository @Inject constructor(
     }
 
     // --- User Applications ---
-    override suspend fun getApplicationById(id: Int): Application? {
-        //TODO
-        return TODO("Provide the return value")
+    override suspend fun getApplicationByCompositeKey(appId: Int, formId: Int): Application? {
+        return applicationDao.getApplicationByCompositeKey(appId, formId)
     }
 
     override suspend fun getFormById(id: Int): Form? {
-        //TODO
-        return TODO("Provide the return value")
+        return formDao.getFormById(id)
     }
 
-    override suspend fun updateApplication(id: Int, payload: Map<Int, FieldPayload>) {
-        //TODO
+    override suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>) {
+        try {
+            val requestBody = UpdateApplicationRequest(
+                formId = formId,
+                applicationId = appId,
+                payload = payload
+            )
+
+            val response = apiService.updateApplication(
+                formId = formId,
+                applicationId = appId,
+                requestBody = requestBody
+            )
+
+            if (!response.isSuccessful) {
+                Log.e("Repository", "Failed to update application $appId (form $formId). Code: ${response.code()}")
+            } else {
+                Log.d("Repository", "Application $appId (form $formId) updated successfully.")
+                refreshApplicationsAndForms()
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Exception during updateApplication", e)
+        }
     }
 
     override suspend fun logout() {

@@ -150,7 +150,7 @@ fun ApplicationCard(
             }
 
             if (showPublicStatusIndicator) {
-                IconButton(onClick = { onEditClicked }) {
+                IconButton(onClick = onEditClicked) {
                     Icon(
                         imageVector = Icons.Filled.Create,
                         contentDescription = null

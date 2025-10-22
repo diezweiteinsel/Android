@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -30,14 +32,12 @@ import de.cau.inf.se.sopro.ui.utils.AppNavigationType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubmitApplicationScreen(
-    navigationType: AppNavigationType, // TODO: navigation drawer or navigation rail
+    navigationType: AppNavigationType,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val vm: SubmitApplicationViewModel = hiltViewModel()
     val uiState = vm.uiState.collectAsStateWithLifecycle()
-
-
 
     LaunchedEffect(Unit) { vm.onInit() }
     // Reuse the same BottomBar instance across recompositions (hence remember) as long as
@@ -45,13 +45,14 @@ fun SubmitApplicationScreen(
     val bottomBar = remember(navigationType, navController) {
         createBottomBar(navigationType, currentTab = AppDestination.SubmitApplicationDestination, navController)
     }
+
     ScreenScaffold(
         titleRes = R.string.submit_application_title,
         bottomBar = bottomBar
     ) { innerPadding ->
+
         SubmitApplicationContent(
-            modifier = Modifier.padding(innerPadding).heightIn(0.dp,600.dp),
-            navController = navController, // Pass the collected uiState
+            modifier = Modifier.padding(innerPadding),
             values = uiState.value.values, //look into Components submitUiState
             blocks = uiState.value.blocks,
             onValueChange = vm::onValueChange, //method from viewModel
@@ -68,7 +69,6 @@ fun SubmitApplicationScreen(
 @Composable
 fun SubmitApplicationContent(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     values: Map<String, String>,
     blocks: List<UiBlock>,
     onValueChange: (String, String) -> Unit,
@@ -80,7 +80,7 @@ fun SubmitApplicationContent(
 ) {
     val focusManager = LocalFocusManager.current
 
-    Column(             //we are putting everything in a column
+    Column(
         modifier = modifier
             .fillMaxSize()
             .clickable(
@@ -89,23 +89,37 @@ fun SubmitApplicationContent(
             ) {
                 focusManager.clearFocus()
             },
-        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SubmitApplicationCategory(modifier = Modifier.fillMaxWidth(), //this is our dropdown
+        SubmitApplicationCategory(
+            modifier = Modifier.fillMaxWidth(), //this is our dropdown
             onValueChange = onCategoryChange,
-            selectedCategory,categories )
+            selectedCategory,
+            categories
+        )
 
 
-        if(selectedCategory.isNotEmpty()) { //only if the applicant has chosen a category, we want to show the form/ the form is built
+        if (selectedCategory.isNotEmpty()) {
             DynamicForm(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                blocks,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                blocks = blocks,
                 values = values,
-                onValueChange = onValueChange,
-                onCancelClicked = onCancelClicked,
-                onSubmit = onSubmit
+                onValueChange = onValueChange
             )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                CancelButton(onClick = onCancelClicked)
+                SubmitButton(onClick = onSubmit)
+            }
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

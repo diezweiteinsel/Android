@@ -1,5 +1,6 @@
 package de.cau.inf.se.sopro.ui.editApplication
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.cau.inf.se.sopro.data.Repository
+import de.cau.inf.se.sopro.ui.navigation.EDIT_APP_ID_ARG
+import de.cau.inf.se.sopro.ui.navigation.EDIT_FORM_ID_ARG
 import de.cau.inf.se.sopro.ui.submitApplication.FieldPayload
 import de.cau.inf.se.sopro.ui.submitApplication.FieldType
 import de.cau.inf.se.sopro.ui.submitApplication.UiBlock
@@ -40,11 +43,13 @@ class EditApplicationViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(EditApplicationUiState())
     val uiState: StateFlow<EditApplicationUiState> = _uiState.asStateFlow()
 
-    private val applicationId: Int = checkNotNull(savedStateHandle["applicationId"])
+    private val applicationId: Int = checkNotNull(savedStateHandle[EDIT_APP_ID_ARG])
+    private val formId: Int = checkNotNull(savedStateHandle[EDIT_FORM_ID_ARG])
 
     private val gson = Gson()
 
     init {
+        Log.d("EditVM", "Received AppID: $applicationId, FormID: $formId")
         loadApplicationData()
     }
 
@@ -52,7 +57,7 @@ class EditApplicationViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            val application = repository.getApplicationById(applicationId)
+            val application = repository.getApplicationByCompositeKey(applicationId, formId)
             if (application == null) {
                 _uiState.update { it.copy(isLoading = false, error = "Application not found") }
                 return@launch
@@ -120,7 +125,7 @@ class EditApplicationViewModel @Inject constructor(
                 payload[i + 1] = FieldPayload(block.label, value, block.datatype)
             }
 
-            repository.updateApplication(applicationId, payload)
+            repository.updateApplication(applicationId, formId, payload)
 
             // TODO: Zurück navigieren (z.B. über einen SharedFlow-Event)
         }

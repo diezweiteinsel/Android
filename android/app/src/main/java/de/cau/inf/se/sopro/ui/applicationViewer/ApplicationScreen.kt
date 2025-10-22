@@ -1,6 +1,7 @@
 package de.cau.inf.se.sopro.ui.applicationViewer
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
@@ -38,7 +39,7 @@ fun ApplicationListScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onLoad: () -> Unit,
-    onEditClicked: (Int) -> Unit = {},
+    onEditClicked: (appId: Int, formId: Int) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val pullRefreshState = rememberPullRefreshState(
@@ -86,7 +87,7 @@ fun ApplicationListContent(
     modifier: Modifier = Modifier,
     displayMode: CardDisplayMode,
     showPublicStatusIndicator: Boolean,
-    onEditClicked: (Int) -> Unit = {}
+    onEditClicked: (appId: Int, formId: Int) -> Unit = { _, _ -> }
 ) {
     LazyColumn(modifier = modifier) {
         items(
@@ -100,7 +101,7 @@ fun ApplicationListContent(
                 formName = formName,
                 displayMode = displayMode,
                 showPublicStatusIndicator = showPublicStatusIndicator,
-                onEditClicked = { onEditClicked(application.id) }
+                onEditClicked = { onEditClicked(application.id, application.formId) }
             )
         }
     }

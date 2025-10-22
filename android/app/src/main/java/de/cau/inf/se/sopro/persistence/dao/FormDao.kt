@@ -24,4 +24,7 @@ interface FormDao {
 
     @Query("DELETE FROM Form")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM Form WHERE id = :id LIMIT 1")
+    suspend fun getFormById(id: Int): Form?
 }

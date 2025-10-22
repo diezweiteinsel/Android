@@ -14,8 +14,10 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.applicationViewer.ApplicationListScreen
@@ -72,12 +74,18 @@ fun AppNavHost(
                     onRefresh = viewModel::refreshApplications,
                     onLoad = viewModel::loadApplications,
                     bottomBar = bottomBar,
-                    onEditClicked = { applicationId ->
+                    onEditClicked = { appId, formId ->
                         navController.navigate(
-                            AppDestination.EditApplicationDestination.route
+                            AppDestination.EditApplicationDestination.createRoute(appId, formId)
                         )
                     }
                 )
+            }
+            composable(
+                route = AppDestination.EditApplicationDestination.route,
+                arguments = AppDestination.EditApplicationDestination.arguments
+            ) {
+                EditApplicationScreen(navController)
             }
         }
         navigation(
@@ -134,14 +142,6 @@ fun AppNavHost(
             startDestination = RootGraph.Options.startDestination.route){
             composable(AppDestination.OptionsDestination.route) { OptionsScreen(navigationType, navController) }
         }
-        navigation(
-            route = RootGraph.EditApplication.route,
-            startDestination = RootGraph.EditApplication.startDestination.route
-        ) {
-            composable(AppDestination.EditApplicationDestination.route) {
-                EditApplicationScreen(navigationType, navController)
-            }
-        }
     }
 }
 
@@ -158,10 +158,11 @@ sealed class RootGraph(
     data object Login : RootGraph("login_graph", AppDestination.LoginDestination)
     data object Registration : RootGraph("registration_graph", AppDestination.RegistrationDestination)
     data object Options : RootGraph("options_graph", AppDestination.OptionsDestination)
-    data object EditApplication : RootGraph("edit_application_graph", AppDestination.EditApplicationDestination)
 }
 
 
+const val EDIT_APP_ID_ARG = "applicationId"
+const val EDIT_FORM_ID_ARG = "formId"
 sealed class AppDestination(
     val route: String,
     @StringRes val titleRes: Int,
@@ -176,7 +177,16 @@ sealed class AppDestination(
     data object LoginDestination : NavMenuDestination("login", R.string.login_title)
     data object RegistrationDestination : NavMenuDestination("registration", R.string.registration_title)
     data object OptionsDestination : NavMenuDestination("options",R.string.options_title)
-    data object EditApplicationDestination : NavMenuDestination("edit_application",R.string.edit_application_title)
+    data object EditApplicationDestination : AppDestination(
+        route = "edit_application/{$EDIT_APP_ID_ARG}/{$EDIT_FORM_ID_ARG}",
+        titleRes = R.string.edit_application_title,
+        arguments = listOf(
+            navArgument(EDIT_APP_ID_ARG) { type = NavType.IntType },
+            navArgument(EDIT_FORM_ID_ARG) { type = NavType.IntType }
+        )
+    ) {
+        fun createRoute(appId: Int, formId: Int) = "edit_application/$appId/$formId"
+    }
 }
 
 
@@ -193,7 +203,6 @@ fun AppDestination.NavMenuDestination.toGraphRoute(): String = when (this) {
     AppDestination.LoginDestination -> RootGraph.Login.route
     AppDestination.RegistrationDestination -> RootGraph.Registration.route
     AppDestination.OptionsDestination -> RootGraph.Options.route
-    AppDestination.EditApplicationDestination -> RootGraph.EditApplication.route
 }
 
 fun NavHostController.navigateTopLevel(dest: AppDestination.NavMenuDestination) =
