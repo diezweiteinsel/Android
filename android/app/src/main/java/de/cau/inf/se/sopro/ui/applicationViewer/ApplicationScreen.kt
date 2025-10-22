@@ -1,7 +1,6 @@
 package de.cau.inf.se.sopro.ui.applicationViewer
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box

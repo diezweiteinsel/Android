@@ -6,7 +6,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import androidx.navigationevent.NavigationEvent
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import dagger.hilt.android.lifecycle.HiltViewModel
