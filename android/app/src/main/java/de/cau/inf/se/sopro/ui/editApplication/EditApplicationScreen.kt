@@ -62,27 +62,27 @@ fun EditApplicationScreen(
         ) {
             DynamicForm(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                    .fillMaxWidth(),
                 blocks = uiState.blocks,
                 values = uiState.values,
-                onValueChange = viewModel::onValueChange
+                onValueChange = viewModel::onValueChange,
+                footerContent = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        CancelButton(
+                            onClick = { viewModel.onCancelClicked(navController) }
+                        )
+                        SubmitButton(
+                            onClick = viewModel::onSubmit,
+                            textResId = R.string.save_changes
+                        )
+                    }
+                }
             )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                CancelButton(
-                    onClick = { viewModel.onCancelClicked(navController) }
-                )
-                SubmitButton(
-                    onClick = viewModel::onSubmit,
-                    textResId = R.string.save_changes
-                )
-            }
         }
     }
 }

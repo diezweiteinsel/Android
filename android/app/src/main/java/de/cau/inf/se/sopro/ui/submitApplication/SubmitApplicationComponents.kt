@@ -42,12 +42,11 @@ fun SubmitApplicationCategory(
     categories: List<String>
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = modifier) {
+    Box(modifier = modifier.padding(horizontal = 32.dp)) {
         Button(
             onClick = { expanded = true },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
@@ -57,7 +56,7 @@ fun SubmitApplicationCategory(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            //modifier = Modifier.fillMaxWidth()
         ) {
             categories.forEach { category ->
                 DropdownMenuItem(
@@ -78,10 +77,13 @@ fun DynamicForm(
     modifier: Modifier = Modifier,
     blocks: List<UiBlock>,
     values: Map<String, String>,
-    onValueChange: (String, String) -> Unit
+    onValueChange: (String, String) -> Unit,
+    footerContent: (@Composable () -> Unit)? = null
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
     ) {
         items(blocks) { block -> //using items() to loop through the blocks and dynamically create a composable for each block
             when (block.type) {
@@ -90,6 +92,7 @@ fun DynamicForm(
                         ?: "", //if the value is null, we want to return an empty string
                     onValueChange = { onValueChange(block.label, it) },
                     label = { Text(block.label) },
+                    singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -98,6 +101,7 @@ fun DynamicForm(
                     onValueChange = { onValueChange(block.label, it) },
                     label = { Text(block.label) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
                 FieldType.DATE -> OutlinedTextField(
@@ -114,6 +118,11 @@ fun DynamicForm(
                             }
                         }
                 )
+            }
+        }
+        if (footerContent != null) {
+            item {
+                footerContent()
             }
         }
     }

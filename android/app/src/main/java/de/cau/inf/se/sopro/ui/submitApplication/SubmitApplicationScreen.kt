@@ -100,23 +100,23 @@ fun SubmitApplicationContent(
 
         if (selectedCategory.isNotEmpty()) {
             DynamicForm(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier = Modifier.fillMaxWidth(),
                 blocks = blocks,
                 values = values,
-                onValueChange = onValueChange
+                onValueChange = onValueChange,
+                footerContent = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp), // Padding für Buttons
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        CancelButton(onClick = onCancelClicked)
+                        SubmitButton(onClick = onSubmit)
+                    }
+                }
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                CancelButton(onClick = onCancelClicked)
-                SubmitButton(onClick = onSubmit)
-            }
         } else {
             Spacer(modifier = Modifier.weight(1f))
         }
