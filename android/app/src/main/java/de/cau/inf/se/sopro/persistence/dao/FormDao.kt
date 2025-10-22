@@ -21,4 +21,10 @@ interface FormDao {
 
     @Upsert
     suspend fun insertAll(forms: List<Form>)
+
+    @Query("DELETE FROM Form")
+    suspend fun clearAll()
+
+    @Query("SELECT * FROM Form WHERE id = :id LIMIT 1")
+    suspend fun getFormById(id: Int): Form?
 }

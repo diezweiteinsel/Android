@@ -3,13 +3,9 @@ package de.cau.inf.se.sopro.ui.submitApplication
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
@@ -44,9 +40,8 @@ class SubmitApplicationViewModel @Inject constructor(private val repository: Rep
                         it.copy(categories = it.categories.plus(form.formName) as List<String>) //we add the form name to our categories
                     }
                 }
-                Log.d("MyApp", "categories: ${_uiState.value.categories}") //Logging
-
             }
+            Log.d("MyApp", "categories: ${_uiState.value.categories}") //Logging
         }
     }
     fun onSubmit(){ //when we submit the application we want to create a new application
@@ -74,9 +69,11 @@ class SubmitApplicationViewModel @Inject constructor(private val repository: Rep
     }
     //DAS WURDE LEIDER ZEITLICH NICHT MEHR GESCHAFFT
     fun checkApplication() { //we want to check if the values match the form,
-        for(block in blocks){
-            if(block.required && _uiState.value.values[block.label] == null){
-                //Toast.makeText(createDynamicApplication(), "Please fill out all required fields", Toast.LENGTH_SHORT)
+        for (block in _uiState.value.blocks) {
+            if (block.required && _uiState.value.values[block.label].isNullOrEmpty()) {
+                // TODO: Zeige dem Nutzer eine Fehlermeldung (z.B. über den uiState)
+                Log.w("ViewModel", "Required field '${block.label}' is empty.")
+                return
             }
         }
     }
@@ -84,36 +81,27 @@ class SubmitApplicationViewModel @Inject constructor(private val repository: Rep
     fun createDynamicApplication() {
 
         viewModelScope.launch {
-            val form = repository.getFormByTitle(uiState.value.selectedCategory) //we want to get the selected form, then the structure will load
+            val form = repository.getFormByTitle(uiState.value.selectedCategory)
             curFormId = form?.id ?: 0
-                val buildingBlocks: List<UiBlock> =
-                    form?.blocks?.values?.map { block -> //wir mappen jeden block aus form.sections auf ein Building Block object
-                        UiBlock(
-                            block.label,
-                            block.dataType,
-                            block.required,
-                            type = when (block.dataType.lowercase()) {//differentiation between the different field types
-                                "STRING" -> FieldType.TEXT
-                                "FLOAT" -> FieldType.NUMBER
-                                "DATE" -> FieldType.DATE
-                                else -> FieldType.TEXT
-                            },null
-                        )
-                    } ?: emptyList()
 
-            if (buildingBlocks != null) {
-                for (block in buildingBlocks) { //allowing us to add blocks
-                    if (block !in blocks) {
-                        blocks.add(block) //the list we are using to create our UI
-                    }
-                }
-            }
+            val buildingBlocks: List<UiBlock> =
+                form?.blocks?.values?.map { block ->
+                    UiBlock(
+                        block.label,
+                        block.dataType,
+                        block.required,
+                        type = when (block.dataType.lowercase()) {
+                            "string" -> FieldType.TEXT
+                            "float" -> FieldType.NUMBER
+                            "date" -> FieldType.DATE
+                            else -> FieldType.TEXT
+                        },
+                        constraintsJson = null
+                    )
+                } ?: emptyList()
 
-
-
-                _uiState.update {it.copy(blocks = buildingBlocks)} //update our blocks
-
-            }
+            _uiState.update { it.copy(blocks = buildingBlocks) }
+        }
     }
     fun onValueChange(id: String, value: String) {
         _uiState.update {
@@ -125,7 +113,6 @@ class SubmitApplicationViewModel @Inject constructor(private val repository: Rep
     }
     fun onCancelClicked(navController:NavHostController) {
         navController.navigateTopLevel(AppDestination.YourApplicationDestination)
-
     }
 }
 

@@ -74,6 +74,9 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.material3)
+    implementation(libs.androidx.navigationevent)
     ksp(libs.room.compiler)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.compose.material3)
@@ -119,6 +122,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.9.2")
     implementation("com.google.code.gson:gson:2.13.2")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("androidx.compose.material:material-icons-extended:<version>")
 }
 ksp{
     arg("room.schemaLocation", "$projectDir/schemas");

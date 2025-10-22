@@ -8,11 +8,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +49,7 @@ import java.time.format.DateTimeParseException
 fun ApplicationCard(
     application: Application,
     formName: String,
+    onEditClicked: () -> Unit = {},
     displayMode: CardDisplayMode = CardDisplayMode.StatusColor,
     showPublicStatusIndicator: Boolean = true
 ) {
@@ -62,68 +69,86 @@ fun ApplicationCard(
             containerColor = cardColor
         )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
         ) {
-            Text(
-                text = formName
-            )
-            Text(
-                text = "Submitted: $formattedDate",
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = "Status: ${application.status}",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            if (showPublicStatusIndicator && application.isPublic)
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
-                    text = "This application is public and visible to anyone.",
+                text = formName
+                )
+
+                Text(
+                    text = "Submitted: $formattedDate",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Text(
+                    text = "Status: ${application.status}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
 
+                if (showPublicStatusIndicator && application.isPublic)
+                    Text(
+                        text = "This application is public and visible to anyone.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
 
-            if (application.dynamicAttributes?.isNotEmpty() == true) {
 
-                AnimatedVisibility(visible = isExpanded) {
-                    Column {
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                if (application.dynamicAttributes?.isNotEmpty() == true) {
 
-                        Text(
-                            text = "More information:",
-                            style = MaterialTheme.typography.labelMedium
-                        )
+                    AnimatedVisibility(visible = isExpanded) {
+                        Column {
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                        val parsedAttributes = remember(application.dynamicAttributes) {
-                            val gson = Gson()
-                            application.dynamicAttributes.entries
-                                .sortedBy { it.key.toIntOrNull() ?: 0 }
-                                .map { entry ->
-                                    try {
-                                        gson.fromJson(entry.value, DynamicAttribute::class.java)
-                                    } catch (e: Exception) {
-                                        Log.e("UI", "Failed to parse dynamic attribute: ${entry.value}", e)
-                                        null
+                            Text(
+                                text = "More information:",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+
+                            val parsedAttributes = remember(application.dynamicAttributes) {
+                                val gson = Gson()
+                                application.dynamicAttributes.entries
+                                    .sortedBy { it.key.toIntOrNull() ?: 0 }
+                                    .map { entry ->
+                                        try {
+                                            gson.fromJson(entry.value, DynamicAttribute::class.java)
+                                        } catch (e: Exception) {
+                                            Log.e("UI", "Failed to parse dynamic attribute: ${entry.value}", e)
+                                            null
+                                        }
                                     }
-                                }
-                        }
+                            }
 
-                        parsedAttributes.forEach { attribute ->
-                            if (attribute != null) {
-                                DynamicAttributeView(attribute = attribute)
-                            } else {
-                                Text(
-                                    text = "Error: Could not parse dynamic attribute.",
-                                    color = MaterialTheme.colorScheme.error,
-                                    style = MaterialTheme.typography.bodySmall
-                                )
+                            parsedAttributes.forEach { attribute ->
+                                if (attribute != null) {
+                                    DynamicAttributeView(attribute = attribute)
+                                } else {
+                                    Text(
+                                        text = "Error: Could not parse dynamic attribute.",
+                                        color = MaterialTheme.colorScheme.error,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
                             }
                         }
                     }
+                }
+            }
+
+            if (application.status == Status.PENDING) {
+                IconButton(onClick = onEditClicked) {
+                    Icon(
+                        imageVector = Icons.Filled.Create,
+                        contentDescription = null
+                    )
                 }
             }
         }

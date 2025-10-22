@@ -15,6 +15,9 @@ interface BlockDao {
 
     @Query("Select * from Blocks")
     suspend fun getAll(): List<Block>
+
+    @Query("DELETE FROM Blocks")
+    suspend fun clearAll()
 }
 
 

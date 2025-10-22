@@ -11,14 +11,6 @@ import de.cau.inf.se.sopro.model.application.Block
 import de.cau.inf.se.sopro.model.application.Constraints
 import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.Json
 import java.time.LocalDateTime
 
 class Converters {

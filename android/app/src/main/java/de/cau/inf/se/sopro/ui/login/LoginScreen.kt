@@ -37,13 +37,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.ui.core.BottomBarSpec
 import de.cau.inf.se.sopro.ui.core.ScreenScaffold
 import de.cau.inf.se.sopro.ui.navigation.AppDestination
 import de.cau.inf.se.sopro.ui.utils.AppNavigationType
+import de.cau.inf.se.sopro.ui.utils.components.PasswordTextField
+import de.cau.inf.se.sopro.ui.utils.components.ShowErrorText
+import de.cau.inf.se.sopro.ui.utils.components.StandardTextField
 import de.cau.inf.se.sopro.ui.utils.components.UrlEditor
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,7 +138,7 @@ fun LoginContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            UsernameTextField(
+            StandardTextField(
                 value = uiState.username.value,
                 onValueChange = onUsernameChange,
                 modifier = Modifier

@@ -21,8 +21,18 @@
 
     <!--SubmitApplication page-->
     <string name="submit_application_title">New Application</string>
-    <string name="submit_application">submit</string>
+    <string name="submit_application">Submit</string>
     <string name="choose_form">Choose a Form</string>
+
+
+    <!--EditApplication page-->
+    <string name="edit_application_title">Edit your application</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="error_application_not_found">Application not found</string>
+    <string name="error_invalid_data">Invalid data</string>
+    <string name="error_server_internal">Server internal error</string>
+    <string name="error_network">Network error</string>
+    <string name="error_generic_update">Generic update error</string>
 
 
 

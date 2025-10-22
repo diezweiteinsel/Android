@@ -46,4 +46,10 @@ interface ApplicationDao {
 
     @Query("DELETE FROM Application WHERE userId = :userId")
     suspend fun deleteUserSpecific(userId: Int)
+
+    @Query("DELETE FROM Application")
+    suspend fun clearAll()
+
+    @Query("SELECT * FROM Application WHERE id = :appId AND formId = :formId LIMIT 1")
+    suspend fun getApplicationByCompositeKey(appId: Int, formId: Int): Application?
 }

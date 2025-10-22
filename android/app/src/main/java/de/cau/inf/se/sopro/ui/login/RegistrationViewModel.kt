@@ -4,12 +4,8 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.cau.inf.se.sopro.CivitasApplication
 import de.cau.inf.se.sopro.R
 import de.cau.inf.se.sopro.data.Repository
 import de.cau.inf.se.sopro.model.applicant.Usertype

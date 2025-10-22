@@ -11,10 +11,13 @@ import de.cau.inf.se.sopro.model.application.Form
 import de.cau.inf.se.sopro.model.application.Status
 import de.cau.inf.se.sopro.network.api.ApiService
 import de.cau.inf.se.sopro.network.api.CreateApplicantRequest
+import de.cau.inf.se.sopro.network.api.UpdateApplicationRequest
 import de.cau.inf.se.sopro.network.api.createApplication
 import de.cau.inf.se.sopro.persistence.dao.ApplicantDao
 import de.cau.inf.se.sopro.persistence.dao.ApplicationDao
+import de.cau.inf.se.sopro.persistence.dao.BlockDao
 import de.cau.inf.se.sopro.persistence.dao.FormDao
+import de.cau.inf.se.sopro.ui.submitApplication.FieldPayload
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Retrofit
@@ -27,12 +30,15 @@ interface Repository {
     suspend fun authenticateLogin(username: String, password: String): LoginResult
     suspend fun loginAndSync(username: String, password: String): LoginResult
     suspend fun createApplicant(username: String, email: String, password: String, role: Usertype): Boolean
-    fun logout()
+    suspend fun logout()
 
     // --- User Applications ---
     fun getApplicationsAsFlow(userId: Int): Flow<List<Application>>
     suspend fun refreshApplicationsAndForms()
     suspend fun createApplication(application: createApplication)
+    suspend fun getApplicationByCompositeKey(appId: Int, formId: Int): Application?
+    suspend fun getFormById(id: Int): Form?
+    suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>): UpdateResult
 
     // --- Public Applications ---
     fun getPublicApplicationsAsFlow(): Flow<List<Application>>
@@ -51,6 +57,7 @@ class DefRepository @Inject constructor(
     private val applicantDao: ApplicantDao,
     private val applicationDao: ApplicationDao,
     private val formDao: FormDao,
+    private val blockDao: BlockDao,
     private val tokenManager: TokenManager
 ) : Repository{
 
@@ -176,8 +183,52 @@ class DefRepository @Inject constructor(
         }
     }
 
-    override fun logout() {
+    // --- User Applications ---
+    override suspend fun getApplicationByCompositeKey(appId: Int, formId: Int): Application? {
+        return applicationDao.getApplicationByCompositeKey(appId, formId)
+    }
+
+    override suspend fun getFormById(id: Int): Form? {
+        return formDao.getFormById(id)
+    }
+
+    override suspend fun updateApplication(appId: Int, formId: Int, payload: Map<Int, FieldPayload>): UpdateResult {
+        return try {
+            val requestBody = UpdateApplicationRequest(
+                formId = formId,
+                applicationId = appId,
+                payload = payload
+            )
+
+            val response = apiService.updateApplication(
+                formId = formId,
+                applicationId = appId,
+                requestBody = requestBody
+            )
+
+            if (response.isSuccessful) {
+                Log.d("Repository", "Application $appId updated successfully.")
+                refreshApplicationsAndForms()
+                UpdateResult.Success
+            } else {
+                Log.e("Repository", "Failed to update application $appId. Code: ${response.code()}")
+                UpdateResult.HttpError(response.code(), response.errorBody()?.string())
+            }
+        } catch (e: IOException) {
+            Log.e("Repository", "Network exception during updateApplication for app $appId", e)
+            UpdateResult.NetworkError
+        } catch (e: Exception) {
+            Log.e("Repository", "Unknown exception during updateApplication for app $appId", e)
+            UpdateResult.HttpError(500, "An unknown error occurred")
+        }
+    }
+
+    override suspend fun logout() {
         tokenManager.clearAll()
+        applicationDao.clearAll()
+        blockDao.clearAll()
+        applicantDao.clearAll()
+        formDao.clearAll()
     }
 
     override suspend fun getFormByTitle(title: String): Form?{
@@ -309,4 +360,11 @@ sealed class LoginResult {
     data object WrongPassword : LoginResult()
     data object NetworkError : LoginResult()
     data object GenericError : LoginResult()
+}
+
+sealed class UpdateResult {
+    data object Success : UpdateResult()
+    data class HttpError(val code: Int, val message: String?) : UpdateResult()
+    data object NetworkError : UpdateResult()
+    data object UnknownError : UpdateResult()
 }

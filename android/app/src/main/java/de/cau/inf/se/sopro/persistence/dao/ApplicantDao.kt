@@ -24,4 +24,7 @@ interface ApplicantDao {
 
     @Upsert
     suspend fun upsertApplicant(applicant: Applicant)
+
+    @Query("DELETE FROM Applicant")
+    suspend fun clearAll()
 }
